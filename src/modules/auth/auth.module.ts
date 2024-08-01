@@ -9,6 +9,8 @@ import * as process from "node:process";
 import {AuthController} from "./controller/auth.controller";
 import {LocalStrategy} from "./strategies/local.strategy";
 import {LocalAuthGuard} from "./guards/local-auth.guard";
+import {UserRepository} from "./repository/user.repository";
+import {RefreshTokenRepository} from "./repository/refresh-token.repository";
 
 @Module({
     controllers: [
@@ -26,8 +28,11 @@ import {LocalAuthGuard} from "./guards/local-auth.guard";
         PrismaService,
         Logger,
         AuthService,
+        UserRepository,
+        RefreshTokenRepository,
         RegisterUserHandler,
         LocalStrategy,
+        LocalAuthGuard,
     ],
 })
 export class AuthModule {}

@@ -2,6 +2,7 @@ import {AuthService} from "../services/auth.service";
 import {BadRequestException, Injectable, Logger} from "@nestjs/common";
 import {RegisterUserDto} from "../dto/register-user.dto";
 import {User} from "../model/user.model";
+import * as process from "node:process";
 
 @Injectable()
 export class RegisterUserHandler {
@@ -12,15 +13,11 @@ export class RegisterUserHandler {
     }
 
     public async handle(request: RegisterUserDto): Promise<any> {
-        this.logger.log(RegisterUserHandler.name);
+        this.logger.log(RegisterUserHandler.name, "handle");
 
-        const existingUser = await this.authService.findByCriteria({
-            OR: [{ email: request.email }, { username: request.username }],
-        });
-
-        if (existingUser.length > 0) {
-            const conflictingField = existingUser[0].email === request.email ? 'email' : 'username';
-            const errorMessage = `User already registered with ${conflictingField} given`;
+        const criteria = [{ email: request.email }, { username: request.username }]
+        if (await this.authService.userExists(criteria)) {
+            const errorMessage = `User already registered`;
             this.logger.error(errorMessage);
             throw new BadRequestException({code: 400, message: errorMessage});
         }

@@ -1,4 +1,4 @@
-import {Body, Controller, Logger, Post} from "@nestjs/common";
+import {Body, Controller, InternalServerErrorException, Logger, Post} from "@nestjs/common";
 import {AuthService} from "../services/auth.service";
 import {RegisterUserDto} from "../dto/register-user.dto";
 import {RegisterUserHandler} from "../handler/register-user.handler";
@@ -29,13 +29,13 @@ export class UserController {
         description: 'Internal Server Error',
     })
     public async register(@Body() body: RegisterUserDto): Promise<any> {
-        this.logger.log('UserController.register');
+        this.logger.log(UserController.name, "register");
 
         let userId = null;
         try {
             userId = await this.handler.handle(body);
         } catch (error) {
-            throw Error(error);
+            throw new InternalServerErrorException(error.message);
         }
 
         return {
