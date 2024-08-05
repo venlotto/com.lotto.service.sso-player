@@ -1,5 +1,5 @@
 import {JwtService} from "@nestjs/jwt";
-import {Injectable, Logger, NotFoundException} from "@nestjs/common";
+import {Injectable, Logger, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import {User} from "../model/user.model";
 import {UserRepository} from "../repository/user.repository";
@@ -9,6 +9,7 @@ import * as crypto from 'crypto';
 import { MailerService } from "./mailer.service";
 import { ResetPasswordDto } from "../dto/reset-password.dto";
 import { EditProfileDto } from "../dto/edit-profile.dto";
+import { UserStatus } from "../model/enum/user-status.enum";
 
 @Injectable()
 export class AuthService {
@@ -35,6 +36,11 @@ export class AuthService {
         this.logger.log("AuthService::login", {username: user.username});
         const username = user.username;
         const userExists = await this.userRepository.findByUsername(username);
+
+        if (userExists.status === UserStatus.INACTIVE || userExists.status === UserStatus.BLOCKED) {
+            this.logger.error("AuthService::login", {username: user.username}, 'User is not active');
+            throw new UnauthorizedException('User is not active');
+        }
 
         const payload = {
             username: user.username,
@@ -89,10 +95,12 @@ export class AuthService {
     }
 
     public async revokeRefreshToken(id: number): Promise<any> {
+        this.logger.log('AuthService::revokeRefreshToken');
         await this.refreshTokenRepository.revokeRefreshToken(id)
     }
 
     public async userExists(criteria: any): Promise<boolean> {
+        this.logger.log('AuthService::userExists');
         return await this.userRepository.findByCriteria(criteria);
     }
 
@@ -100,6 +108,11 @@ export class AuthService {
         this.logger.log(AuthService.name+'::refreshToken')
 
         const user = await this.userRepository.findById(userId);
+        if (user.status === UserStatus.INACTIVE || user.status === UserStatus.BLOCKED) {
+            this.logger.error("AuthService::login", {username: user.username}, 'User is not active');
+            throw new UnauthorizedException('User is not active');
+        }
+
         const payload = {
             username: user.username,
             sub: user.id,
@@ -153,6 +166,7 @@ export class AuthService {
     }
 
     public async getUserProfile(userId: string): Promise<User> {
+        this.logger.log(AuthService.name, "getUserProfile");
         return this.userRepository.findById(userId);
     }
 
