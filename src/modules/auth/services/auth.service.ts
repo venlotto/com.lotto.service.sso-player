@@ -1,11 +1,14 @@
 import {JwtService} from "@nestjs/jwt";
-import {Injectable, Logger} from "@nestjs/common";
+import {Injectable, Logger, NotFoundException} from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import {User} from "../model/user.model";
 import {UserRepository} from "../repository/user.repository";
 import {RefreshToken} from "../model/refresh-token.model";
 import {RefreshTokenRepository} from "../repository/refresh-token.repository";
 import * as crypto from 'crypto';
+import { MailerService } from "./mailer.service";
+import { ResetPasswordDto } from "../dto/reset-password.dto";
+import { EditProfileDto } from "../dto/edit-profile.dto";
 
 @Injectable()
 export class AuthService {
@@ -13,6 +16,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly userRepository: UserRepository,
         private readonly refreshTokenRepository: RefreshTokenRepository,
+        private readonly mailerService: MailerService,
         private readonly logger: Logger = new Logger(AuthService.name),
     ) {
     }
@@ -39,6 +43,8 @@ export class AuthService {
             email: userExists.email,
             name: userExists.name,
             lastLogin: userExists.lastLogin,
+            role: userExists.role,
+            status: userExists.status,
         };
 
         await this.userRepository.updateLastLogin(userExists);
@@ -100,12 +106,66 @@ export class AuthService {
             userId: user.id,
             email: user.email,
             name: user.name,
-            lastLogin: user.lastLogin,
+            lastLogin: user.lastLogin,            
+            role: user.role,
+            status: user.status,
         };
 
         return {
             'access_token': await this.generateAccessToken(payload),
             'refresh_token': await this.generateRefreshToken(payload),
         };
+    }
+
+    public async forgotPassword(email: string): Promise<any> {
+        this.logger.log(AuthService.name+'::forgotPassword', email);
+        
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) {
+            throw new NotFoundException('User could not be found');
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        user.resetToken = resetToken;
+        user.resetTokenExpiry = new Date(Date.now() + 3600000);
+        await this.userRepository.update(user);
+
+        // Send password reset email
+        await this.mailerService.sendPasswordResetEmail(user.email, resetToken);
+    }
+
+    public async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<any> {
+        this.logger.log(AuthService.name+'::resetPassword');
+
+        const user = await this.userRepository.findByResetToken(resetPasswordDto.token);
+        if (!user) {
+            throw new NotFoundException('User could not be found');
+        }
+
+        user.password = await bcrypt.hash(resetPasswordDto.password, 10);
+        user.resetToken = null;
+        user.resetTokenExpiry = null;
+        await this.userRepository.update(user);
+
+        return {
+            message: 'Password reset successful'
+        };
+    }
+
+    public async getUserProfile(userId: string): Promise<User> {
+        return this.userRepository.findById(userId);
+    }
+
+    public async updateUserProfile(userId: string, dto: EditProfileDto): Promise<User> {
+        this.logger.log(AuthService.name, "updateUserProfile");
+        const user = await this.userRepository.findById(userId);
+        if (!user) {
+            throw new NotFoundException('User could not be found');
+        }
+        user.email = dto.email;
+        user.name = dto.name;
+        user.username = dto.username;
+        
+        return await this.userRepository.update(user);
     }
 }

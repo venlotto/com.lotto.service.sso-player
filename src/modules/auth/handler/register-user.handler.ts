@@ -2,7 +2,8 @@ import {AuthService} from "../services/auth.service";
 import {BadRequestException, Injectable, Logger} from "@nestjs/common";
 import {RegisterUserDto} from "../dto/register-user.dto";
 import {User} from "../model/user.model";
-import * as process from "node:process";
+import { UserStatus } from "../model/enum/user-status.enum";
+
 
 @Injectable()
 export class RegisterUserHandler {
@@ -23,6 +24,7 @@ export class RegisterUserHandler {
         }
 
         try {
+            request.status = UserStatus.ACTIVE;
             const dto: User = new User(request);
             const user = await this.authService.register(dto);
             return user.id;

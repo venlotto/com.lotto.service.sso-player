@@ -11,6 +11,9 @@ import {LocalStrategy} from "./strategies/local.strategy";
 import {LocalAuthGuard} from "./guards/local-auth.guard";
 import {UserRepository} from "./repository/user.repository";
 import {RefreshTokenRepository} from "./repository/refresh-token.repository";
+import { MailerService } from './services/mailer.service';
+import * as nodemailer from 'nodemailer';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
     controllers: [
@@ -33,6 +36,23 @@ import {RefreshTokenRepository} from "./repository/refresh-token.repository";
         RegisterUserHandler,
         LocalStrategy,
         LocalAuthGuard,
+        {
+            provide: 'MAILER_TRANSPORTER',
+            useFactory: () => {
+              return nodemailer.createTransport({
+                host: process.env.SMTP_HOST,
+                port: 587,
+                secure: false,
+                auth: {
+                  user: process.env.SMTP_USER,
+                  pass: process.env.SMTP_PASSWORD,
+                },
+              });
+            },
+        },
+        MailerService,
+        JwtAuthGuard,
     ],
+    exports: [AuthService,]
 })
 export class AuthModule {}

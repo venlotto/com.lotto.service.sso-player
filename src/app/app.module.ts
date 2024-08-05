@@ -5,6 +5,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { CoreModule } from 'src/core/core.module';
 import { CommonModule } from 'src/common/common.module';
 import {AuthModule} from "../modules/auth/auth.module";
+import { SeederModule } from '../modules/seeder/seeder.module';
 
 @Module({
   imports: [

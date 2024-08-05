@@ -1,23 +1,12 @@
-import {IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsStrongPassword, Length, MaxLength, MinLength, Validate} from "class-validator";
+import {IsNotEmpty, IsStrongPassword, MaxLength} from "class-validator";
 import {Match} from "../../../core/decorators/custom.decorator";
 import {ApiProperty} from "@nestjs/swagger";
-import { UserRoles } from "../model/enum/user-roles.enum";
 
-export class RegisterUserDto {
+export class ResetPasswordDto {
     @ApiProperty()
     @IsNotEmpty()
-    @IsEmail()
-    readonly email: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    readonly username: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    readonly name: string;
-
+    token: string;
+    
     @ApiProperty()
     @IsNotEmpty()
     @IsStrongPassword({
@@ -30,17 +19,10 @@ export class RegisterUserDto {
             message: 'Password must be at least 8 characters'
     })
     @MaxLength(20)
-    readonly password: string;
-
+    password: string;
+    
     @ApiProperty()
     @IsNotEmpty()
     @Match('password', { message: 'Password confirmation must match password' })
     readonly passwordConfirmation: string;
-
-    @ApiProperty()
-    @IsEnum(UserRoles)
-    @IsOptional()
-    readonly role: string | null;
-
-    status: string;
 }

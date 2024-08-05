@@ -4,6 +4,7 @@ import {User} from "../model/user.model";
 
 @Injectable()
 export class UserRepository {
+    
     public constructor(
         private readonly prismaService: PrismaService,
         private readonly logger: Logger = new Logger(UserRepository.name)
@@ -47,6 +48,8 @@ export class UserRepository {
                 email: user.email,
                 password: user.password,
                 username: user.username,
+                role: user.role,
+                status: user.status,
             },
         });
     }
@@ -57,6 +60,41 @@ export class UserRepository {
             where: {
                 OR: criteria.OR,
             },
+        });
+    }
+
+    public async findByEmail(email: string): Promise<any> {
+        this.logger.log("UserRepository::findByEmail", {email: email});
+        return this.prismaService.user.findUnique({
+            where: {
+                email: email
+            }
+        });
+    }
+
+    public async update(user: User): Promise<any> {
+        this.logger.log(UserRepository.name+'::update');
+
+        return this.prismaService.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                name: user.name,
+                email: user.email,
+                username: user.username,
+                resetToken: user.resetToken,
+                resetTokenExpiry: user.resetTokenExpiry,
+            }
+        });
+    }
+
+    public async findByResetToken(token: string): Promise<any> {
+        this.logger.log(UserRepository.name+'::findByResetToken');
+        return this.prismaService.user.findFirst({
+            where: {
+                resetToken: token
+            }
         });
     }
 }

@@ -21,6 +21,7 @@ export const setupSwagger = async (app: INestApplication) => {
         .setDescription(docDesc)
         .setVersion(docVersion)
         .addTag(`${process.env.APP_MODULE}`)
+        .addBearerAuth()
         .build();
 
     const document = SwaggerModule.createDocument(app, documentBuild, {

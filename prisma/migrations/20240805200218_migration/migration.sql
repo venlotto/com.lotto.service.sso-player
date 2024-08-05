@@ -6,6 +6,10 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "lastLogin" TIMESTAMP(3),
+    "resetToken" TEXT,
+    "resetTokenExpiry" TIMESTAMP(3),
+    "role" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -34,28 +38,6 @@ CREATE TABLE "UserCompany" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "UserCompany_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Role" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "UserRoles" (
-    "id" SERIAL NOT NULL,
-    "userId" TEXT NOT NULL,
-    "roleId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "UserRoles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
