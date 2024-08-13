@@ -1,5 +1,5 @@
 import {JwtService} from "@nestjs/jwt";
-import {Injectable, Logger, NotFoundException, UnauthorizedException} from "@nestjs/common";
+import {BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import {User} from "../model/user.model";
 import {UserRepository} from "../repository/user.repository";
@@ -10,6 +10,9 @@ import { MailerService } from "./mailer.service";
 import { ResetPasswordDto } from "../dto/reset-password.dto";
 import { EditProfileDto } from "../dto/edit-profile.dto";
 import { UserStatus } from "../model/enum/user-status.enum";
+import { PasswordResetRepository } from "../repository/password-reset.repository";
+import { PasswordReset } from "../model/password-reset.model";
+import { PrismaService } from "src/common/services/prisma.service";
 
 @Injectable()
 export class AuthService {
@@ -19,6 +22,8 @@ export class AuthService {
         private readonly refreshTokenRepository: RefreshTokenRepository,
         private readonly mailerService: MailerService,
         private readonly logger: Logger = new Logger(AuthService.name),
+        private readonly passwordResetRepository: PasswordResetRepository,
+        private readonly prisma: PrismaService,
     ) {
     }
 
@@ -138,10 +143,20 @@ export class AuthService {
             throw new NotFoundException('User could not be found');
         }
 
+        const passwordResetExists = await this.passwordResetRepository.findByUserId(user.id);
+        if (passwordResetExists && passwordResetExists.resetTokenExpiry > new Date()) {
+            throw new BadRequestException('Password reset token already requested');
+        }
+
         const resetToken = crypto.randomBytes(32).toString('hex');
-        user.resetToken = resetToken;
-        user.resetTokenExpiry = new Date(Date.now() + 3600000);
-        await this.userRepository.update(user);
+        const resetTokenExpiry = new Date(Date.now() + 3600000);
+
+        const passwordReset = new PasswordReset({
+            userId: user.id,
+            resetToken: resetToken,
+            resetTokenExpiry: resetTokenExpiry,
+        });
+        await this.passwordResetRepository.create(passwordReset);
 
         // Send password reset email
         await this.mailerService.sendPasswordResetEmail(user.email, resetToken);
@@ -150,15 +165,28 @@ export class AuthService {
     public async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<any> {
         this.logger.log(AuthService.name+'::resetPassword');
 
-        const user = await this.userRepository.findByResetToken(resetPasswordDto.token);
+        const passwordReset = await this.passwordResetRepository.findByToken(resetPasswordDto.token);
+        if (!passwordReset) {
+            throw new NotFoundException('Password reset token not found');
+        }
+
+        let user = await this.userRepository.findById(passwordReset.userId);
         if (!user) {
             throw new NotFoundException('User could not be found');
         }
-
         user.password = await bcrypt.hash(resetPasswordDto.password, 10);
-        user.resetToken = null;
-        user.resetTokenExpiry = null;
-        await this.userRepository.update(user);
+
+        try {
+            await this.prisma.$transaction(async (): Promise<void> => {
+                console.log('transaction started');
+                await this.passwordResetRepository.delete(passwordReset.id);
+
+                await this.userRepository.updatePassword(user);
+            });
+        } catch (error) {
+            this.logger.error(AuthService.name+'::resetPassword', error);
+            throw new InternalServerErrorException('Error resetting password');
+        }
 
         return {
             message: 'Password reset successful'

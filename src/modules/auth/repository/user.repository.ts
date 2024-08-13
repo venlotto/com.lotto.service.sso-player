@@ -83,18 +83,19 @@ export class UserRepository {
                 name: user.name,
                 email: user.email,
                 username: user.username,
-                resetToken: user.resetToken,
-                resetTokenExpiry: user.resetTokenExpiry,
             }
         });
     }
 
-    public async findByResetToken(token: string): Promise<any> {
-        this.logger.log(UserRepository.name+'::findByResetToken');
-        return this.prismaService.user.findFirst({
+    public async updatePassword(user: User): Promise<any> {
+        this.logger.log("UserRepository::updateLastLogin", {username: user.username});
+        return this.prismaService.user.update({
             where: {
-                resetToken: token
-            }
+                username: user.username,
+            },
+            data: {
+                password: user.password,
+            },
         });
     }
 }

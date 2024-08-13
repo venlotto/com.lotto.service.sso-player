@@ -8,8 +8,6 @@ export class User implements Prisma.UserCreateInput{
     password: string;
     username: string;
     lastLogin: Date | string | null;
-    resetToken: string | null;
-    resetTokenExpiry: Date | string | null;
     role: string;
     status: string;
 

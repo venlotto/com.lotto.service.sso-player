@@ -4,7 +4,7 @@ import {ApiProperty} from "@nestjs/swagger";
 export class EditProfileDto {
     @IsEmail()
     @IsNotEmpty()
-    @ApiProperty()
+    @ApiProperty({ required: false })
     @IsOptional()
     email: string | null;
 

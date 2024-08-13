@@ -14,6 +14,7 @@ import {RefreshTokenRepository} from "./repository/refresh-token.repository";
 import { MailerService } from './services/mailer.service';
 import * as nodemailer from 'nodemailer';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { PasswordResetRepository } from './repository/password-reset.repository';
 
 @Module({
     controllers: [
@@ -33,6 +34,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         AuthService,
         UserRepository,
         RefreshTokenRepository,
+        PasswordResetRepository,
         RegisterUserHandler,
         LocalStrategy,
         LocalAuthGuard,
