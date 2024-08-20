@@ -7,6 +7,7 @@ import {ConfigService} from "@nestjs/config";
 import {Logger, ValidationPipe, VersioningType} from "@nestjs/common";
 import { setupSwagger } from './swagger';
 import * as dotenv from 'dotenv';
+import { CorsMiddleware } from './middleware/cors.middleware';
 
 const logger = new Logger();
 
@@ -16,14 +17,9 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(
     AppModule,
     new ExpressAdapter(express()),
-    {
-      cors: {
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'
-      },
-    },
   );
   
+  app.use(new CorsMiddleware().use);
   const configService = app.get<ConfigService>(ConfigService);
   const port: number = configService.get<number>('app.http.port');
   const host: string = configService.get<string>('app.http.host');
