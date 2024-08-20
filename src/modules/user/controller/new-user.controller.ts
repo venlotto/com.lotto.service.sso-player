@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, InternalServerErrorException, Logger, Post, UseFilters } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, InternalServerErrorException, Logger, Post, UseFilters } from "@nestjs/common";
 import { AuthService } from "../../auth/services/auth.service";
 import { NewUserDto } from "../dto/new-user.dto";
 import { NewUserHandler } from "../handler/new-user.handler";
@@ -24,8 +24,8 @@ export class NewUserController {
         content: {}
     })
     @ApiResponse({
-        status: 400,
-        description: 'Bad Request',
+        status: 409,
+        description: 'Conflict',
     })
     @ApiResponse({
         status: 500,
@@ -45,8 +45,8 @@ export class NewUserController {
                 'refresh_token': await this.authService.generateRefreshToken(userPayload),
             };
         } catch (error) {
-            if (error instanceof BadRequestException) {
-                throw error; // Let the exception propagate, handled by the global exception filter
+            if (error instanceof ConflictException) {
+                throw error;
             } else {
                 this.logger.error(error.message, error.stack);
                 throw new InternalServerErrorException('An unexpected error occurred');

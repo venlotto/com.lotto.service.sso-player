@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { NewUserDto } from "../dto/new-user.dto";
 import { User } from "../model/user.model";
 import { UserRoles } from "../model/enum/user-roles.enum";
@@ -16,9 +16,9 @@ export class NewUserHandler {
         const criteria = [{ phone: newUserDto.phone }, { identification: newUserDto.identification }];
 
         if (await this.userRepository.findByCriteria(criteria)) {
-            const errorMessage = `User already registered`;
+            const errorMessage = `Request cannot be completed`;
             this.logger.error(errorMessage);
-            throw new BadRequestException(errorMessage);
+            throw new ConflictException(errorMessage);
         }
 
         try {
