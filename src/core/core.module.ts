@@ -9,10 +9,6 @@ import {BadRequestExceptionFilter} from "./interceptors/bad-request.interceptor"
     imports: [],
     providers: [
         {
-            provide: APP_INTERCEPTOR,
-            useClass: ResponseInterceptor,
-        },
-        {
             provide: APP_FILTER,
             useClass: GlobalExceptionFilter,
         },

@@ -1,24 +1,37 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { UserRepository } from '../auth/repository/user.repository';
-import * as bcrypt from 'bcrypt';
-import { User } from '../auth/model/user.model';
+import { ConfigService } from '@nestjs/config';
+import { User } from '../user/model/user.model';
+import { UserRoles } from '../user/model/enum/user-roles.enum';
+import { UserStatus } from '../user/model/enum/user-status.enum';
+import { UserRepositoryPrisma } from '../user/repository/user.repository.prisma';
 
 @Injectable()
 export class SeederService {
-    constructor(private readonly userRepository: UserRepository, private readonly logger: Logger) {}
+    constructor(
+        private readonly userRepository: UserRepositoryPrisma,
+        private readonly configService: ConfigService,
+        private readonly logger: Logger
+    ) {}
 
     public async seed() {
-        const hashedPassword = await bcrypt.hash('adminPassw0rd', 10);
-        const user = new User({
-            name: 'Admin User',
-            email: 'admin@admin.com',
-            password: hashedPassword,
-            username: 'admin',
-            role: 'admin',
-            status: 'active',
-        });
-        await this.userRepository.createUser(user);
+        this.logger.log('Starting seeding process...');
 
-        this.logger.log('Admin user created successfully.');
+        try {
+            const user = await User.newUser(
+                this.configService.get<string>('ADMIN_NAME'),
+                this.configService.get<string>('ADMIN_EMAIL'),
+                this.configService.get<string>('ADMIN_PASSWORD'),
+                this.configService.get<string>('ADMIN_USERNAME'),
+                UserRoles.ADMIN,
+                UserStatus.ACTIVE
+            );
+
+            await this.userRepository.save(user);
+
+            this.logger.log('Admin user created successfully.');
+        } catch (error) {
+            this.logger.error(`Error during seeding process: ${error.message}`);
+            throw error;
+        }
     }
 }

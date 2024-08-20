@@ -1,26 +1,27 @@
 import {Body, Controller, Get, InternalServerErrorException, Logger, Post, Put, Req, UseGuards} from "@nestjs/common";
-import {AuthService} from "../services/auth.service";
-import {RegisterUserDto} from "../dto/register-user.dto";
-import {RegisterUserHandler} from "../handler/register-user.handler";
+import {AuthService} from "../../auth/services/auth.service";
+import {NewUserDto} from "../dto/new-user.dto";
+import {NewUserHandler} from "../handler/new-user.handler";
 import {ApiBearerAuth, ApiResponse, ApiTags} from "@nestjs/swagger";
-import { ForgotPasswordDto } from "../dto/forgot-password.dto";
-import {ResetPasswordDto} from '../dto/reset-password.dto';
+import { ForgotPasswordDto } from "../../auth/dto/forgot-password.dto";
+import {ResetPasswordDto} from '../../auth/dto/reset-password.dto';
 import { JwtService } from "@nestjs/jwt";
-import { JwtAuthGuard } from "../guards/jwt-auth.guard";
-import { EditProfileDto } from "../dto/edit-profile.dto";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
+import { EditProfileDto } from "../../auth/dto/edit-profile.dto";
 
-@Controller('user')
-export class UserController {
+@ApiTags('User')
+@Controller({
+  version: '1',
+})
+export class ActivateUserController {
     public constructor(
         private readonly authService: AuthService,
-        private readonly handler: RegisterUserHandler,
+        private readonly handler: NewUserHandler,
         private readonly jwtService: JwtService,
-        private readonly logger: Logger = new Logger(UserController.name),
+        private readonly logger: Logger = new Logger(ActivateUserController.name),
     ) {
     }
 
-    @Post('/register')
-    @ApiTags('User')
     @ApiResponse({
         status: 201,
         description: 'Register user',
@@ -34,10 +35,11 @@ export class UserController {
         status: 500,
         description: 'Internal Server Error',
     })
-    @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
-    public async register(@Body() body: RegisterUserDto): Promise<any> {
-        this.logger.log(UserController.name, "register");
+    //@ApiBearerAuth()
+    @Post("new-user")
+    //@UseGuards(JwtAuthGuard)
+    public async new(@Body() body: NewUserDto): Promise<any> {
+        this.logger.log(ActivateUserController.name, "NewUser");
 
         let userId = null;
         try {
@@ -52,7 +54,6 @@ export class UserController {
         }
     }
 
-    @ApiTags('User')
     @Post('forgot-password')
     public async forgotPassword(@Body() dto: ForgotPasswordDto) {
     await this.authService.forgotPassword(dto.email);
@@ -65,7 +66,6 @@ export class UserController {
   }
 
   @Get('/profile')
-  @ApiTags('User')
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
@@ -82,7 +82,7 @@ export class UserController {
   })
   @UseGuards(JwtAuthGuard)
   public async getProfile(@Req() req) {
-    this.logger.log(UserController.name, "getProfile");
+    this.logger.log(ActivateUserController.name, "getProfile");
     try {
       const userId = this.jwtService.decode(req.headers.authorization.split(' ')[1])['userId'];
       const user = await this.authService.getUserProfile(userId);
@@ -93,7 +93,6 @@ export class UserController {
   }
 
   @Put('/profile')
-  @ApiTags('User')
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
@@ -110,7 +109,7 @@ export class UserController {
   })
   @UseGuards(JwtAuthGuard)
   public async editProfile(@Req() req, @Body() dto: EditProfileDto) {
-    this.logger.log(UserController.name, "editProfile");
+    this.logger.log(ActivateUserController.name, "editProfile");
     try {
       const userId = this.jwtService.decode(req.headers.authorization.split(' ')[1])['userId'];
       const updatedUser = await this.authService.updateUserProfile(userId, dto);

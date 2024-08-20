@@ -3,20 +3,23 @@ import {Match} from "../../../core/decorators/custom.decorator";
 import {ApiProperty} from "@nestjs/swagger";
 import { UserRoles } from "../model/enum/user-roles.enum";
 
-export class RegisterUserDto {
+export class ActivateUserDto {
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    @MaxLength(50)
+    readonly identification?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    @MaxLength(100)
+    readonly name?: string;
+
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
     readonly email: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    readonly username: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    readonly name: string;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -38,9 +41,20 @@ export class RegisterUserDto {
     readonly passwordConfirmation: string;
 
     @ApiProperty()
-    @IsEnum(UserRoles)
-    @IsOptional()
-    readonly role: string | null;
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(3)
+    @MaxLength(50)
+    readonly username: string;
 
-    status: string;
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    @MaxLength(20)
+    readonly phone?: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEnum(UserRoles)
+    readonly role: string;
 }

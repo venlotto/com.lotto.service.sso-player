@@ -24,7 +24,6 @@ async function bootstrap(): Promise<void> {
   const configService = app.get<ConfigService>(ConfigService);
   const port: number = configService.get<number>('app.http.port');
   const host: string = configService.get<string>('app.http.host');
-  const globalPrefix: string = configService.get<string>('app.globalPrefix');
   const versioningPrefix: string = configService.get<string>(
       'app.versioning.prefix',
   );
@@ -34,7 +33,6 @@ async function bootstrap(): Promise<void> {
   );
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix(globalPrefix);
   if (versionEnable) {
     app.enableVersioning({
       type: VersioningType.URI,

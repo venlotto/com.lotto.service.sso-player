@@ -1,24 +1,25 @@
 import {JwtService} from "@nestjs/jwt";
 import {BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
-import {User} from "../model/user.model";
-import {UserRepository} from "../repository/user.repository";
+import {User} from "../../user/model/user.model";
+import {UserRepositoryPrisma} from "../../user/repository/user.repository.prisma";
 import {RefreshToken} from "../model/refresh-token.model";
 import {RefreshTokenRepository} from "../repository/refresh-token.repository";
 import * as crypto from 'crypto';
 import { MailerService } from "./mailer.service";
 import { ResetPasswordDto } from "../dto/reset-password.dto";
 import { EditProfileDto } from "../dto/edit-profile.dto";
-import { UserStatus } from "../model/enum/user-status.enum";
+import { UserStatus } from "../../user/model/enum/user-status.enum";
 import { PasswordResetRepository } from "../repository/password-reset.repository";
 import { PasswordReset } from "../model/password-reset.model";
 import { PrismaService } from "src/common/services/prisma.service";
+import { UUID } from "src/common/value-object/uuid.value-object";
 
 @Injectable()
 export class AuthService {
     public constructor(
         private readonly jwtService: JwtService,
-        private readonly userRepository: UserRepository,
+        private readonly userRepository: UserRepositoryPrisma,
         private readonly refreshTokenRepository: RefreshTokenRepository,
         private readonly mailerService: MailerService,
         private readonly logger: Logger = new Logger(AuthService.name),
@@ -58,7 +59,7 @@ export class AuthService {
             status: userExists.status,
         };
 
-        await this.userRepository.updateLastLogin(userExists);
+        await this.userRepository.save(userExists);
 
         return {
             'access_token': await this.generateAccessToken(payload),
@@ -67,32 +68,38 @@ export class AuthService {
     }
 
     public async generateAccessToken(payload: any): Promise<any> {
-        return this.jwtService.sign(payload);
+        return this.jwtService.sign(payload,{ expiresIn: process.env.ACCESS_TOKEN_EXPIRES || '1h'})
     }
 
     public async register(user: User): Promise<any> {
         this.logger.log(AuthService.name, `Registering user ${user.username}`);
-        user.password = await bcrypt.hash(user.password, 10);
-        return this.userRepository.createUser(user);
+        return this.userRepository.save(user);
     }
 
-    public async generateRefreshToken(payload: any) {
-        this.logger.log('AuthService::generateRefreshToken', {username: payload.username});
-
+    public async generateRefreshToken(payload: any): Promise<string> {
+        this.logger.log('AuthService::generateRefreshToken', { user_id: payload.id });
+    
         const token = crypto.randomBytes(64).toString('hex');
+    
         const expiresAt = new Date();
-        expiresAt.setTime(expiresAt.getTime() + parseInt(process.env.REFRESH_EXPIRES, 10) * 1000);
-
+        // Parse the expiration time from environment variable in seconds
+        const seconds = parseInt(process.env.REFRESH_TOKEN_EXPIRES || '2592000', 10); // 30 days in seconds (30 * 24 * 60 * 60)
+        expiresAt.setTime(expiresAt.getTime() + seconds * 1000);
+    
+        console.log("Expires At:", expiresAt);
+    
         const refreshToken = new RefreshToken(
             expiresAt,
             token,
-            payload.userId
+            payload.id
         );
-
+    
         await this.refreshTokenRepository.create(refreshToken);
-
+    
         return token;
     }
+    
+    
 
     public async findRefreshToken(token: string) {
         this.logger.log('AuthService::findRefreshToken');
@@ -104,12 +111,12 @@ export class AuthService {
         await this.refreshTokenRepository.revokeRefreshToken(id)
     }
 
-    public async userExists(criteria: any): Promise<boolean> {
+    public async userExists(criteria: any): Promise<User[]> {
         this.logger.log('AuthService::userExists');
         return await this.userRepository.findByCriteria(criteria);
     }
 
-    public async refreshToken(userId: string): Promise<any> {
+    public async refreshToken(userId: UUID): Promise<any> {
         this.logger.log(AuthService.name+'::refreshToken')
 
         const user = await this.userRepository.findById(userId);
@@ -144,18 +151,14 @@ export class AuthService {
         }
 
         const passwordResetExists = await this.passwordResetRepository.findByUserId(user.id);
-        if (passwordResetExists && passwordResetExists.resetTokenExpiry > new Date()) {
+        if (passwordResetExists && passwordResetExists.reset_token_expiry > new Date()) {
             throw new BadRequestException('Password reset token already requested');
         }
 
         const resetToken = crypto.randomBytes(32).toString('hex');
         const resetTokenExpiry = new Date(Date.now() + 3600000);
 
-        const passwordReset = new PasswordReset({
-            userId: user.id,
-            resetToken: resetToken,
-            resetTokenExpiry: resetTokenExpiry,
-        });
+        const passwordReset = new PasswordReset(user.id, resetToken, resetTokenExpiry);
         await this.passwordResetRepository.create(passwordReset);
 
         // Send password reset email
@@ -170,18 +173,18 @@ export class AuthService {
             throw new NotFoundException('Password reset token not found');
         }
 
-        let user = await this.userRepository.findById(passwordReset.userId);
+        let user = await this.userRepository.findById(new UUID(passwordReset.user_id));
         if (!user) {
             throw new NotFoundException('User could not be found');
         }
-        user.password = await bcrypt.hash(resetPasswordDto.password, 10);
+        user.setNewPassword(resetPasswordDto.password);
 
         try {
             await this.prisma.$transaction(async (): Promise<void> => {
                 console.log('transaction started');
                 await this.passwordResetRepository.delete(passwordReset.id);
 
-                await this.userRepository.updatePassword(user);
+                await this.userRepository.save(user);
             });
         } catch (error) {
             this.logger.error(AuthService.name+'::resetPassword', error);
@@ -193,21 +196,20 @@ export class AuthService {
         };
     }
 
-    public async getUserProfile(userId: string): Promise<User> {
+    public async getUserProfile(userId: UUID): Promise<User> {
         this.logger.log(AuthService.name, "getUserProfile");
         return this.userRepository.findById(userId);
     }
 
-    public async updateUserProfile(userId: string, dto: EditProfileDto): Promise<User> {
+    public async updateUserProfile(userId: UUID, dto: EditProfileDto): Promise<User> {
         this.logger.log(AuthService.name, "updateUserProfile");
-        const user = await this.userRepository.findById(userId);
-        if (!user) {
+        const userExists = await this.userRepository.findById(userId);
+        if (!userExists) {
             throw new NotFoundException('User could not be found');
         }
-        user.email = dto.email;
-        user.name = dto.name;
-        user.username = dto.username;
+
+        const user = User.fromRepository(userId.toString(), dto.email, dto.name, dto.username, userExists.password, userExists.role, userExists.status);
         
-        return await this.userRepository.update(user);
+        return await this.userRepository.save(user);
     }
 }
