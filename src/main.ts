@@ -18,7 +18,7 @@ async function bootstrap(): Promise<void> {
     new ExpressAdapter(express()),
     {
       cors: {
-        origin: ['*'],
+        origin: '*',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
         credentials: true,
       },

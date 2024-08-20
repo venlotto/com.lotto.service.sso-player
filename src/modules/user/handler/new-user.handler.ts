@@ -16,7 +16,7 @@ export class NewUserHandler {
         const criteria = [{ phone: newUserDto.phone }, { identification: newUserDto.identification }];
 
         if (await this.userRepository.findByCriteria(criteria)) {
-            const errorMessage = `Request cannot be completed`;
+            const errorMessage = `request cannot be completed`;
             this.logger.error(errorMessage);
             throw new ConflictException(errorMessage);
         }
