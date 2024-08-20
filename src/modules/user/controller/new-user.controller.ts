@@ -5,12 +5,13 @@ import { NewUserHandler } from "../handler/new-user.handler";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "../model/user.model";
 import { HttpExceptionFilter } from "src/core/filters/http.exception.filters";
+import { GlobalExceptionFilter } from "src/exception-filters/exception.interceptor";
 
 @ApiTags('User')
 @Controller({
   version: '1',
 })
-@UseFilters(new HttpExceptionFilter()) 
+@UseFilters(new GlobalExceptionFilter()) 
 export class NewUserController {
     public constructor(
         private readonly handler: NewUserHandler,
