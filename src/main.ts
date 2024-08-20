@@ -19,8 +19,7 @@ async function bootstrap(): Promise<void> {
     {
       cors: {
         origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-        credentials: true,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'
       },
     },
   );
