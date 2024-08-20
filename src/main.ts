@@ -14,13 +14,17 @@ dotenv.config();
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(
-      AppModule,
-      new ExpressAdapter(express()),
-      {
-        cors: true,
+    AppModule,
+    new ExpressAdapter(express()),
+    {
+      cors: {
+        origin: ['*'],
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        credentials: true,
       },
+    },
   );
-
+  
   const configService = app.get<ConfigService>(ConfigService);
   const port: number = configService.get<number>('app.http.port');
   const host: string = configService.get<string>('app.http.host');

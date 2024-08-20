@@ -12,6 +12,8 @@ export class User {
   private _lastLogin: Date | string | null;
   private _role: UserRoles; 
   private _status: UserStatus;
+  private _identification: string | null; // now optional
+  private _phone: string | null; // now optional
 
   public static mapRole(role: string): UserRoles {
     if (!Object.values(UserRoles).includes(role as UserRoles)) {
@@ -28,6 +30,8 @@ export class User {
     username: string,
     role: UserRoles, 
     status: UserStatus,
+    identification: string | null = null,
+    phone: string | null = null,
     lastLogin: Date | string | null = null
   ) {
     this._id = id;
@@ -37,23 +41,25 @@ export class User {
     this._username = username || null;
     this._role = role;
     this._status = status;
+    this._identification = identification || null;
+    this._phone = phone || null;
     this._lastLogin = lastLogin;
   }
 
-  // Static factory method to create a new user with CREATED status
   public static async newUser(
     name: string,
     email: string,
     password: string,
     username: string,
     role: UserRoles,
+    identification: string | null = null,
+    phone: string | null = null,
     lastLogin: Date | string | null = null
   ): Promise<User> {
     const encryptedPassword = await bcrypt.hash(password, 10);
-    return new User(new UUID(), name, email, encryptedPassword, username, role, UserStatus.CREATED, lastLogin);
+    return new User(new UUID(), name, email, encryptedPassword, username, role, UserStatus.CREATED, identification, phone, lastLogin);
   }
 
-  // Static factory method to create a user from repository data
   public static fromRepository(
     id: string,
     name: string,
@@ -62,9 +68,11 @@ export class User {
     username: string,
     role: UserRoles,
     status: UserStatus,
+    identification: string | null = null,
+    phone: string | null = null,
     lastLogin: Date | string | null = null
   ): User {
-    return new User(new UUID(id), name, email, password, username, role, status, lastLogin);
+    return new User(new UUID(id), name, email, password, username, role, status, identification, phone, lastLogin);
   }
 
   public static toPayload(user: User): any {
@@ -75,6 +83,8 @@ export class User {
       username: user.username,
       role: user.role,
       status: user.status,
+      identification: user.identification,
+      phone: user.phone,
       lastLogin: user.lastLogin
     };
   }
@@ -86,7 +96,7 @@ export class User {
       throw new Error(`Failed to update password: ${error.message}`);
     }
   }
-  
+
   get id(): string {
     return this._id.toString(); 
   }
@@ -119,45 +129,14 @@ export class User {
     return this._status;
   }
 
-  /*
-  set name(value: string | null) {
-    if (value !== this._name) {
-      this._name = value;
-    }
+  get identification(): string | null {
+    return this._identification;
   }
 
-  set email(value: string | null) {
-    if (value !== this._email) {
-      this._email = value;
-    }
+  get phone(): string | null {
+    return this._phone;
   }
 
-  set password(value: string) {
-    if (value !== this._password) {
-      this._password = value;
-    }
-  }
-
-  set username(value: string | null) {
-    if (value !== this._username) {
-      this._username = value;
-    }
-  }
-
-  set role(value: UserRoles) {
-    if (value !== this._role) {
-      this._role = value;
-    }
-  }
-
-  set lastLogin(value: Date | string | null) {
-    if (value !== this._lastLogin) {
-      this._lastLogin = value;
-    }
-  }
-  */
-
-  // Status-specific methods
   blockUser(): void {
     this._setStatus(UserStatus.BLOCKED);
   }
@@ -170,7 +149,6 @@ export class User {
     this._setStatus(UserStatus.INACTIVE);
   }
 
-  // Private method to update status ensuring idempotency
   private _setStatus(newStatus: UserStatus): void {
     if (newStatus !== this._status) {
       this._status = newStatus;

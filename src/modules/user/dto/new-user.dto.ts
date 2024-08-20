@@ -36,11 +36,6 @@ export class NewUserDto {
     readonly password: string;
 
     @ApiProperty()
-    @IsNotEmpty()
-    @Match('password', { message: 'Password confirmation must match password' })
-    readonly passwordConfirmation: string;
-
-    @ApiProperty()
     @IsOptional()
     @IsString()
     @MinLength(3)

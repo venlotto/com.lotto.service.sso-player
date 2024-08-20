@@ -34,6 +34,8 @@ export class UserRepositoryPrisma implements UserRepository {
             user.username,
             mapEnum(UserRoles, user.role),
             mapEnum(UserStatus, user.status),
+            user.identification,
+            user.phone,
             user.last_login
         );
     }
@@ -57,6 +59,8 @@ export class UserRepositoryPrisma implements UserRepository {
             user.username,
             mapEnum(UserRoles, user.role),
             mapEnum(UserStatus, user.status),
+            user.identification,
+            user.phone,
             user.last_login
         );
     }
@@ -75,7 +79,9 @@ export class UserRepositoryPrisma implements UserRepository {
                 role: user.role,
                 status: user.status,
                 last_login: user.lastLogin,
-                password: user.password
+                password: user.password,
+                identification: user.identification,
+                phone: user.phone
             },
             create: {
                 id: user.id.toString(), 
@@ -85,7 +91,9 @@ export class UserRepositoryPrisma implements UserRepository {
                 username: user.username,
                 role: user.role,
                 status: user.status,
-                last_login: user.lastLogin
+                last_login: user.lastLogin,
+                identification: user.identification,
+                phone: user.phone
             },
         });
 
@@ -97,15 +105,14 @@ export class UserRepositoryPrisma implements UserRepository {
             upsertedUser.username,
             mapEnum(UserRoles, upsertedUser.role),
             mapEnum(UserStatus, upsertedUser.status),
+            upsertedUser.identification,
+            upsertedUser.phone,
             upsertedUser.last_login
         );
     }
 
     public async findByCriteria(criteria: any[]): Promise<User[] | null> {
         this.logger.log(UserRepositoryPrisma.name, "findByCriteria", {criteria});
-        console.log(criteria)
-        console.log("janez")
-        console.log("janez")
         const users = await this.prismaService.user.findMany({
             where: {
                 OR: criteria,
@@ -123,6 +130,8 @@ export class UserRepositoryPrisma implements UserRepository {
                 user.username,
                 mapEnum(UserRoles, user.role),
                 mapEnum(UserStatus, user.status),
+                user.identification,
+                user.phone,
                 user.last_login
             )
         );
@@ -147,6 +156,8 @@ export class UserRepositoryPrisma implements UserRepository {
             user.username,
             mapEnum(UserRoles, user.role),
             mapEnum(UserStatus, user.status),
+            user.identification,
+            user.phone,
             user.last_login
         );
     }
