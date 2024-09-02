@@ -67,31 +67,30 @@ export class AuthService {
 
     public async login(loginUserDto: LoginUserDto) {
         this.logger.log("AuthService::login", {username: loginUserDto.username});
-       
+       console.log(loginUserDto)
         let criteria = [];
         if (loginUserDto.identification) {
             criteria = [{ identification: loginUserDto.identification }];
+            console.log("sfafsafsa 111111")
         } else if (loginUserDto.phone) {
             criteria = [{ phone: loginUserDto.phone }];
+            console.log("sfafsafsa 22222")
         } else {
             throw new BadRequestException('Please provide either identification or phone.');
         }
-       
-        const users = await this.userRepository.findByCriteria(criteria);
 
+        const users = await this.userRepository.findByCriteria(criteria);
         if (!users) {
             throw new UnauthorizedException('Invalid login credentials');
         }
 
         const user = users[0];
-
         if (user.status === UserStatus.INACTIVE || user.status === UserStatus.BLOCKED) {
             this.logger.error("AuthService::login", {username: loginUserDto.username}, 'User is not active');
             throw new UnauthorizedException('User is not active');
         }
 
         await this.userRepository.save(user);
-
         const payload = {
             username: loginUserDto.username,
             sub: user.id,

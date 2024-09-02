@@ -21,16 +21,12 @@ export class NewUserDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsStrongPassword({
-        minLength: 8,
-        minLowercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-        minUppercase: 1,
-    }, {
-            message: 'Password must be at least 8 characters'
+    @MinLength(6, {
+        message: 'Password must be between 6 and 16 characters long.'
     })
-    @MaxLength(20)
+    @MaxLength(16, {
+        message: 'Password must be between 6 and 16 characters long.'
+    })
     readonly password: string;
 
     @ApiProperty()
