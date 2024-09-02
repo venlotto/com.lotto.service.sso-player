@@ -1,7 +1,5 @@
-import {IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsStrongPassword, Length, MaxLength, MinLength, Validate} from "class-validator";
-import {Match} from "../../../core/decorators/custom.decorator";
+import {IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, MaxLength, MinLength} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
-import { UserRoles } from "../model/enum/user-roles.enum";
 
 export class NewUserDto {
     @ApiProperty()

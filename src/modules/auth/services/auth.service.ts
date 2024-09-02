@@ -126,7 +126,7 @@ export class AuthService {
     
         const expiresAt = new Date();
         // Parse the expiration time from environment variable in seconds
-        const seconds = parseInt(process.env.REFRESH_TOKEN_EXPIRES || '2592000', 10); // 30 days in seconds (30 * 24 * 60 * 60)
+        const seconds = parseInt(process.env.REFRESH_TOKEN_EXPIRES || '2592000', 10); 
         expiresAt.setTime(expiresAt.getTime() + seconds * 1000);
     
     
@@ -135,8 +135,7 @@ export class AuthService {
             token,
             payload.userId
         );
-        console.log("REFRESK TOKEN:", refreshToken);
-    
+
         await this.refreshTokenRepository.create(refreshToken);
     
         return token;
