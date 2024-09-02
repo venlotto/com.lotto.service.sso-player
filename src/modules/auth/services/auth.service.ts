@@ -14,6 +14,7 @@ import { PasswordResetRepository } from "../repository/password-reset.repository
 import { PasswordReset } from "../model/password-reset.model";
 import { PrismaService } from "src/common/services/prisma.service";
 import { UUID } from "src/common/value-object/uuid.value-object";
+import { LoginUserDto } from "../dto/login-user.dto";
 
 @Injectable()
 export class AuthService {
@@ -28,40 +29,82 @@ export class AuthService {
     ) {
     }
 
-    public async validateUser(username: string, password: string): Promise<any> {
-        this.logger.log(AuthService.name, "validateUser", username);
-        const user: User = await this.userRepository.findByUsername(username);
-        if (user && await bcrypt.compare(password, user.password)) {
+    public async validateUser(loginDto: LoginUserDto): Promise<any> {
+        this.logger.log(AuthService.name, "validateUser", loginDto);
+        
+        let criteria = [];
+    
+        // Detect which field is provided and build the search criteria
+        if (loginDto.username) {
+            criteria = [ { username: loginDto.username } ];
+        } else if (loginDto.phone) {
+            criteria = [ { phone: loginDto.phone } ];
+        } else if (loginDto.identification) {
+            criteria = [ { identification: loginDto.identification } ];
+        } else {
+            throw new BadRequestException('Please provide either username, phone, or identification.');
+        }
+    
+        // Use findByCriteria to search for the user
+        const users = await this.userRepository.findByCriteria(criteria);
+        
+        // Assuming findByCriteria returns an array of users
+        if (!users || users.length === 0) {
+            throw new UnauthorizedException('Invalid login credentials');
+        }
+    
+        const user = users[0];
+    
+        if (await bcrypt.compare(loginDto.password, user.password)) {
             const { password, ...result } = user;
             return result;
+        } else {
+            throw new UnauthorizedException('Invalid password');
         }
-        return null;
     }
+    
+    
 
-    public async login(user: any) {
-        this.logger.log("AuthService::login", {username: user.username});
-        const username = user.username;
-        const userExists = await this.userRepository.findByUsername(username);
+    public async login(loginUserDto: LoginUserDto) {
+        this.logger.log("AuthService::login", {username: loginUserDto.username});
+       
+        let criteria = [];
+        if (loginUserDto.identification) {
+            criteria = [{ identification: loginUserDto.identification }];
+        } else if (loginUserDto.phone) {
+            criteria = [{ phone: loginUserDto.phone }];
+        } else {
+            throw new BadRequestException('Please provide either identification or phone.');
+        }
+       
+        const users = await this.userRepository.findByCriteria(criteria);
 
-        if (userExists.status === UserStatus.INACTIVE || userExists.status === UserStatus.BLOCKED) {
-            this.logger.error("AuthService::login", {username: user.username}, 'User is not active');
+        if (!users) {
+            throw new UnauthorizedException('Invalid login credentials');
+        }
+
+        const user = users[0];
+
+        if (user.status === UserStatus.INACTIVE || user.status === UserStatus.BLOCKED) {
+            this.logger.error("AuthService::login", {username: loginUserDto.username}, 'User is not active');
             throw new UnauthorizedException('User is not active');
         }
 
+        await this.userRepository.save(user);
+
         const payload = {
-            username: user.username,
+            username: loginUserDto.username,
             sub: user.id,
-            userId: userExists.id,
-            email: userExists.email,
-            name: userExists.name,
-            lastLogin: userExists.lastLogin,
-            role: userExists.role,
-            status: userExists.status,
+            userId: user.id,
+            email: user.email,
+            name: user.name,
+            lastLogin: user.lastLogin,
+            role: user.role,
+            status: user.status,
         };
 
-        await this.userRepository.save(userExists);
-
         return {
+            'user_id': user.id,
             'access_token': await this.generateAccessToken(payload),
             'refresh_token': await this.generateRefreshToken(payload),
         };
@@ -86,13 +129,13 @@ export class AuthService {
         const seconds = parseInt(process.env.REFRESH_TOKEN_EXPIRES || '2592000', 10); // 30 days in seconds (30 * 24 * 60 * 60)
         expiresAt.setTime(expiresAt.getTime() + seconds * 1000);
     
-        console.log("Expires At:", expiresAt);
     
         const refreshToken = new RefreshToken(
             expiresAt,
             token,
-            payload.id
+            payload.userId
         );
+        console.log("REFRESK TOKEN:", refreshToken);
     
         await this.refreshTokenRepository.create(refreshToken);
     
@@ -106,9 +149,9 @@ export class AuthService {
         return this.refreshTokenRepository.findByToken(token);
     }
 
-    public async revokeRefreshToken(id: number): Promise<any> {
+    public async revokeRefreshToken(token: string): Promise<any> {
         this.logger.log('AuthService::revokeRefreshToken');
-        await this.refreshTokenRepository.revokeRefreshToken(id)
+        await this.refreshTokenRepository.revokeRefreshToken(token)
     }
 
     public async userExists(criteria: any): Promise<User[]> {

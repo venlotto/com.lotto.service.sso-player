@@ -4,14 +4,11 @@ import { NewUserDto } from "../dto/new-user.dto";
 import { NewUserHandler } from "../handler/new-user.handler";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "../model/user.model";
-import { HttpExceptionFilter } from "src/core/filters/http.exception.filters";
-import { GlobalExceptionFilter } from "src/exception-filters/exception.interceptor";
 
 @ApiTags('User')
 @Controller({
   version: '1',
 })
-@UseFilters(new GlobalExceptionFilter()) 
 export class NewUserController {
     public constructor(
         private readonly handler: NewUserHandler,
@@ -38,8 +35,8 @@ export class NewUserController {
 
         try {
             const user = await this.handler.handle(newUserDto);
-
             const userPayload = await User.toPayload(user);
+
             return {
                 'user_id': user.id,
                 'access_token': await this.authService.generateAccessToken(userPayload),

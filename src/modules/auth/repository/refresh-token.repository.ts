@@ -34,11 +34,11 @@ export class RefreshTokenRepository implements IRefreshTokenRepository {
             : null;
     }
 
-    public async revokeRefreshToken(id: number): Promise<void> {
-        this.logger.log('RefreshTokenRepository::revokeRefreshToken', { id });
+    public async revokeRefreshToken(token: string): Promise<void> {
+        this.logger.log('RefreshTokenRepository::revokeRefreshToken', { token });
 
         await this.prismaService.refresh_token.delete({
-            where: { id },
+            where: { token },
         });
     }
 }

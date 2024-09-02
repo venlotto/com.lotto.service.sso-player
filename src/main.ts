@@ -23,23 +23,17 @@ async function bootstrap(): Promise<void> {
   const configService = app.get<ConfigService>(ConfigService);
   const port: number = configService.get<number>('app.http.port');
   const host: string = configService.get<string>('app.http.host');
-  const versioningPrefix: string = configService.get<string>(
-      'app.versioning.prefix',
-  );
-  const version: string = configService.get<string>('app.versioning.version');
-  const versionEnable: string = configService.get<string>(
-      'app.versioning.enable',
-  );
+  const version: string = configService.get<string>('api.version');
+  const versioningPrefix: string = configService.get<string>('api.version.prefix');
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: version,
+    prefix: versioningPrefix,
+  });
+
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
-  if (versionEnable) {
-    app.enableVersioning({
-      type: VersioningType.URI,
-      defaultVersion: version,
-      prefix: versioningPrefix,
-    });
-  }
-  await setupSwagger(app);
+  setupSwagger(app);
 
   await app.listen(port, host);
   logger.log(

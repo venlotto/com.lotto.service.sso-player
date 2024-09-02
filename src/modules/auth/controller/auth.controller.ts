@@ -1,7 +1,5 @@
-import {Body, Controller, Logger, LoggerService, Post, UnauthorizedException, UseGuards} from "@nestjs/common";
+import {Body, Controller, Logger, Post, UnauthorizedException, Version} from "@nestjs/common";
 import {AuthService} from "../services/auth.service";
-import {LocalAuthGuard} from "../guards/local-auth.guard";
-import * as process from "node:process";
 import {ApiTags} from "@nestjs/swagger";
 import {LoginUserDto} from "../dto/login-user.dto";
 import {RefreshTokenDto} from "../dto/refresh-token.dto";
@@ -18,15 +16,14 @@ import { UUID } from "src/common/value-object/uuid.value-object";
     ) {
     }
 
-    @UseGuards(LocalAuthGuard)
     @Post('login')
-    public async login(@Body() dto: LoginUserDto): Promise<any> {
+    public async login(@Body() loginUserDto: LoginUserDto): Promise<any> {
         this.logger.log('Login attempt');
-        const login = await this.authService.login(dto);
+        const login = await this.authService.login(loginUserDto);
 
         return {
+            user_id: login.user_id,
             access_token: login.access_token,
-            expires_in: process.env.JWT_EXPIRES,
             refresh_token: login.refresh_token,
         }
     }
@@ -44,7 +41,7 @@ import { UUID } from "src/common/value-object/uuid.value-object";
         const currentTime = new Date().getTime();
         const expiresAt = new Date(refreshToken.expires_at).getTime();
         if (expiresAt < currentTime) {
-            await this.authService.revokeRefreshToken(refreshToken.id);
+            await this.authService.revokeRefreshToken(refreshToken.token);
             throw new UnauthorizedException('Refresh token expired');
         }
 
@@ -52,8 +49,8 @@ import { UUID } from "src/common/value-object/uuid.value-object";
         const refresh = await this.authService.refreshToken(new UUID(refreshToken.user_id));
 
         return {
+            user_id: refreshToken.user_id,
             access_token: refresh.access_token,
-            expires_in: process.env.JWT_EXPIRES,
             refresh_token: refresh.refresh_token,
         };
     }

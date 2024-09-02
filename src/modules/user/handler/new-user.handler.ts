@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { ConflictException, Inject, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { NewUserDto } from "../dto/new-user.dto";
 import { User } from "../model/user.model";
 import { UserRoles } from "../model/enum/user-roles.enum";
@@ -31,6 +31,8 @@ export class NewUserHandler {
                 newUserDto.identification,
                 newUserDto.phone
             );  
+
+    
             return await this.userRepository.save(newUser);
         } catch (error) {
             this.logger.error(error.message, error.stack);
