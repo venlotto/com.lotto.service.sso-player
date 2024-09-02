@@ -77,7 +77,7 @@ export class User {
 
   public static toPayload(user: User): any {
     return {
-      userId: user.id,
+      id: user.id,
       name: user.name,
       email: user.email,
       username: user.username,

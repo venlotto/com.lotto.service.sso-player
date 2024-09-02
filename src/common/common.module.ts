@@ -19,8 +19,8 @@ import { AuthService } from 'src/modules/auth/services/auth.service';
         }),
         JwtModule.registerAsync({
             useFactory: () => ({
-                secret: process.env.JWT_SECRET || '48da21ccb2abd9a2e756228b42d15fdbe39c00f1',
-                signOptions: { expiresIn: process.env.JWT_EXPIRES + 's' },
+                secret: process.env.JWT_SECRET,
+                signOptions: { expiresIn: '48h' },
             }),
         }),
     ],

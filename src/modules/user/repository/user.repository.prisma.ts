@@ -118,8 +118,7 @@ export class UserRepositoryPrisma implements UserRepository {
                 OR: criteria,
             },
         });
-        console.log("criteriaaaaaaaa", criteria)
-        console.log("users", users)
+
         if (users.length === 0) return null;
 
         return users.map(user => 

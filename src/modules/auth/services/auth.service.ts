@@ -67,14 +67,12 @@ export class AuthService {
 
     public async login(loginUserDto: LoginUserDto) {
         this.logger.log("AuthService::login", {username: loginUserDto.username});
-       console.log(loginUserDto)
+     
         let criteria = [];
         if (loginUserDto.identification) {
             criteria = [{ identification: loginUserDto.identification }];
-            console.log("sfafsafsa 111111")
         } else if (loginUserDto.phone) {
             criteria = [{ phone: loginUserDto.phone }];
-            console.log("sfafsafsa 22222")
         } else {
             throw new BadRequestException('Please provide either identification or phone.');
         }
@@ -91,16 +89,7 @@ export class AuthService {
         }
 
         await this.userRepository.save(user);
-        const payload = {
-            username: loginUserDto.username,
-            sub: user.id,
-            userId: user.id,
-            email: user.email,
-            name: user.name,
-            lastLogin: user.lastLogin,
-            role: user.role,
-            status: user.status,
-        };
+        const payload = User.toPayload(user)
 
         return {
             'user_id': user.id,
@@ -110,7 +99,7 @@ export class AuthService {
     }
 
     public async generateAccessToken(payload: any): Promise<any> {
-        return this.jwtService.sign(payload,{ expiresIn: process.env.ACCESS_TOKEN_EXPIRES || '1h'})
+        return this.jwtService.sign(payload,{ expiresIn: process.env.ACCESS_TOKEN_EXPIRES})
     }
 
     public async register(user: User): Promise<any> {
@@ -125,14 +114,13 @@ export class AuthService {
     
         const expiresAt = new Date();
         // Parse the expiration time from environment variable in seconds
-        const seconds = parseInt(process.env.REFRESH_TOKEN_EXPIRES || '2592000', 10); 
+        const seconds = parseInt(process.env.REFRESH_TOKEN_EXPIRES); 
         expiresAt.setTime(expiresAt.getTime() + seconds * 1000);
-    
     
         const refreshToken = new RefreshToken(
             expiresAt,
             token,
-            payload.userId
+            payload.id
         );
 
         await this.refreshTokenRepository.create(refreshToken);
@@ -142,7 +130,7 @@ export class AuthService {
     
     
 
-    public async findRefreshToken(token: string) {
+    public async findRefreshToken(token: string): Promise<RefreshToken | null> {
         this.logger.log('AuthService::findRefreshToken');
         return this.refreshTokenRepository.findByToken(token);
     }
@@ -166,16 +154,7 @@ export class AuthService {
             throw new UnauthorizedException('User is not active');
         }
 
-        const payload = {
-            username: user.username,
-            sub: user.id,
-            userId: user.id,
-            email: user.email,
-            name: user.name,
-            lastLogin: user.lastLogin,            
-            role: user.role,
-            status: user.status,
-        };
+        const payload = User.toPayload(user)
 
         return {
             'access_token': await this.generateAccessToken(payload),
@@ -222,9 +201,7 @@ export class AuthService {
 
         try {
             await this.prisma.$transaction(async (): Promise<void> => {
-                console.log('transaction started');
                 await this.passwordResetRepository.delete(passwordReset.id);
-
                 await this.userRepository.save(user);
             });
         } catch (error) {

@@ -5,13 +5,13 @@ import { UserRepository } from './repository/user.repository.interface';
 import { CommonModule } from 'src/common/common.module';
 import { NewUserHandler } from './handler/new-user.handler';
 import { NewUserController } from './controller/new-user.controller';
+import { MeController } from './controller/me.controller';
 
 @Module({
-  controllers: [NewUserController],
+  controllers: [NewUserController, MeController],
   imports: [
     AuthModule,
     CommonModule,
-
   ],
   providers: [
     NewUserHandler,
