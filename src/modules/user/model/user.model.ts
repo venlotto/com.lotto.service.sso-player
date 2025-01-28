@@ -7,6 +7,7 @@ interface TokenPayload {
   sub: string;
   username: string;
   role: string | null;
+  permissions: string[];
   [key: string]: unknown;
 }
 
@@ -19,6 +20,7 @@ export class User {
   private _status: UserStatus;
   private _createdAt: Date;
   private _updatedAt: Date;
+  private _permissions: string[];
 
   private constructor(
     id: UUID,
@@ -29,6 +31,7 @@ export class User {
     lastLogin: Date | string | null = null,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
+    permissions: string[] = []
   ) {
     this._id = id;
     this._password = password;
@@ -38,6 +41,7 @@ export class User {
     this._lastLogin = lastLogin;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
+    this._permissions = permissions;
   }
 
   public static async newUser(
@@ -45,6 +49,7 @@ export class User {
     username: string,
     roleName: string | null = null,
     lastLogin: Date | string | null = null,
+    permissions: string[] = []
   ): Promise<User> {
     const encryptedPassword = await bcrypt.hash(password, 10);
     return new User(
@@ -54,6 +59,9 @@ export class User {
       roleName,
       UserStatus.ACTIVE,
       lastLogin,
+      new Date(),
+      new Date(),
+      permissions
     );
   }
 
@@ -66,6 +74,7 @@ export class User {
     lastLogin: Date | string | null = null,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
+    permissions: string[] = []
   ): User {
     return new User(
       new UUID(id),
@@ -76,6 +85,7 @@ export class User {
       lastLogin,
       createdAt,
       updatedAt,
+      permissions
     );
   }
 
@@ -84,6 +94,7 @@ export class User {
       sub: user.id,
       username: user.username || "",
       role: user.roleName,
+      permissions: user.permissions,
     };
   }
 
@@ -125,6 +136,10 @@ export class User {
 
   get updatedAt(): Date {
     return this._updatedAt;
+  }
+
+  get permissions(): string[] {
+    return this._permissions;
   }
 
   blockUser(): void {

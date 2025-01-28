@@ -8,7 +8,6 @@ import {
   forwardRef,
 } from "@nestjs/common";
 
-import { AuthService } from "./auth.service";
 import { PermissionService } from "./permission.service";
 import { RoleService } from "./role.service";
 import { UUID } from "../../../common/value-object/uuid.value-object";

@@ -20,9 +20,13 @@ export class UserRepositoryPrisma implements IUserRepository {
       where: { id },
       include: {
         role: {
-          select: {
-            name: true,
-          },
+          include: {
+            permissions: {
+              include: {
+                permission: true
+              }
+            }
+          }
         },
       },
     });
@@ -38,6 +42,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       user.last_login,
       user.created_at,
       user.updated_at,
+      user.role?.permissions.map(rp => rp.permission.name) || []
     );
   }
 
@@ -48,9 +53,13 @@ export class UserRepositoryPrisma implements IUserRepository {
       where: { username },
       include: {
         role: {
-          select: {
-            name: true,
-          },
+          include: {
+            permissions: {
+              include: {
+                permission: true
+              }
+            }
+          }
         },
       },
     });
@@ -68,6 +77,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       user.last_login,
       user.created_at,
       user.updated_at,
+      user.role?.permissions.map(rp => rp.permission.name) || []
     );
   }
 
