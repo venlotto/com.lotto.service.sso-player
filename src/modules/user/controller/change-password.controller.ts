@@ -7,7 +7,6 @@ import {
   UseGuards,
   UnauthorizedException,
   InternalServerErrorException,
-  ForbiddenException,
   Param,
 } from "@nestjs/common";
 import {

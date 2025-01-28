@@ -7,7 +7,6 @@ import { UserRepositoryPrisma } from "./repository/user.repository.prisma";
 import { UserService } from "./services/user.service";
 import { AuthModule } from "../auth/auth.module";
 import { PrismaModule } from "../prisma/prisma.module";
-import { UserManagementController } from "./controller/user-management.controller";
 
 @Module({
   imports: [
@@ -18,7 +17,6 @@ import { UserManagementController } from "./controller/user-management.controlle
     NewUserController,
     ChangePasswordController,
     ChangeStatusController,
-    UserManagementController,
   ],
   providers: [
     UserService,

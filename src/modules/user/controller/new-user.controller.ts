@@ -36,7 +36,6 @@ import { UserService } from "../services/user.service";
 export class NewUserController {
   public constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService,
     private readonly logger: Logger = new Logger(NewUserController.name),
   ) {}
 
@@ -147,8 +146,6 @@ export class NewUserController {
       return {
         user_id: user.id,
         username: user.username,
-        access_token: await this.authService.generateAccessToken(userPayload),
-        refresh_token: await this.authService.generateRefreshToken(userPayload),
       };
     } catch (error) {
       if (error instanceof ConflictException) {

@@ -66,9 +66,9 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/v1/auth/refresh-token",
+              "raw": "{{baseUrl}}/v1/auth/refreshToken",
               "host": ["{{baseUrl}}"],
-              "path": ["v1", "auth", "refresh-token"]
+              "path": ["v1", "auth", "refreshToken"]
             },
             "description": "Get new access token using refresh token"
           }
