@@ -166,6 +166,27 @@ Get a new access token using a refresh token.
 }
 ```
 
+#### POST /auth/logout
+Invalidate the current session by revoking the refresh token. Requires authentication.
+
+**Request:**
+```json
+{
+  "refresh_token": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Logout successful",
+  "status_code": 200,
+  "meta": {
+    "correlation_id": "string"
+  }
+}
+```
+
 ### User Management
 
 #### POST /users/newUser

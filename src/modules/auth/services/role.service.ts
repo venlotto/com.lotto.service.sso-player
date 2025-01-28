@@ -21,7 +21,7 @@ export class RoleService {
   async createRole(dto: CreateRoleDto, correlationId: string) {
     this.logger.log("Creating role", { correlationId, name: dto.name });
 
-    const existingRole = await this.prisma.role.findUnique({
+    const existingRole = await this.prisma.roles.findUnique({
       where: { name: dto.name },
     });
 
@@ -37,7 +37,7 @@ export class RoleService {
       });
     }
 
-    return this.prisma.role.create({
+    return this.prisma.roles.create({
       data: dto,
     });
   }
@@ -49,7 +49,7 @@ export class RoleService {
   ): Promise<Role> {
     this.logger.log("Assigning permissions to role", { correlationId, roleId });
 
-    const role = await this.prisma.role.findUnique({
+    const role = await this.prisma.roles.findUnique({
       where: { id: roleId },
     });
 
@@ -62,7 +62,7 @@ export class RoleService {
     }
 
     // Verify all permissions exist
-    const permissions = await this.prisma.permission.findMany({
+    const permissions = await this.prisma.permissions.findMany({
       where: { id: { in: dto.permission_ids } },
     });
 
@@ -75,27 +75,42 @@ export class RoleService {
     }
 
     // Remove existing permissions
-    await this.prisma.rolePermission.deleteMany({
-      where: { roleId },
+    await this.prisma.rolepermissions.deleteMany({
+      where: { role_id: roleId },
     });
 
     // Add new permissions
     const rolePermissions = dto.permission_ids.map((permissionId) => ({
-      roleId,
-      permissionId,
+      role_id: roleId,
+      permission_id: permissionId,
     }));
 
-    await this.prisma.rolePermission.createMany({
+    await this.prisma.rolepermissions.createMany({
       data: rolePermissions,
     });
 
-    return this.getRoleWithPermissions(roleId, correlationId);
+    const updatedRole = await this.getRoleWithPermissions(roleId, correlationId);
+    
+    return new Role({
+      id: updatedRole.id,
+      name: updatedRole.name,
+      description: updatedRole.description,
+      createdAt: updatedRole.created_at,
+      updatedAt: updatedRole.updated_at,
+      permissions: updatedRole.permissions.map(rp => ({
+        permission: {
+          id: rp.permission.id,
+          name: rp.permission.name,
+          description: rp.permission.description
+        }
+      }))
+    });
   }
 
   async getRoleWithPermissions(roleId: string, correlationId: string) {
     this.logger.log("Getting role with permissions", { correlationId, roleId });
 
-    const role = await this.prisma.role.findUnique({
+    const role = await this.prisma.roles.findUnique({
       where: { id: roleId },
       include: {
         permissions: {
@@ -120,7 +135,7 @@ export class RoleService {
   async getAllRoles(correlationId: string) {
     this.logger.log("Getting all roles", { correlationId });
 
-    return this.prisma.role.findMany({
+    return this.prisma.roles.findMany({
       include: {
         permissions: {
           include: {
@@ -137,7 +152,7 @@ export class RoleService {
   ): Promise<void> {
     this.logger.log("Validating role exists", { correlationId, roleName });
 
-    const role = await this.prisma.role.findUnique({
+    const role = await this.prisma.roles.findUnique({
       where: { name: roleName },
     });
 

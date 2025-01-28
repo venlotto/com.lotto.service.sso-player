@@ -1,7 +1,7 @@
 import { RefreshToken } from "../model/refresh-token.model";
 
 export interface IRefreshTokenRepository {
-  create(refreshToken: RefreshToken): Promise<void>;
+  save(refreshToken: RefreshToken): Promise<void>;
   findByToken(token: string): Promise<RefreshToken | null>;
-  revokeRefreshToken(id: string): Promise<void>;
+  delete(token: string): Promise<void>;
 }

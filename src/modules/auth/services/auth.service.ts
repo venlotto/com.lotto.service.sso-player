@@ -144,7 +144,7 @@ export class AuthService {
       new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     );
 
-    await this.refreshTokenRepository.create(refreshToken);
+    await this.refreshTokenRepository.save(refreshToken);
 
     return refreshToken.token;
   }
@@ -154,9 +154,8 @@ export class AuthService {
     return this.refreshTokenRepository.findByToken(token);
   }
 
-  public async revokeRefreshToken(token: string): Promise<void> {
-    this.logger.log("AuthService::revokeRefreshToken");
-    await this.refreshTokenRepository.revokeRefreshToken(token);
+  public async revokeToken(token: string): Promise<void> {
+    await this.refreshTokenRepository.delete(token);
   }
 
   public async refreshToken(userId: UUID): Promise<TokenResponse> {

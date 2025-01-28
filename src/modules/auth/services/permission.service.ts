@@ -13,7 +13,7 @@ export class PermissionService {
   async createPermission(dto: CreatePermissionDto, correlationId: string) {
     this.logger.log("Creating permission", { correlationId, name: dto.name });
 
-    const existingPermission = await this.prisma.permission.findUnique({
+    const existingPermission = await this.prisma.permissions.findUnique({
       where: { name: dto.name },
     });
 
@@ -29,25 +29,14 @@ export class PermissionService {
       });
     }
 
-    return this.prisma.permission.create({
-      data: {
-        name: dto.name,
-        description: dto.description,
-      },
+    return this.prisma.permissions.create({
+      data: dto,
     });
   }
 
   async getAllPermissions(correlationId: string) {
     this.logger.log("Getting all permissions", { correlationId });
 
-    return this.prisma.permission.findMany({
-      include: {
-        roles: {
-          include: {
-            role: true,
-          },
-        },
-      },
-    });
+    return this.prisma.permissions.findMany({});
   }
 }

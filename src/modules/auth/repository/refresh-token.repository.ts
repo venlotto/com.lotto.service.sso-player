@@ -6,43 +6,45 @@ import { RefreshToken } from "../model/refresh-token.model";
 
 @Injectable()
 export class RefreshTokenRepository implements IRefreshTokenRepository {
-  public constructor(
+  constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger = new Logger(RefreshTokenRepository.name),
   ) {}
 
-  public async create(refreshToken: RefreshToken): Promise<void> {
-    this.logger.log("RefreshTokenRepository::create", { refreshToken });
+  public async save(refreshToken: RefreshToken): Promise<void> {
+    this.logger.log("RefreshTokenRepository::save");
 
-    await this.prismaService.refresh_token.create({
+    await this.prismaService.refresh_tokens.create({
       data: {
         token: refreshToken.token,
-        expires_at: refreshToken.expires_at,
         user_id: refreshToken.userId,
+        expires_at: refreshToken.expires_at,
       },
     });
   }
 
   public async findByToken(token: string): Promise<RefreshToken | null> {
-    this.logger.log("RefreshTokenRepository::findByToken", { token });
+    this.logger.log("RefreshTokenRepository::findByToken");
 
-    const foundToken = await this.prismaService.refresh_token.findFirst({
+    const foundToken = await this.prismaService.refresh_tokens.findFirst({
       where: { token },
     });
 
-    return foundToken
-      ? new RefreshToken(
-          foundToken.token,
-          foundToken.user_id,
-          foundToken.expires_at,
-        )
-      : null;
+    if (!foundToken) {
+      return null;
+    }
+
+    return new RefreshToken(
+      foundToken.token,
+      foundToken.user_id,
+      foundToken.expires_at,
+    );
   }
 
-  public async revokeRefreshToken(token: string): Promise<void> {
-    this.logger.log("RefreshTokenRepository::revokeRefreshToken", { token });
+  public async delete(token: string): Promise<void> {
+    this.logger.log("RefreshTokenRepository::delete");
 
-    await this.prismaService.refresh_token.delete({
+    await this.prismaService.refresh_tokens.delete({
       where: { token },
     });
   }

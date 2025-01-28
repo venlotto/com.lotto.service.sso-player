@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-export class RefreshToken implements Prisma.refresh_tokenCreateInput {
+export class RefreshToken implements Prisma.refresh_tokensCreateInput {
   id: string;
   expires_at: Date;
   token: string;

@@ -16,7 +16,7 @@ export class UserRepositoryPrisma implements IUserRepository {
   public async findById(id: string): Promise<User | null> {
     this.logger.log("UserRepository::findById", { id });
 
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.users.findUnique({
       where: { id },
       include: {
         role: {
@@ -44,7 +44,7 @@ export class UserRepositoryPrisma implements IUserRepository {
   public async findByUsername(username: string): Promise<User | null> {
     this.logger.log("UserRepository::findByUsername", { username });
 
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.users.findUnique({
       where: { username },
       include: {
         role: {
@@ -74,7 +74,7 @@ export class UserRepositoryPrisma implements IUserRepository {
   public async findByCriteria(criteria: any): Promise<User[] | null> {
     this.logger.log("UserRepository::findByCriteria", { criteria });
 
-    const users = await this.prismaService.user.findMany({
+    const users = await this.prismaService.users.findMany({
       where: criteria,
       include: {
         role: {
@@ -106,7 +106,7 @@ export class UserRepositoryPrisma implements IUserRepository {
   public async save(user: User): Promise<User> {
     this.logger.log("UserRepository::save", { user });
 
-    const savedUser = await this.prismaService.user.upsert({
+    const savedUser = await this.prismaService.users.upsert({
       where: { id: user.id },
       create: {
         id: user.id,
@@ -161,7 +161,7 @@ export class UserRepositoryPrisma implements IUserRepository {
     hashedPassword: string,
   ): Promise<void> {
     this.logger.log("UserRepository::updatePassword", { userId });
-    await this.prismaService.user.update({
+    await this.prismaService.users.update({
       where: { id: userId },
       data: { password: hashedPassword },
     });
@@ -169,7 +169,7 @@ export class UserRepositoryPrisma implements IUserRepository {
 
   public async updateStatus(userId: string, status: UserStatus): Promise<User> {
     this.logger.log("UserRepository::updateStatus", { userId, status });
-    const updatedUser = await this.prismaService.user.update({
+    const updatedUser = await this.prismaService.users.update({
       where: { id: userId },
       data: { status },
       include: {

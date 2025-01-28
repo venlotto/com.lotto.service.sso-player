@@ -15,7 +15,8 @@ model users {
   status      String
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
-  role        roles?
+  role_id     String?
+  role        roles?    @relation(fields: [role_id], references: [id])
 }
 
 model refresh_tokens {

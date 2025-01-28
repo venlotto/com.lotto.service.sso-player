@@ -10,7 +10,7 @@ export class RefreshTokenService {
 
   async create(token: string, userId: string, expiresAt: Date) {
     this.logger.log("Creating refresh token", { userId });
-    return this.prisma.refresh_token.create({
+    return this.prisma.refresh_tokens.create({
       data: {
         token,
         user_id: userId,
@@ -20,19 +20,19 @@ export class RefreshTokenService {
   }
 
   async findByToken(token: string) {
-    return this.prisma.refresh_token.findUnique({
+    return this.prisma.refresh_tokens.findUnique({
       where: { token },
     });
   }
 
   async delete(token: string) {
-    return this.prisma.refresh_token.delete({
+    return this.prisma.refresh_tokens.delete({
       where: { token },
     });
   }
 
   async deleteAllForUser(userId: string) {
-    return this.prisma.refresh_token.deleteMany({
+    return this.prisma.refresh_tokens.deleteMany({
       where: { user_id: userId },
     });
   }

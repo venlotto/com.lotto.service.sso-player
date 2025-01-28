@@ -66,7 +66,7 @@ export class BootstrapService implements OnModuleInit {
     const bootstrapCorrelationId = `${new UUID().toString()}`;
 
     // Check if system is already bootstrapped
-    const adminRole = await this.prisma.role.findFirst({
+    const adminRole = await this.prisma.roles.findFirst({
       where: { name: "admin" },
     });
 
