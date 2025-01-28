@@ -7,32 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id                    String    @id @default(uuid())
-  password              String
-  username              String?   @unique
-  last_login            DateTime?
-  status                String
-  created_at            DateTime  @default(now())
-  updated_at            DateTime  @updatedAt
-  user_payment_methods  user_payment_method[]
-  roleId                String?
-  role                  Role?     @relation(fields: [roleId], references: [id])
+model users {
+  id          String    @id @default(uuid())
+  password    String
+  username    String?   @unique
+  last_login  DateTime?
+  status      String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  role        roles?
 }
 
-model user_payment_method {
-  id              String    @id @default(uuid())
-  user_id         String  
-  payment_method  String
-  is_default      Boolean   @default(false)
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @updatedAt
-  user            user      @relation(fields: [user_id], references: [id])
-
-  @@index([user_id])
-}
-
-model refresh_token {
+model refresh_tokens {
   id          Int      @id @default(autoincrement())
   token       String   @unique
   user_id     String
@@ -41,32 +27,32 @@ model refresh_token {
   updated_at  DateTime @updatedAt
 }
 
-model Permission {
-  id          String        @id @default(uuid())
-  name        String        @unique
-  description String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  roles       RolePermission[]
+model permissions {
+  id            String           @id @default(uuid())
+  name          String           @unique
+  description   String?
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @updatedAt
+  roles         rolepermissions[]
 }
 
-model Role {
-  id          String        @id @default(uuid())
-  name        String        @unique
-  description String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  permissions RolePermission[]
-  users       user[]
+model roles {
+  id            String           @id @default(uuid())
+  name          String           @unique
+  description   String?
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @updatedAt
+  permissions   rolepermissions[]
+  users         users[]
 }
 
-model RolePermission {
-  id           String     @id @default(uuid())
-  roleId       String
-  permissionId String
-  createdAt    DateTime   @default(now())
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+model rolepermissions {
+  id            String       @id @default(uuid())
+  role_id       String
+  permission_id String
+  created_at    DateTime     @default(now())
+  role          roles        @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission    permissions  @relation(fields: [permission_id], references: [id], onDelete: Cascade)
 
-  @@unique([roleId, permissionId])
+  @@unique([role_id, permission_id])
 }
