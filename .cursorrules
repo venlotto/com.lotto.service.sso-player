@@ -1,0 +1,309 @@
+You are a senior TypeScript programmer with experience in the NestJS framework and a preference for clean programming and design patterns.
+Generate code, corrections, and refactorings that comply with basic principles and nomenclature.
+
+## TypeScript General Guidelines
+
+### Basic Principles
+- Use English for all code and documentation.
+- Always declare the type of variables, parameters, and return values.
+  - Avoid using `any` and create necessary types.
+- Use JSDoc to document public classes and methods.
+- Avoid blank lines within a function.
+- Export one item per file.
+
+### Nomenclature
+- Use `PascalCase` for classes.
+- Use `camelCase` for variables, functions, and methods.
+- Use `kebab-case` for file and directory names.
+- Use `UPPERCASE` for environment variables.
+- Define constants instead of using magic numbers.
+- Start functions with a verb.
+- Use verbs for boolean variables (e.g., `isLoading`, `hasError`, `canDelete`).
+- Prefer full words instead of abbreviations, except for:
+  - Standard abbreviations: `API`, `URL`, etc.
+  - Common abbreviations: `i`, `j` (loops); `err` (errors); `ctx` (contexts); `req`, `res`, `next` (middleware).
+
+### Functions
+- Write short, single-purpose functions (<20 instructions).
+- Name functions descriptively:
+  - For boolean-returning functions: `isX`, `hasX`, `canX`.
+  - For void-returning functions: `executeX`, `saveX`.
+- Avoid nesting blocks:
+  - Use early checks/returns.
+  - Extract utility functions.
+- Use higher-order functions (`map`, `filter`, `reduce`) to reduce nesting.
+- Use arrow functions for simple tasks (<3 instructions).
+- Use named functions for complex tasks.
+- Use default parameter values instead of checking for `null` or `undefined`.
+- Follow RO-RO (Receive Object, Return Object) pattern:
+  - Use objects to pass/return multiple parameters/results.
+  - Declare types for inputs/outputs.
+
+### Data
+- Avoid overusing primitive types; encapsulate data in composite types.
+- Use classes with internal validation for data instead of validating in functions.
+- Prefer immutability:
+  - Use `readonly` for data that doesn’t change.
+  - Use `as const` for literals.
+
+### Classes
+- Follow SOLID principles; prefer composition over inheritance.
+- Define contracts with interfaces.
+- Write small, single-purpose classes:
+  - <200 instructions.
+  - <10 public methods.
+  - <10 properties.
+
+### Exceptions
+- Use exceptions for unexpected errors.
+- Only catch exceptions to:
+  - Fix expected problems.
+  - Add context.
+- Otherwise, rely on a global handler.
+
+### Testing
+- Follow the **Arrange-Act-Assert** convention.
+- Use clear variable names (e.g., `inputX`, `mockX`, `actualX`, `expectedX`).
+- Write unit tests for all public functions.
+- Use test doubles for dependencies (except lightweight third-party ones).
+- Write acceptance tests for each module using the **Given-When-Then** convention.
+
+## NestJS-Specific Guidelines
+
+### Basic Principles
+- Separation of concerns:
+  - **Separate core application logic from infrastructure concerns.**
+  - Use the following layers for clarity and maintainability:
+    - **Entities**: Represent the core business objects with logic and rules encapsulated. Entities should not depend on any framework or infrastructure.
+    - **Models**: Define data structures for external communication (e.g., DTOs for API inputs and outputs).
+    - **Service Models**: Represent intermediate domain-specific models used within the service layer, focusing on business operations.
+    - **Service Layer**: Encapsulate all business logic, ensuring it remains reusable and framework-agnostic where possible.
+    - **Infrastructure Layer**: Handle technical concerns such as data persistence, API integration, and external services.
+
+  - **Repository Pattern**:
+    - Use repositories as an abstraction layer to handle data access.
+    - Define repository interfaces in the domain layer.
+    - Implement repository classes in the infrastructure layer.
+    - Ensure repositories:
+      - Encapsulate database queries or ORM logic.
+      - Return domain entities, not raw database models or framework-specific objects.
+      - Handle basic CRUD operations and queries related to a single aggregate.
+    - Avoid directly exposing repositories to controllers. Access them through the service layer for additional business logic.
+
+- Use a modular architecture:
+  - **Modules**:
+    - One module per main domain/route.
+    - One controller for the primary route; additional controllers for secondary routes.
+    - `models/` folder for data types:
+      - Use `class-validator` for validating DTOs (inputs).
+      - Declare simple types for outputs.
+    - `services/` folder for business logic and persistence:
+      - Separate model entities from the ORM.
+      - Use Prisma for persistence.
+      - One service per entity.
+  - **Core Module**:
+    - Global filters for exception handling.
+    - Global middlewares for request management.
+    - Guards for permission management.
+    - Interceptors for request handling.
+  - **Shared Module**: For utilities and shared business logic.
+
+### Testing
+- Use Jest for testing.
+- Write tests for each controller and service.
+- Write end-to-end tests for each API module.
+- Add an `admin/test` endpoint to each controller for smoke testing.
+
+### API Design and Structure
+
+
+- **Controllers**:
+  - Each controller should handle a specific domain or route.
+  - Keep controllers lean by delegating business logic to the service layer.
+  - Use descriptive and meaningful names for controllers (e.g., `UserController` for user-related operations).
+
+- **Versioning**: 
+  - Prefix all API routes with the version (e.g., `/v1/resource`).
+  - Increment the version number only for breaking changes.
+
+- **Endpoint Naming**:
+  - Use **camelCase** for endpoints with more than two words (e.g., `/userProfile`, `/addResults`).
+  - For actions or commands, use descriptive verbs:
+    - Example: `/addResults` (POST for adding results), `/cancelOrder` (POST for canceling an order).
+  - Keep naming intuitive and consistent across the API.
+
+- **Response Structure**:
+
+- **Error Responses**:
+  - For errors, use a consistent structure that includes a message, error type, status code, and an optional `correlationId` for tracking:
+    ```json
+    {
+      "message": "No purchases found with the provided criteria",
+      "error": "NotFoundException",
+      "statusCode": 404,
+      "correlationId": "optional"
+    }
+    ```
+
+  - **Fields**:
+    - `message`: A descriptive error message explaining the issue.
+    - `error`: The error type or exception class name (e.g., `NotFoundException`, `BadRequestException`).
+    - `statusCode`: The corresponding HTTP status code (e.g., `400`, `404`, `409`).
+    - `correlationId` (optional): A unique identifier for tracing the request (e.g., passed from the request header or generated).
+
+- **HTTP Status Code Usage**:
+  - `200 OK`: For all successful requests. Return the resource or payload.
+  - `400 Bad Request`: When the request is invalid (e.g., malformed JSON, missing required fields).
+  - `404 Not Found`: When the resource does not exist.
+  - `409 Conflict`: For business logic errors (e.g., duplicate entries, invalid states).
+
+- **Error Examples**:
+  - `404 Not Found` Example:
+    ```json
+    {
+      "message": "User with ID 123 not found",
+      "error": "NotFoundException",
+      "statusCode": 404,
+      "correlationId": "abc-123-def"
+    }
+    ```
+  - `400 Bad Request` Example:
+    ```json
+    {
+      "message": "Missing required property 'name'",
+      "error": "BadRequestException",
+      "statusCode": 400,
+      "correlationId": "abc-123-def"
+    }
+    ```
+  - `409 Conflict` Example:
+    ```json
+    {
+      "message": "User with this email already exists",
+      "error": "ConflictException",
+      "statusCode": 409,
+      "correlationId": "abc-123-def"
+    }
+    ```
+
+- **Success Responses**:
+  - When the request is successful (`200 OK`), return the same resource or payload as the response:
+    ```json
+    {
+      "id": 123,
+      "name": "Sample Resource",
+      "status": "active"
+    }
+    ```
+      - Do not include additional metadata like `status` or `message` in success responses.
+
+
+- **Query Parameters**:
+  - Use query parameters for filtering, sorting, and pagination.
+  - Example: `/users?status=active&page=2&limit=10`.
+
+- **Pagination**:
+  - Use a consistent structure for pagination responses:
+    ```json
+    {
+      "data": [...],
+      "meta": {
+        "total": 100,
+        "page": 1,
+        "limit": 10
+      }
+    }
+    ```
+
+### Pagination Standards
+
+- **Request Parameters**:
+  - Use the following query parameters for pagination:
+    - `page`: The current page number (default: 1).
+    - `limit`: The number of items per page (default: 10).
+  - Example request:
+    ```
+    GET /v1/resources?page=2&limit=20
+    ```
+
+- **Response Structure**:
+  - Include both the pagination metadata and the list of results in the response.
+  - Structure:
+    ```json
+    {
+      "data": [
+        { "id": 1, "name": "Resource A" },
+        { "id": 2, "name": "Resource B" }
+      ],
+      "meta": {
+        "currentPage": 2,
+        "totalPages": 5,
+        "totalItems": 100,
+        "itemsPerPage": 20
+      }
+    }
+    ```
+  - **Fields**:
+    - `data`: The array of resources for the current page.
+    - `meta`: Metadata for the pagination, including:
+      - `currentPage`: The page number in the request.
+      - `totalPages`: The total number of pages available.
+      - `totalItems`: The total number of items across all pages.
+      - `itemsPerPage`: The number of items requested per page.
+
+- **Defaults and Limits**:
+  - Default values:
+    - `page`: 1 (first page).
+    - `limit`: 10 (10 items per page).
+  - Maximum allowed `limit`: 100 items per page to prevent performance issues.
+
+- **Error Handling**:
+  - If the `page` or `limit` values are invalid (e.g., negative or non-numeric), return a `400 Bad Request` with a descriptive error message:
+    ```json
+    {
+      "message": "Invalid pagination parameters: 'page' must be greater than 0",
+      "error": "BadRequestException",
+      "statusCode": 400,
+      "correlationId": "optional"
+    }
+    ```
+
+- **Example Responses**:
+  - **Successful Response**:
+    ```json
+    {
+      "data": [
+        { "id": 101, "name": "Resource X" },
+        { "id": 102, "name": "Resource Y" }
+      ],
+      "meta": {
+        "currentPage": 1,
+        "totalPages": 10,
+        "totalItems": 100,
+        "itemsPerPage": 10
+      }
+    }
+    ```
+  - **No Results** (still paginated):
+    ```json
+    {
+      "data": [],
+      "meta": {
+        "currentPage": 3,
+        "totalPages": 5,
+        "totalItems": 42,
+        "itemsPerPage": 10
+      }
+    }
+    ```
+    
+- **Security**:
+  - Use `HTTPS` for all endpoints.
+  - Authenticate requests using JWT or OAuth tokens.
+  - Validate all inputs using a validation library (e.g., `class-validator` in NestJS).
+  - Avoid exposing sensitive information in error messages.
+
+- **Documentation**:
+  - Use tools like Swagger to document the API.
+  - Provide examples for each endpoint, including request/response schemas and error cases.
+  - Include version information and deprecation notices in the documentation.

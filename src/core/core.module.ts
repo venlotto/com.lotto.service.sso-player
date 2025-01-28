@@ -1,21 +1,16 @@
-import { Module } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { ResponseInterceptor } from './interceptors/response.interceptor';
-import { GlobalExceptionFilter } from './interceptors/exception.interceptor';
-import {BadRequestExceptionFilter} from "./interceptors/bad-request.interceptor";
+import { Module } from "@nestjs/common";
+import { APP_FILTER } from "@nestjs/core";
+
+import { HttpExceptionFilter } from "./filters/http.exception.filters";
 
 @Module({
-    controllers: [],
-    imports: [],
-    providers: [
-        {
-            provide: APP_FILTER,
-            useClass: GlobalExceptionFilter,
-        },
-        {
-            provide: APP_FILTER,
-            useClass: BadRequestExceptionFilter,
-        },
-    ],
+  controllers: [],
+  imports: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class CoreModule {}

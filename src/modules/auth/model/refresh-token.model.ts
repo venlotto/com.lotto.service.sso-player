@@ -1,15 +1,22 @@
 import { Prisma } from "@prisma/client";
 
-
 export class RefreshToken implements Prisma.refresh_tokenCreateInput {
-    id: number;
-    expires_at: Date | string;
-    token: string;
-    user_id: string;
+  id: string;
+  expires_at: Date;
+  token: string;
+  user_id: string;
 
-    public constructor(expiresAt: Date | string, token: string, userId: string) {
-        this.expires_at = expiresAt;
-        this.token = token;
-        this.user_id = userId;
-    }
+  public constructor(token: string, userId: string, expiresAt: Date) {
+    this.token = token;
+    this.user_id = userId;
+    this.expires_at = expiresAt;
+  }
+
+  public isExpired(): boolean {
+    return new Date() > this.expires_at;
+  }
+
+  public get userId(): string {
+    return this.user_id;
+  }
 }

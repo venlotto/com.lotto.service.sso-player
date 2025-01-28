@@ -1,26 +1,30 @@
 {
-  "name": "auth",
+  "name": "com.lotto.service.auth-internal",
   "version": "0.0.1",
   "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && npm run copy-templates",
-    "copy-templates": "copyfiles -u 2 src/modules/auth/templates/*.html dist/modules/auth/templates",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint:strict": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-warnings=0",
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint:unused": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-warnings=0 --rule 'unused-imports/no-unused-imports: error' --rule 'unused-imports/no-unused-vars: error'",
+    "lint:all": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --max-warnings=0 --rule 'unused-imports/no-unused-imports: error' --rule 'unused-imports/no-unused-vars: error' && prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "push:db": "prisma migrate deploy",
-    "seed": "ts-node src/modules/seeder/seed.ts"
+    "seed": "ts-node src/modules/seeder/seed.ts",
+    "lint:fix-types": "tsc --noEmit && npm run lint:fix"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -61,7 +65,11 @@
     "copyfiles": "^2.4.1",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-complexity": "^1.0.2",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-sonarjs": "^3.0.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
     "prisma": "^5.12.1",
@@ -89,5 +97,23 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint", "unused-imports"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+      "@typescript-eslint/explicit-function-return-type": "error",
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/explicit-module-boundary-types": "error",
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "error",
+        { "argsIgnorePattern": "^_" }
+      ]
+    }
   }
 }

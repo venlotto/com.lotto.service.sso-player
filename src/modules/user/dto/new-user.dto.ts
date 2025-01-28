@@ -1,44 +1,19 @@
-import {IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, MaxLength, MinLength} from "class-validator";
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsString, Matches } from "class-validator";
 
 export class NewUserDto {
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    @MaxLength(50)
-    readonly identification?: string;
+  @ApiProperty()
+  @IsString()
+  username: string;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    @MaxLength(100)
-    readonly name?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsEmail()
-    readonly email: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @MinLength(6, {
-        message: 'Password must be between 6 and 16 characters long.'
-    })
-    @MaxLength(16, {
-        message: 'Password must be between 6 and 16 characters long.'
-    })
-    readonly password: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    @MinLength(3)
-    @MaxLength(50)
-    readonly username: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    @MaxLength(20)
-    readonly phone?: string;
+  @ApiProperty()
+  @IsString()
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/,
+    {
+      message:
+        "Password must be between 8 and 50 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+    },
+  )
+  password: string;
 }

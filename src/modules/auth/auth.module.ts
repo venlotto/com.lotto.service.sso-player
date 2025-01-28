@@ -1,58 +1,116 @@
-import {Logger, Module} from '@nestjs/common';
-import {PrismaService} from "../../common/services/prisma.service";
-import {AuthService} from "./services/auth.service";
-import {JwtModule, JwtService} from "@nestjs/jwt";
-import {PassportModule} from "@nestjs/passport";
-import * as process from "node:process";
-import {AuthController} from "./controller/auth.controller";
-import {LocalStrategy} from "./strategies/local.strategy";
-import {LocalAuthGuard} from "./guards/local-auth.guard";
-import {UserRepositoryPrisma} from "../user/repository/user.repository.prisma";
-import {RefreshTokenRepository} from "./repository/refresh-token.repository";
-import { MailerService } from './services/mailer.service';
-import * as nodemailer from 'nodemailer';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { PasswordResetRepository } from './repository/password-reset.repository';
-import { UserRepository } from '../user/repository/user.repository.interface';
-import { CommonModule } from 'src/common/common.module';
+import { Logger, Module, DynamicModule, forwardRef } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
+import { PassportModule } from "@nestjs/passport";
 
-@Module({
-    controllers: [
-        AuthController,
-    ],
-    imports: [
-        CommonModule,
-    ],
-    providers: [
-        AuthService,
-        PrismaService,
+import { PrismaService } from "../prisma/prisma.service";
+import { AuthController } from "./controller/auth.controller";
+import { PermissionController } from "./controller/permission.controller";
+import { RoleController } from "./controller/role.controller";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { LocalAuthGuard } from "./guards/local-auth.guard";
+import { RefreshTokenRepository } from "./repository/refresh-token.repository";
+import { AuthService } from "./services/auth.service";
+import { BootstrapService } from "./services/bootstrap.service";
+import { PermissionService } from "./services/permission.service";
+import { LocalStrategy } from "./strategy/local.strategy";
+import { PrismaModule } from "../prisma/prisma.module";
+import { RoleService } from "./services/role.service";
+import { JwtStrategy } from "./strategy/jwt.strategy";
+import { UserRepositoryPrisma } from "../user/repository/user.repository.prisma";
+import { UserService } from "../user/services/user.service";
+import { UserModule } from "../user/user.module";
+
+export interface AuthModuleConfig {
+  isTestEnvironment?: boolean;
+}
+
+@Module({})
+export class AuthModule {
+  static forRoot(config: AuthModuleConfig = {}): DynamicModule {
+    return {
+      module: AuthModule,
+      global: true,
+      controllers: [AuthController, RoleController, PermissionController],
+      imports: [
+        ConfigModule,
+        PassportModule.register({ defaultStrategy: "jwt" }),
+        JwtModule.registerAsync({
+          imports: [ConfigModule],
+          useFactory: async (configService: ConfigService) => {
+            const secret = configService.get<string>("JWT_SECRET");
+            if (!secret) {
+              throw new Error("JWT_SECRET is not defined in configuration");
+            }
+            return {
+              secret,
+              signOptions: {
+                expiresIn: configService.get<string>("JWT_EXPIRATION") || "1h",
+              },
+            };
+          },
+          inject: [ConfigService],
+        }),
+        PrismaModule,
+        forwardRef(() => UserModule),
+      ],
+      providers: [
         Logger,
-        UserRepositoryPrisma,
-        RefreshTokenRepository,
-        PasswordResetRepository,
-        LocalStrategy,
-        LocalAuthGuard,
+        PrismaService,
         {
-            provide: 'MAILER_TRANSPORTER',
-            useFactory: () => {
-              return nodemailer.createTransport({
-                host: process.env.SMTP_HOST,
-                port: 587,
-                secure: false,
-                auth: {
-                  user: process.env.SMTP_USER,
-                  pass: process.env.SMTP_PASSWORD,
-                },
-              });
-            },
-        },
-        MailerService,
-        JwtAuthGuard,
-        {
-          provide: UserRepository,
+          provide: "UserRepository",
           useClass: UserRepositoryPrisma,
         },
-    ],
-    exports: [AuthService]
-})
-export class AuthModule {}
+        RefreshTokenRepository,
+        AuthService,
+        JwtStrategy,
+        JwtAuthGuard,
+        LocalStrategy,
+        LocalAuthGuard,
+        RoleService,
+        PermissionService,
+        {
+          provide: BootstrapService,
+          useFactory: (
+            prisma: PrismaService,
+            roleService: RoleService,
+            permissionService: PermissionService,
+            authService: AuthService,
+            logger: Logger,
+            userService: UserService,
+          ) => {
+            return new BootstrapService(
+              prisma,
+              roleService,
+              permissionService,
+              authService,
+              logger,
+              config.isTestEnvironment ?? false,
+              userService,
+            );
+          },
+          inject: [
+            PrismaService,
+            RoleService,
+            PermissionService,
+            AuthService,
+            Logger,
+            UserService,
+          ],
+        },
+      ],
+      exports: [
+        AuthService,
+        JwtStrategy,
+        JwtAuthGuard,
+        LocalStrategy,
+        LocalAuthGuard,
+        RoleService,
+        PermissionService,
+        "UserRepository",
+        RefreshTokenRepository,
+        JwtModule,
+      ],
+    };
+  }
+}

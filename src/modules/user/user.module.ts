@@ -1,25 +1,28 @@
-import { Logger, Module } from '@nestjs/common';
-import { AuthModule } from '../auth/auth.module';
-import { UserRepositoryPrisma } from './repository/user.repository.prisma';
-import { UserRepository } from './repository/user.repository.interface';
-import { CommonModule } from 'src/common/common.module';
-import { NewUserHandler } from './handler/new-user.handler';
-import { NewUserController } from './controller/new-user.controller';
-import { MeController } from './controller/me.controller';
+import { Logger, Module, forwardRef } from "@nestjs/common";
+
+import { ChangePasswordController } from "./controller/change-password.controller";
+import { ChangeStatusController } from "./controller/change-status.controller";
+import { NewUserController } from "./controller/new-user.controller";
+import { UserRepositoryPrisma } from "./repository/user.repository.prisma";
+import { UserService } from "./services/user.service";
+import { AuthModule } from "../auth/auth.module";
+import { PrismaModule } from "../prisma/prisma.module";
 
 @Module({
-  controllers: [NewUserController, MeController],
-  imports: [
-    AuthModule,
-    CommonModule,
+  imports: [forwardRef(() => AuthModule.forRoot()), PrismaModule],
+  controllers: [
+    NewUserController,
+    ChangePasswordController,
+    ChangeStatusController,
   ],
   providers: [
-    NewUserHandler,
+    UserService,
     Logger,
     {
-      provide: UserRepository,
+      provide: "UserRepository",
       useClass: UserRepositoryPrisma,
     },
   ],
+  exports: [UserService, "UserRepository"],
 })
 export class UserModule {}

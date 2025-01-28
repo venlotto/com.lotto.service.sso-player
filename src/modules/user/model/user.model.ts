@@ -1,91 +1,89 @@
-import { UserRoles } from './enum/user-roles.enum';
-import { UserStatus } from './enum/user-status.enum';
-import { UUID } from '../../../common/value-object/uuid.value-object';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
+
+import { UserStatus } from "./enum/user-status.enum";
+import { UUID } from "../../../common/value-object/uuid.value-object";
+
+interface TokenPayload {
+  sub: string;
+  username: string;
+  role: string | null;
+  [key: string]: unknown;
+}
 
 export class User {
   private readonly _id: UUID;
-  private _name: string | null;
-  private _email: string | null;
   private _password: string;
   private _username: string | null;
   private _lastLogin: Date | string | null;
-  private _role: UserRoles; 
+  private _roleName: string | null;
   private _status: UserStatus;
-  private _identification: string | null; // now optional
-  private _phone: string | null; // now optional
-
-  public static mapRole(role: string): UserRoles {
-    if (!Object.values(UserRoles).includes(role as UserRoles)) {
-      throw new Error(`Invalid role: ${role}`);
-    }
-    return UserRoles[role as keyof typeof UserRoles];
-  }
+  private _createdAt: Date;
+  private _updatedAt: Date;
 
   private constructor(
     id: UUID,
-    name: string,
-    email: string,
     password: string,
     username: string,
-    role: UserRoles, 
+    roleName: string | null,
     status: UserStatus,
-    identification: string | null = null,
-    phone: string | null = null,
-    lastLogin: Date | string | null = null
+    lastLogin: Date | string | null = null,
+    createdAt: Date = new Date(),
+    updatedAt: Date = new Date(),
   ) {
     this._id = id;
-    this._name = name || null;
-    this._email = email || null;
     this._password = password;
     this._username = username || null;
-    this._role = role;
+    this._roleName = roleName;
     this._status = status;
-    this._identification = identification || null;
-    this._phone = phone || null;
     this._lastLogin = lastLogin;
+    this._createdAt = createdAt;
+    this._updatedAt = updatedAt;
   }
 
   public static async newUser(
-    name: string,
-    email: string,
     password: string,
     username: string,
-    role: UserRoles,
-    identification: string | null = null,
-    phone: string | null = null,
-    lastLogin: Date | string | null = null
+    roleName: string | null = null,
+    lastLogin: Date | string | null = null,
   ): Promise<User> {
     const encryptedPassword = await bcrypt.hash(password, 10);
-    return new User(new UUID(), name, email, encryptedPassword, username, role, UserStatus.CREATED, identification, phone, lastLogin);
+    return new User(
+      new UUID(),
+      encryptedPassword,
+      username,
+      roleName,
+      UserStatus.ACTIVE,
+      lastLogin,
+    );
   }
 
   public static fromRepository(
     id: string,
-    name: string,
-    email: string,
     password: string,
     username: string,
-    role: UserRoles,
+    roleName: string | null,
     status: UserStatus,
-    identification: string | null = null,
-    phone: string | null = null,
-    lastLogin: Date | string | null = null
+    lastLogin: Date | string | null = null,
+    createdAt: Date = new Date(),
+    updatedAt: Date = new Date(),
   ): User {
-    return new User(new UUID(id), name, email, password, username, role, status, identification, phone, lastLogin);
+    return new User(
+      new UUID(id),
+      password,
+      username,
+      roleName,
+      status,
+      lastLogin,
+      createdAt,
+      updatedAt,
+    );
   }
 
-  public static toPayload(user: User): any {
+  public static toPayload(user: User): TokenPayload {
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      username: user.username,
-      role: user.role,
-      status: user.status,
-      identification: user.identification,
-      phone: user.phone,
-      lastLogin: user.lastLogin
+      sub: user.id,
+      username: user.username || "",
+      role: user.roleName,
     };
   }
 
@@ -97,16 +95,12 @@ export class User {
     }
   }
 
+  public updateLastLogin(): void {
+    this._lastLogin = new Date();
+  }
+
   get id(): string {
-    return this._id.toString(); 
-  }
-
-  get name(): string | null {
-    return this._name;
-  }
-
-  get email(): string | null {
-    return this._email;
+    return this._id.toString();
   }
 
   get password(): string {
@@ -121,20 +115,20 @@ export class User {
     return this._lastLogin;
   }
 
-  get role(): UserRoles {
-    return this._role;
+  get roleName(): string | null {
+    return this._roleName;
   }
 
   get status(): UserStatus {
     return this._status;
   }
 
-  get identification(): string | null {
-    return this._identification;
+  get createdAt(): Date {
+    return this._createdAt;
   }
 
-  get phone(): string | null {
-    return this._phone;
+  get updatedAt(): Date {
+    return this._updatedAt;
   }
 
   blockUser(): void {
@@ -143,10 +137,6 @@ export class User {
 
   activateUser(): void {
     this._setStatus(UserStatus.ACTIVE);
-  }
-
-  deactivateUser(): void {
-    this._setStatus(UserStatus.INACTIVE);
   }
 
   private _setStatus(newStatus: UserStatus): void {

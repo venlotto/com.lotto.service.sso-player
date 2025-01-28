@@ -9,19 +9,15 @@ datasource db {
 
 model user {
   id                    String    @id @default(uuid())
-  identification        String?
-  name                  String?
-  email                 String?   @unique
   password              String
   username              String?   @unique
-  phone                 String?
   last_login            DateTime?
-  role                  String
   status                String
-  time_zone             String?
   created_at            DateTime  @default(now())
   updated_at            DateTime  @updatedAt
   user_payment_methods  user_payment_method[]
+  roleId                String?
+  role                  Role?     @relation(fields: [roleId], references: [id])
 }
 
 model user_payment_method {
@@ -36,15 +32,6 @@ model user_payment_method {
   @@index([user_id])
 }
 
-model password_reset {
-  id                  Int       @id @default(autoincrement())
-  user_id             String
-  reset_token         String    @unique
-  reset_token_expiry  DateTime
-  created_at          DateTime  @default(now())
-  updated_at          DateTime  @updatedAt
-}
-
 model refresh_token {
   id          Int      @id @default(autoincrement())
   token       String   @unique
@@ -52,4 +39,34 @@ model refresh_token {
   expires_at  DateTime
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+}
+
+model Permission {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  roles       RolePermission[]
+}
+
+model Role {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  permissions RolePermission[]
+  users       user[]
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime   @default(now())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
 }

@@ -71,3 +71,143 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+# Auth Service
+
+A NestJS-based authentication service with role-based access control and dynamic permissions.
+
+## Features
+
+- User authentication with JWT
+- Role-based access control (RBAC)
+- Dynamic permission management
+- User status management
+- Password reset functionality
+- Refresh token support
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- PostgreSQL
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
+
+4. Update the `.env` file with your configuration:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/auth"
+JWT_SECRET="your-jwt-secret"
+JWT_EXPIRATION="1h"
+```
+
+5. Run database migrations:
+```bash
+npx prisma migrate dev
+```
+
+6. Start the application:
+```bash
+npm run start:dev
+```
+
+## API Documentation
+
+The API documentation is available at `/docs` when running the application.
+
+### Role and Permission Management
+
+The service includes a flexible role and permission system:
+
+#### Roles
+
+- **Create Role**
+  ```http
+  POST /v1/roles
+  ```
+  ```json
+  {
+    "name": "editor",
+    "description": "Content editor role"
+  }
+  ```
+
+- **Get All Roles**
+  ```http
+  GET /v1/roles
+  ```
+
+- **Get Role Details**
+  ```http
+  GET /v1/roles/:roleId
+  ```
+
+#### Permissions
+
+- **Create Permission**
+  ```http
+  POST /v1/permissions
+  ```
+  ```json
+  {
+    "name": "create:article",
+    "description": "Can create articles"
+  }
+  ```
+
+- **Get All Permissions**
+  ```http
+  GET /v1/permissions
+  ```
+
+#### Assign Permissions to Role
+
+- **Assign Permissions**
+  ```http
+  PUT /v1/roles/:roleId/permissions
+  ```
+  ```json
+  {
+    "permissionIds": ["permission-id-1", "permission-id-2"]
+  }
+  ```
+
+## Testing
+
+Run the test suite:
+
+```bash
+# Unit tests
+npm run test
+
+# e2e tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+## Security
+
+- All endpoints are protected with JWT authentication
+- Role-based access control for sensitive operations
+- Permission-based authorization for fine-grained access control
+- User status validation (active/inactive/blocked)
+- Secure password hashing
+- Token expiration and refresh mechanism
+
+## License
+
+MIT
