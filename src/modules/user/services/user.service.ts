@@ -138,6 +138,9 @@ export class UserService {
       });
     }
 
+    // Get permissions from the role
+    const permissions = role.permissions.map(rp => rp.permission.name);
+
     // Update user's role using save
     const updatedUser = User.fromRepository(
       user.id,
@@ -148,13 +151,15 @@ export class UserService {
       user.lastLogin,
       user.createdAt,
       user.updatedAt,
+      permissions // Pass the permissions from the role
     );
 
-    await this.userRepository.save(updatedUser);
+    const savedUser = await this.userRepository.save(updatedUser);
 
     return {
       user_id: userId,
       role_id: roleId,
+      user: savedUser
     };
   }
 }

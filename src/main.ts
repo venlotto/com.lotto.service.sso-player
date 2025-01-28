@@ -1,12 +1,10 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { ExpressAdapter } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as dotenv from "dotenv";
 import * as express from "express";
 import helmet from "helmet";
-
 import { AppModule } from "./app/app.module";
 import { HttpExceptionFilter } from "./core/filters/http.exception.filters";
 import { TransformInterceptor } from "./core/interceptors/transform.interceptor";
@@ -23,7 +21,6 @@ async function bootstrap(): Promise<void> {
   );
 
   app.use(new CorsMiddleware().use);
-  const configService = app.get<ConfigService>(ConfigService);
 
   app.use(helmet());
   app.useGlobalPipes(
@@ -54,9 +51,7 @@ async function bootstrap(): Promise<void> {
   await app.listen(port);
 
   logger.log(
-    `🚀 ${configService.get(
-      "app.name",
-    )} service started successfully on port ${port}`,
+    `🚀 ${process.env.APP_NAME} service started successfully on port ${port}`,
   );
 }
 

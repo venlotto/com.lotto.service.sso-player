@@ -63,21 +63,6 @@ export class BootstrapService implements OnModuleInit {
     // Generate a bootstrap correlation ID
     const bootstrapCorrelationId = `${new UUID().toString()}`;
 
-    // Check if system is already bootstrapped by checking for admin role and permissions
-    const [adminRole, adminPermission] = await Promise.all([
-      this.prisma.roles.findFirst({ where: { name: "User Management" } }),
-      this.prisma.permissions.findFirst({
-        where: { name: "com.lotto.service.auth-internal:user:create" },
-      }),
-    ]);
-
-    if (adminRole && adminPermission) {
-      this.logger.log("System already bootstrapped, skipping initialization", {
-        correlationId: bootstrapCorrelationId,
-      });
-      return;
-    }
-
     try {
       // Create default permissions
       this.logger.log("Creating default permissions...", {
@@ -122,6 +107,17 @@ export class BootstrapService implements OnModuleInit {
       // Check if admin user exists
       const adminUser = await this.prisma.users.findFirst({
         where: { username: "admin" },
+        include: {
+          role: {
+            include: {
+              permissions: {
+                include: {
+                  permission: true
+                }
+              }
+            }
+          }
+        }
       });
 
       if (!adminUser) {
@@ -130,11 +126,25 @@ export class BootstrapService implements OnModuleInit {
         this.logger.log("Creating User Management user...", {
           correlationId: bootstrapCorrelationId,
         });
-        await this.userService.createUser(
+        const user = await this.userService.createUser(
           "admin",
           password,
           bootstrapCorrelationId,
         );
+
+        // Assign User Management role to admin user
+        this.logger.log("Assigning User Management role to admin user...", {
+          correlationId: bootstrapCorrelationId,
+        });
+        const updatedUser = await this.userService.assignRole(user.id, role.id, bootstrapCorrelationId);
+
+        this.logger.log("Admin user created with role and permissions:", {
+          correlationId: bootstrapCorrelationId,
+          userId: updatedUser.user_id,
+          roleId: updatedUser.role_id,
+          roleName: updatedUser.user.roleName,
+          permissions: updatedUser.user.permissions
+        });
 
         // Log admin credentials (only on first deployment)
         this.logger.warn("==================================================");
@@ -152,13 +162,27 @@ export class BootstrapService implements OnModuleInit {
           correlationId: bootstrapCorrelationId,
         });
         this.logger.warn("==================================================");
+      } else {
+        // If admin user exists but doesn't have the role, assign it
+        if (!adminUser.role || adminUser.role.name !== "User Management") {
+          this.logger.log("Assigning User Management role to existing admin user...", {
+            correlationId: bootstrapCorrelationId,
+          });
+          const updatedUser = await this.userService.assignRole(adminUser.id, role.id, bootstrapCorrelationId);
+          
+          this.logger.log("Admin user updated with role and permissions:", {
+            correlationId: bootstrapCorrelationId,
+            userId: updatedUser.user_id,
+            roleId: updatedUser.role_id,
+            roleName: updatedUser.user.roleName,
+            permissions: updatedUser.user.permissions
+          });
+        }
       }
-
-      this.logger.log("System bootstrap completed successfully", {
+    } catch (error) {
+      this.logger.error("Error during system bootstrap:", error, {
         correlationId: bootstrapCorrelationId,
       });
-    } catch (error) {
-      this.logger.error("Error during system bootstrap", error.stack);
       throw error;
     }
   }

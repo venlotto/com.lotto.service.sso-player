@@ -17,7 +17,9 @@ export class UserRepositoryPrisma implements IUserRepository {
     this.logger.log("UserRepository::findById", { id });
 
     const user = await this.prismaService.users.findUnique({
-      where: { id },
+      where: {
+        id: id,
+      },
       include: {
         role: {
           include: {
@@ -27,18 +29,20 @@ export class UserRepositoryPrisma implements IUserRepository {
               }
             }
           }
-        },
-      },
+        }
+      }
     });
 
-    if (!user) return null;
+    if (!user) {
+      return null;
+    }
 
     return User.fromRepository(
       user.id,
       user.password,
       user.username,
       user.role?.name || null,
-      mapEnum(UserStatus, user.status),
+      user.status as UserStatus,
       user.last_login,
       user.created_at,
       user.updated_at,
@@ -147,9 +151,13 @@ export class UserRepositoryPrisma implements IUserRepository {
       },
       include: {
         role: {
-          select: {
-            name: true,
-          },
+          include: {
+            permissions: {
+              include: {
+                permission: true
+              }
+            }
+          }
         },
       },
     });
@@ -163,6 +171,7 @@ export class UserRepositoryPrisma implements IUserRepository {
       savedUser.last_login,
       savedUser.created_at,
       savedUser.updated_at,
+      savedUser.role?.permissions.map(rp => rp.permission.name) || []
     );
   }
 }
