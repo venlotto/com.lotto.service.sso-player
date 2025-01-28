@@ -9,6 +9,7 @@ import { PermissionController } from "./controller/permission.controller";
 import { RoleController } from "./controller/role.controller";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
+import { PermissionGuard } from "./guards/permission.guard";
 import { RefreshTokenRepository } from "./repository/refresh-token.repository";
 import { AuthService } from "./services/auth.service";
 import { BootstrapService } from "./services/bootstrap.service";
@@ -65,6 +66,7 @@ export class AuthModule {
         AuthService,
         JwtStrategy,
         JwtAuthGuard,
+        PermissionGuard,
         LocalStrategy,
         LocalAuthGuard,
         RoleService,
@@ -83,7 +85,6 @@ export class AuthModule {
               prisma,
               roleService,
               permissionService,
-              authService,
               logger,
               config.isTestEnvironment ?? false,
               userService,
@@ -99,18 +100,7 @@ export class AuthModule {
           ],
         },
       ],
-      exports: [
-        AuthService,
-        JwtStrategy,
-        JwtAuthGuard,
-        LocalStrategy,
-        LocalAuthGuard,
-        RoleService,
-        PermissionService,
-        "UserRepository",
-        RefreshTokenRepository,
-        JwtModule,
-      ],
+      exports: [AuthService, JwtAuthGuard, PermissionGuard, RoleService],
     };
   }
 }

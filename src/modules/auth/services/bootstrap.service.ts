@@ -17,34 +17,33 @@ import { UserService } from "../../user/services/user.service";
 
 @Injectable()
 export class BootstrapService implements OnModuleInit {
-  private readonly defaultPermissions = [
+  private readonly adminPermissions = [
     // User Management
-    "user:create",
-    "user:read",
-    "user:update",
-    "user:delete",
-    "user:activate",
-    "user:block",
-    "user:change-password",
+    "com.lotto.service.auth-internal:user:create",
+    "com.lotto.service.auth-internal:user:update",
+    "com.lotto.service.auth-internal:user:delete",
+    "com.lotto.service.auth-internal:user:change-password",
+    "com.lotto.service.auth-internal:user:change-other-users-password",
+    "com.lotto.service.auth-internal:user:change-status",
+    "com.lotto.service.auth-internal:user:assign-role",
+
     // Role Management
-    "role:create",
-    "role:read",
-    "role:update",
-    "role:delete",
-    "role:assign",
+    "com.lotto.service.auth-internal:role:create",
+    "com.lotto.service.auth-internal:role:update",
+    "com.lotto.service.auth-internal:role:delete",
+    "com.lotto.service.auth-internal:role:view",
+    "com.lotto.service.auth-internal:role:assign-permission",
     // Permission Management
-    "permission:create",
-    "permission:read",
-    "permission:update",
-    "permission:delete",
-    "permission:assign",
+    "com.lotto.service.auth-internal:permission:create",
+    "com.lotto.service.auth-internal:permission:update",
+    "com.lotto.service.auth-internal:permission:delete",
+    "com.lotto.service.auth-internal:permission:view",
   ];
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly roleService: RoleService,
     private readonly permissionService: PermissionService,
-    private readonly authService: AuthService,
     private readonly logger: Logger,
     private readonly isTestEnvironment: boolean = false,
     @Inject(forwardRef(() => UserService))
@@ -83,7 +82,7 @@ export class BootstrapService implements OnModuleInit {
         correlationId: bootstrapCorrelationId,
       });
       const permissions = await Promise.all(
-        this.defaultPermissions.map((name) =>
+        this.adminPermissions.map((name) =>
           this.permissionService.createPermission(
             {
               name,
@@ -95,19 +94,19 @@ export class BootstrapService implements OnModuleInit {
       );
 
       // Create admin role
-      this.logger.log("Creating admin role...", {
+      this.logger.log("Creating User Management role...", {
         correlationId: bootstrapCorrelationId,
       });
       const role = await this.roleService.createRole(
         {
-          name: "admin",
-          description: "System administrator role",
+          name: "User Management",
+          description: "User and role management",
         },
         bootstrapCorrelationId,
       );
 
       // Assign all permissions to admin role
-      this.logger.log("Assigning permissions to admin role...", {
+      this.logger.log("Assigning permissions to User Management role...", {
         correlationId: bootstrapCorrelationId,
       });
       await this.roleService.assignPermissions(
@@ -120,7 +119,7 @@ export class BootstrapService implements OnModuleInit {
 
       const password = this.generateSecurePassword();
 
-      this.logger.log("Creating admin user...", {
+      this.logger.log("Creating User Management user...", {
         correlationId: bootstrapCorrelationId,
       });
       await this.userService.createUser(

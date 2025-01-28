@@ -114,6 +114,216 @@
       ]
     },
     {
+      "name": "Role Management",
+      "item": [
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"editor\",\n    \"description\": \"Content editor role\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "roles"]
+            },
+            "description": "Create a new role"
+          }
+        },
+        {
+          "name": "Get All Roles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "roles"]
+            },
+            "description": "Get list of all roles"
+          }
+        },
+        {
+          "name": "Get Role Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/roles/:roleId",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "roles", ":roleId"],
+              "variable": [
+                {
+                  "key": "roleId",
+                  "value": "",
+                  "description": "ID of the role to retrieve"
+                }
+              ]
+            },
+            "description": "Get details of a specific role"
+          }
+        },
+        {
+          "name": "Assign Permissions to Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"permissionIds\": [\"permission-id-1\", \"permission-id-2\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/roles/:roleId/permissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "roles", ":roleId", "permissions"],
+              "variable": [
+                {
+                  "key": "roleId",
+                  "value": "",
+                  "description": "ID of the role to assign permissions to"
+                }
+              ]
+            },
+            "description": "Assign permissions to a role"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permission Management",
+      "item": [
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"create:article\",\n    \"description\": \"Can create articles\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/permissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "permissions"]
+            },
+            "description": "Create a new permission"
+          }
+        },
+        {
+          "name": "Get All Permissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/permissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "permissions"]
+            },
+            "description": "Get list of all permissions"
+          }
+        }
+      ]
+    },
+    {
       "name": "User Management",
       "item": [
         {
@@ -223,6 +433,51 @@
               "path": ["v1", "users", "changeStatus"]
             },
             "description": "Change user status (active/blocked)"
+          }
+        },
+        {
+          "name": "Assign Role to User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"roleId\": \"role-id-1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/users/:userId/role",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "users", ":userId", "role"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "",
+                  "description": "ID of the user to assign the role to"
+                }
+              ]
+            },
+            "description": "Assign a role to a user"
           }
         }
       ]

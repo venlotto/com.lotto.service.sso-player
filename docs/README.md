@@ -265,6 +265,180 @@ Change user status. Requires authentication and admin privileges.
 }
 ```
 
+### Role Management
+
+#### POST /v1/roles
+Create a new role.
+
+**Request:**
+```json
+{
+  "name": "editor",
+  "description": "Content editor role"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Role created successfully",
+  "status_code": 201,
+  "data": {
+    "id": "string",
+    "name": "editor",
+    "description": "Content editor role"
+  },
+  "meta": {
+    "correlation_id": "string"
+  }
+}
+```
+
+#### GET /v1/roles
+Get a list of all roles.
+
+**Response:**
+```json
+{
+  "message": "Roles retrieved successfully",
+  "status_code": 200,
+  "data": [
+    {
+      "id": "string",
+      "name": "admin",
+      "description": "Administrator role"
+    },
+    {
+      "id": "string",
+      "name": "editor",
+      "description": "Content editor role"
+    }
+  ],
+  "meta": {
+    "correlation_id": "string"
+  }
+}
+```
+
+#### GET /v1/roles/:roleId
+Get details of a specific role.
+
+**Response:**
+```json
+{
+  "message": "Role retrieved successfully",
+  "status_code": 200,
+  "data": {
+    "id": "string",
+    "name": "editor",
+    "description": "Content editor role",
+    "permissions": [
+      {
+        "id": "string",
+        "name": "create:article",
+        "description": "Can create articles"
+      }
+    ]
+  },
+  "meta": {
+    "correlation_id": "string"
+  }
+}
+```
+
+#### PUT /v1/roles/:roleId/permissions
+Assign permissions to a role.
+
+**Request:**
+```json
+{
+  "permissionIds": ["permission-id-1", "permission-id-2"]
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Permissions assigned successfully",
+  "status_code": 200,
+  "data": {
+    "id": "string",
+    "name": "editor",
+    "description": "Content editor role",
+    "permissions": [
+      {
+        "id": "permission-id-1",
+        "name": "create:article",
+        "description": "Can create articles"
+      },
+      {
+        "id": "permission-id-2",
+        "name": "edit:article",
+        "description": "Can edit articles"
+      }
+    ]
+  },
+  "meta": {
+    "correlation_id": "string"
+  }
+}
+```
+
+### Permission Management
+
+#### POST /v1/permissions
+Create a new permission.
+
+**Request:**
+```json
+{
+  "name": "create:article",
+  "description": "Can create articles"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Permission created successfully",
+  "status_code": 201,
+  "data": {
+    "id": "string",
+    "name": "create:article",
+    "description": "Can create articles"
+  },
+  "meta": {
+    "correlation_id": "string"
+  }
+}
+```
+
+#### GET /v1/permissions
+Get a list of all permissions.
+
+**Response:**
+```json
+{
+  "message": "Permissions retrieved successfully",
+  "status_code": 200,
+  "data": [
+    {
+      "id": "string",
+      "name": "create:article",
+      "description": "Can create articles"
+    },
+    {
+      "id": "string",
+      "name": "edit:article",
+      "description": "Can edit articles"
+    }
+  ],
+  "meta": {
+    "correlation_id": "string"
+  }
+}
+```
+
 ## Development
 
 ### Environment Variables

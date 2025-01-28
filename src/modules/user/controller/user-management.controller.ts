@@ -22,15 +22,23 @@ import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { ChangePasswordDto } from "../dto/change-password.dto";
+import { AssignRoleDto } from "../dto/assign-role.dto";
 import { UserService } from "../services/user.service";
+
+interface RequestWithUser extends Request {
+  user: {
+    sub: string;
+    permissions: string[];
+  };
+}
 
 @ApiTags("User")
 @Controller("v1/users")
 @UseGuards(JwtAuthGuard, PermissionGuard)
-export class ChangePasswordController {
+export class UserManagementController {
   constructor(
     private readonly userService: UserService,
-    private readonly logger: Logger = new Logger(ChangePasswordController.name),
+    private readonly logger: Logger = new Logger(UserManagementController.name),
   ) {}
 
   @Post("changePassword")
@@ -318,4 +326,162 @@ export class ChangePasswordController {
       });
     }
   }
-}
+
+  @Post(":userId/role")
+  @ApiBearerAuth()
+  @RequirePermissions("com.lotto.service.auth-internal:user:assign-role")
+  @ApiOperation({
+    summary: "Assign role to user",
+    description: "Allows authorized users to assign a role to a user",
+  })
+  @ApiParam({
+    name: "userId",
+    description: "ID of the user to assign the role to",
+    type: "string",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Role assigned successfully",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "Role assigned successfully",
+        },
+        status_code: {
+          type: "number",
+          example: 200,
+        },
+        data: {
+          type: "object",
+          properties: {
+            user_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+            role_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            }
+          }
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User does not have required permissions",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User does not have the required permissions",
+        },
+        error: {
+          type: "string",
+          example: "ForbiddenException",
+        },
+        status_code: {
+          type: "number",
+          example: 403,
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: "User or role not found",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User or role not found",
+        },
+        error: {
+          type: "string",
+          example: "Not Found",
+        },
+        status_code: {
+          type: "number",
+          example: 404,
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
+        },
+      },
+    },
+  })
+  async assignRole(
+    @Request() req: RequestWithUser,
+    @Param("userId") userId: string,
+    @Body() dto: AssignRoleDto,
+  ) {
+    const correlationId = req["correlationId"];
+    this.logger.log("Assigning role to user", { correlationId, userId });
+
+    try {
+      const result = await this.userService.assignRole(userId, dto.roleId, correlationId);
+      
+      return {
+        message: "Role assigned successfully",
+        status_code: 200,
+        data: {
+          user_id: userId,
+          role_id: dto.roleId
+        },
+        meta: {
+          correlation_id: correlationId,
+        },
+      };
+    } catch (error) {
+      this.logger.error(error.message, error.stack, { correlationId });
+      
+      if (error instanceof ForbiddenException) {
+        throw new ForbiddenException({
+          message: error.message,
+          error: error.name,
+          status_code: 403,
+          meta: {
+            correlation_id: correlationId,
+          },
+        });
+      }
+
+      throw new InternalServerErrorException({
+        message: "Error assigning role",
+        error: "InternalServerError",
+        status_code: 500,
+        meta: {
+          correlation_id: correlationId,
+        },
+      });
+    }
+  }
+} 

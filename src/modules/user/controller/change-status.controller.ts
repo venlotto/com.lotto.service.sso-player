@@ -14,16 +14,22 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 
-import { Roles } from "../../../core/decorators/roles.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
-import { RolesGuard } from "../../auth/guards/roles.guard";
+import { PermissionGuard } from "../../auth/guards/permission.guard";
+import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { ChangeStatusDto } from "../dto/change-status.dto";
-import { UserRoles } from "../model/enum/user-roles.enum";
 import { UserService } from "../services/user.service";
+
+interface RequestWithUser extends Request {
+  user: {
+    sub: string;
+    permissions: string[];
+  };
+}
 
 @ApiTags("User")
 @Controller("v1/users")
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, PermissionGuard)
 export class ChangeStatusController {
   constructor(
     private readonly userService: UserService,
@@ -31,12 +37,12 @@ export class ChangeStatusController {
   ) {}
 
   @Post("changeStatus")
-  @Roles(UserRoles.ADMIN)
+  @RequirePermissions("com.lotto.service.auth-internal:user:change-status")
   @ApiBearerAuth()
   @ApiOperation({
     summary: "Change user status",
     description:
-      "Allows admin to toggle user status between active and blocked",
+      "Allows authorized users to toggle user status between active and blocked",
   })
   @ApiResponse({
     status: 200,
@@ -82,17 +88,17 @@ export class ChangeStatusController {
   })
   @ApiResponse({
     status: 403,
-    description: "Forbidden - User does not have required role",
+    description: "Forbidden - User does not have required permissions",
     schema: {
       type: "object",
       properties: {
         message: {
           type: "string",
-          example: "Forbidden resource",
+          example: "User does not have the required permissions",
         },
         error: {
           type: "string",
-          example: "Forbidden",
+          example: "ForbiddenException",
         },
         correlation_id: {
           type: "string",
@@ -122,11 +128,15 @@ export class ChangeStatusController {
       },
     },
   })
-  async changeStatus(@Request() req: Request, @Body() dto: ChangeStatusDto) {
+  async changeStatus(@Request() req: RequestWithUser, @Body() dto: ChangeStatusDto) {
     const correlationId = req["correlationId"];
+    const requestorUserId = req.user.sub;
+
     this.logger.log("Changing user status", {
       correlationId,
-      user_id: dto.user_id,
+      requestorUserId: requestorUserId,
+      targetUserId: dto.user_id,
+      newStatus: dto.status,
     });
 
     try {

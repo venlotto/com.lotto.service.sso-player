@@ -7,9 +7,13 @@ import {
   Post,
   Req,
   Request,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags, ApiHeader } from "@nestjs/swagger";
 
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
+import { PermissionGuard } from "../../auth/guards/permission.guard";
+import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { Public } from "../../auth/decorators/public.decorator";
 import { AuthService } from "../../auth/services/auth.service";
 import { NewUserDto } from "../dto/new-user.dto";
@@ -18,6 +22,7 @@ import { UserService } from "../services/user.service";
 
 @ApiTags("User")
 @Controller("v1/users")
+@UseGuards(JwtAuthGuard, PermissionGuard)
 @ApiHeader({
   name: "X-Correlation-Id",
   description: "Correlation ID for request tracing (optional)",
@@ -94,10 +99,35 @@ export class NewUserController {
     },
   })
   @ApiResponse({
+    status: 403,
+    description: "User does not have required permissions",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User does not have the required permissions",
+        },
+        error: {
+          type: "string",
+          example: "ForbiddenException",
+        },
+        statusCode: {
+          type: "number",
+          example: 403,
+        },
+        correlationId: {
+          type: "string",
+          example: "123e4567-e89b-12d3-a456-426614174000",
+        },
+      },
+    },
+  })
+  @ApiResponse({
     status: 500,
     description: "Internal Server Error",
   })
-  @Public()
+  @RequirePermissions("com.lotto.service.auth-internal:user:create")
   @Post("newUser")
   public async new(
     @Req() req: Request,

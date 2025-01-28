@@ -15,11 +15,13 @@ import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
 import { CreateRoleDto } from "../dto/create-role.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { PermissionGuard } from "../guards/permission.guard";
+import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionGuard)
 @ApiHeader({
   name: "X-Correlation-Id",
   description: "Correlation ID for request tracing (optional)",
@@ -37,6 +39,7 @@ export class RoleController {
   ) {}
 
   @Post()
+  @RequirePermissions("com.lotto.service.auth-internal:role:create")
   @ApiOperation({ summary: "Create a new role" })
   @ApiResponse({
     status: 201,
@@ -72,6 +75,31 @@ export class RoleController {
         statusCode: {
           type: "number",
           example: 409,
+        },
+        correlationId: {
+          type: "string",
+          example: "123e4567-e89b-12d3-a456-426614174000",
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User does not have required permissions",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User does not have the required permissions",
+        },
+        error: {
+          type: "string",
+          example: "ForbiddenException",
+        },
+        statusCode: {
+          type: "number",
+          example: 403,
         },
         correlationId: {
           type: "string",
@@ -124,11 +152,37 @@ export class RoleController {
     }
   }
 
-  @Put(":roleId/permissions")
+  @Post(":roleId/permissions")
+  @RequirePermissions("com.lotto.service.auth-internal:role:assign-permission")
   @ApiOperation({ summary: "Assign permissions to a role" })
   @ApiResponse({
     status: 200,
     description: "Permissions assigned successfully",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User does not have required permissions",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User does not have the required permissions",
+        },
+        error: {
+          type: "string",
+          example: "ForbiddenException",
+        },
+        statusCode: {
+          type: "number",
+          example: 403,
+        },
+        correlationId: {
+          type: "string",
+          example: "123e4567-e89b-12d3-a456-426614174000",
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 404,
@@ -179,10 +233,36 @@ export class RoleController {
   }
 
   @Get()
+  @RequirePermissions("com.lotto.service.auth-internal:role:view")
   @ApiOperation({ summary: "Get all roles with their permissions" })
   @ApiResponse({
     status: 200,
     description: "List of all roles with permissions",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User does not have required permissions",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User does not have the required permissions",
+        },
+        error: {
+          type: "string",
+          example: "ForbiddenException",
+        },
+        statusCode: {
+          type: "number",
+          example: 403,
+        },
+        correlationId: {
+          type: "string",
+          example: "123e4567-e89b-12d3-a456-426614174000",
+        },
+      },
+    },
   })
   async getAllRoles(@Request() req: Request) {
     const correlationId = req["correlationId"];
@@ -204,10 +284,36 @@ export class RoleController {
   }
 
   @Get(":roleId")
+  @RequirePermissions("com.lotto.service.auth-internal:role:view")
   @ApiOperation({ summary: "Get role details with permissions" })
   @ApiResponse({
     status: 200,
     description: "Role details retrieved successfully",
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User does not have required permissions",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User does not have the required permissions",
+        },
+        error: {
+          type: "string",
+          example: "ForbiddenException",
+        },
+        statusCode: {
+          type: "number",
+          example: 403,
+        },
+        correlationId: {
+          type: "string",
+          example: "123e4567-e89b-12d3-a456-426614174000",
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 404,

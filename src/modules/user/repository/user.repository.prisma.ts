@@ -155,41 +155,4 @@ export class UserRepositoryPrisma implements IUserRepository {
       savedUser.updated_at,
     );
   }
-
-  public async updatePassword(
-    userId: string,
-    hashedPassword: string,
-  ): Promise<void> {
-    this.logger.log("UserRepository::updatePassword", { userId });
-    await this.prismaService.users.update({
-      where: { id: userId },
-      data: { password: hashedPassword },
-    });
-  }
-
-  public async updateStatus(userId: string, status: UserStatus): Promise<User> {
-    this.logger.log("UserRepository::updateStatus", { userId, status });
-    const updatedUser = await this.prismaService.users.update({
-      where: { id: userId },
-      data: { status },
-      include: {
-        role: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-
-    return User.fromRepository(
-      updatedUser.id,
-      updatedUser.password,
-      updatedUser.username,
-      updatedUser.role?.name || null,
-      status,
-      updatedUser.last_login,
-      updatedUser.created_at,
-      updatedUser.updated_at,
-    );
-  }
 }

@@ -87,12 +87,8 @@ export class User {
     };
   }
 
-  public async setNewPassword(newPassword: string): Promise<void> {
-    try {
-      this._password = await bcrypt.hash(newPassword, 10);
-    } catch (error) {
-      throw new Error(`Failed to update password: ${error.message}`);
-    }
+  public setNewPassword(hashedPassword: string): void {
+    this._password = hashedPassword;
   }
 
   public updateLastLogin(): void {
