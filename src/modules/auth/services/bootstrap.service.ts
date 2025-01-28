@@ -19,24 +19,22 @@ export class BootstrapService implements OnModuleInit {
   private readonly adminPermissions = [
     // User Management
     "com.lotto.service.auth-internal:user:create",
-    "com.lotto.service.auth-internal:user:update",
-    "com.lotto.service.auth-internal:user:delete",
-    "com.lotto.service.auth-internal:user:change-password",
     "com.lotto.service.auth-internal:user:change-other-users-password",
     "com.lotto.service.auth-internal:user:change-status",
     "com.lotto.service.auth-internal:user:assign-role",
 
     // Role Management
     "com.lotto.service.auth-internal:role:create",
-    "com.lotto.service.auth-internal:role:update",
-    "com.lotto.service.auth-internal:role:delete",
     "com.lotto.service.auth-internal:role:view",
     "com.lotto.service.auth-internal:role:assign-permission",
     // Permission Management
     "com.lotto.service.auth-internal:permission:create",
-    "com.lotto.service.auth-internal:permission:update",
-    "com.lotto.service.auth-internal:permission:delete",
     "com.lotto.service.auth-internal:permission:view",
+  ];
+
+  private readonly basicPermissions = [
+    "com.lotto.service.auth-internal:user:view-profile",
+    "com.lotto.service.auth-internal:user:change-password",
   ];
 
   constructor(
@@ -68,7 +66,7 @@ export class BootstrapService implements OnModuleInit {
       this.logger.log("Creating default permissions...", {
         correlationId: bootstrapCorrelationId,
       });
-      const permissions = await Promise.all(
+      const adminPermissionObjects = await Promise.all(
         this.adminPermissions.map((name) =>
           this.permissionService.createPermission(
             {
@@ -80,11 +78,35 @@ export class BootstrapService implements OnModuleInit {
         ),
       );
 
+      const basicPermissionObjects = await Promise.all(
+        this.basicPermissions.map((name) =>
+          this.permissionService.createPermission(
+            {
+              name,
+              description: `Default permission: ${name}`,
+            },
+            bootstrapCorrelationId,
+          ),
+        ),
+      );
+
+      // Create basic role
+      this.logger.log("Creating Default Basic role...", {
+        correlationId: bootstrapCorrelationId,
+      });
+      const basicRole = await this.roleService.createRole(
+        {
+          name: "Basic permission",
+          description: "Basic permission for all users",
+        },
+        bootstrapCorrelationId,
+      );
+
       // Create admin role
       this.logger.log("Creating User Management role...", {
         correlationId: bootstrapCorrelationId,
       });
-      const role = await this.roleService.createRole(
+      const adminRole = await this.roleService.createRole(
         {
           name: "User Management",
           description: "User and role management",
@@ -97,9 +119,21 @@ export class BootstrapService implements OnModuleInit {
         correlationId: bootstrapCorrelationId,
       });
       await this.roleService.assignPermissions(
-        role.id,
+        adminRole.id,
         {
-          permission_ids: permissions.map((p) => p.id),
+          permission_ids: adminPermissionObjects.map((p) => p.id),
+        },
+        bootstrapCorrelationId,
+      );
+
+      // Assign basic permissions to basic role
+      this.logger.log("Assigning permissions to Basic role...", {
+        correlationId: bootstrapCorrelationId,
+      });
+      await this.roleService.assignPermissions(
+        basicRole.id,
+        {
+          permission_ids: basicPermissionObjects.map((p) => p.id),
         },
         bootstrapCorrelationId,
       );
@@ -136,9 +170,15 @@ export class BootstrapService implements OnModuleInit {
         this.logger.log("Assigning User Management role to admin user...", {
           correlationId: bootstrapCorrelationId,
         });
-        const updatedUser = await this.userService.assignRole(user.id, role.id, bootstrapCorrelationId);
+        let updatedUser = await this.userService.assignRole(user.id, adminRole.id, bootstrapCorrelationId);
 
-        this.logger.log("Admin user created with role and permissions:", {
+        // Assign Basic permission to admin user
+        this.logger.log("Assigning Basic permission to admin user...", {
+          correlationId: bootstrapCorrelationId,
+        });
+        updatedUser = await this.userService.assignRole(user.id, basicRole.id, bootstrapCorrelationId);
+
+        this.logger.log("Admin user created with roles and permissions:", {
           correlationId: bootstrapCorrelationId,
           userId: updatedUser.user_id,
           roleId: updatedUser.role_id,
@@ -163,14 +203,19 @@ export class BootstrapService implements OnModuleInit {
         });
         this.logger.warn("==================================================");
       } else {
-        // If admin user exists but doesn't have the role, assign it
+        // If admin user exists but doesn't have the roles, assign them
         if (!adminUser.role || adminUser.role.name !== "User Management") {
           this.logger.log("Assigning User Management role to existing admin user...", {
             correlationId: bootstrapCorrelationId,
           });
-          const updatedUser = await this.userService.assignRole(adminUser.id, role.id, bootstrapCorrelationId);
+          let updatedUser = await this.userService.assignRole(adminUser.id, adminRole.id, bootstrapCorrelationId);
           
-          this.logger.log("Admin user updated with role and permissions:", {
+          this.logger.log("Assigning Basic role to existing admin user...", {
+            correlationId: bootstrapCorrelationId,
+          });
+          updatedUser = await this.userService.assignRole(adminUser.id, basicRole.id, bootstrapCorrelationId);
+          
+          this.logger.log("Admin user updated with roles and permissions:", {
             correlationId: bootstrapCorrelationId,
             userId: updatedUser.user_id,
             roleId: updatedUser.role_id,

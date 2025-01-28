@@ -337,6 +337,11 @@
                 "type": "text"
               },
               {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
                 "key": "X-Correlation-Id",
                 "value": "{{$guid}}",
                 "type": "text"
