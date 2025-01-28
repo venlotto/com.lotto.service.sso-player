@@ -23,8 +23,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "push:db": "prisma migrate deploy",
-    "seed": "ts-node src/modules/seeder/seed.ts",
-    "lint:fix-types": "tsc --noEmit && npm run lint:fix"
+    "lint:fix-types": "tsc --noEmit && npm run lint:fix",
+    "reset:admin": "ts-node src/scripts/reset-admin-password.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

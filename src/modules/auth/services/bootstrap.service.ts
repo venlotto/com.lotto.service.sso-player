@@ -116,33 +116,40 @@ export class BootstrapService implements OnModuleInit {
         bootstrapCorrelationId,
       );
 
-      const password = this.generateSecurePassword();
+      // Check if admin user exists
+      const adminUser = await this.prisma.users.findFirst({
+        where: { username: "admin" },
+      });
 
-      this.logger.log("Creating User Management user...", {
-        correlationId: bootstrapCorrelationId,
-      });
-      await this.userService.createUser(
-        "admin",
-        password,
-        bootstrapCorrelationId,
-      );
+      if (!adminUser) {
+        const password = this.generateSecurePassword();
 
-      // Log admin credentials (only on first deployment)
-      this.logger.warn("==================================================");
-      this.logger.warn("IMPORTANT: Default admin user has been created", {
-        correlationId: bootstrapCorrelationId,
-      });
-      this.logger.warn(
-        "Please save these credentials and change the password",
-        { correlationId: bootstrapCorrelationId },
-      );
-      this.logger.warn("Username: admin", {
-        correlationId: bootstrapCorrelationId,
-      });
-      this.logger.warn(`Password: ${password}`, {
-        correlationId: bootstrapCorrelationId,
-      });
-      this.logger.warn("==================================================");
+        this.logger.log("Creating User Management user...", {
+          correlationId: bootstrapCorrelationId,
+        });
+        await this.userService.createUser(
+          "admin",
+          password,
+          bootstrapCorrelationId,
+        );
+
+        // Log admin credentials (only on first deployment)
+        this.logger.warn("==================================================");
+        this.logger.warn("IMPORTANT: Default admin user has been created", {
+          correlationId: bootstrapCorrelationId,
+        });
+        this.logger.warn(
+          "Please save these credentials and change the password",
+          { correlationId: bootstrapCorrelationId },
+        );
+        this.logger.warn("Username: admin", {
+          correlationId: bootstrapCorrelationId,
+        });
+        this.logger.warn(`Password: ${password}`, {
+          correlationId: bootstrapCorrelationId,
+        });
+        this.logger.warn("==================================================");
+      }
 
       this.logger.log("System bootstrap completed successfully", {
         correlationId: bootstrapCorrelationId,
