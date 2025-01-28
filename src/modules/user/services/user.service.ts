@@ -90,6 +90,13 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  /**
+   * Creates a new user or returns existing one if username already exists
+   * @param username The username for the user
+   * @param password The password for the user
+   * @param correlationId Correlation ID for request tracking
+   * @returns The created or existing user
+   */
   public async createUser(
     username: string,
     password: string,
@@ -99,15 +106,8 @@ export class UserService {
 
     const existingUser = await this.userRepository.findByUsername(username);
     if (existingUser) {
-      this.logger.error("Username already exists", { username, correlationId });
-      throw new ConflictException({
-        message: "Username already exists",
-        error: "ConflictException",
-        status_code: 409,
-        meta: {
-          correlation_id: correlationId,
-        },
-      });
+      this.logger.log("Username already exists, returning existing", { username, correlationId });
+      return existingUser;
     }
 
     const user = await User.newUser(password, username, null);
