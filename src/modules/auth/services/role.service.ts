@@ -18,6 +18,12 @@ export class RoleService {
     private readonly logger: Logger = new Logger(RoleService.name),
   ) {}
 
+  /**
+   * Creates a new role or returns existing one if it already exists
+   * @param dto The role data to create
+   * @param correlationId Correlation ID for request tracking
+   * @returns The created or existing role
+   */
   async createRole(dto: CreateRoleDto, correlationId: string) {
     this.logger.log("Creating role", { correlationId, name: dto.name });
 
@@ -26,15 +32,11 @@ export class RoleService {
     });
 
     if (existingRole) {
-      this.logger.warn("Role already exists", {
+      this.logger.log("Role already exists, returning existing", {
         correlationId,
         name: dto.name,
       });
-      throw new ConflictException({
-        message: "Role already exists",
-        error: "Conflict",
-        correlation_id: correlationId,
-      });
+      return existingRole;
     }
 
     return this.prisma.roles.create({
