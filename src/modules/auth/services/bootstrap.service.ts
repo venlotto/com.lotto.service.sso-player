@@ -63,12 +63,15 @@ export class BootstrapService implements OnModuleInit {
     // Generate a bootstrap correlation ID
     const bootstrapCorrelationId = `${new UUID().toString()}`;
 
-    // Check if system is already bootstrapped
-    const adminRole = await this.prisma.roles.findFirst({
-      where: { name: "admin" },
-    });
+    // Check if system is already bootstrapped by checking for admin role and permissions
+    const [adminRole, adminPermission] = await Promise.all([
+      this.prisma.roles.findFirst({ where: { name: "User Management" } }),
+      this.prisma.permissions.findFirst({
+        where: { name: "com.lotto.service.auth-internal:user:create" },
+      }),
+    ]);
 
-    if (adminRole) {
+    if (adminRole && adminPermission) {
       this.logger.log("System already bootstrapped, skipping initialization", {
         correlationId: bootstrapCorrelationId,
       });
