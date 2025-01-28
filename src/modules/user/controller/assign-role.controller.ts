@@ -2,14 +2,12 @@ import {
   Controller,
   Post,
   Body,
-  Param,
   UseGuards,
   Logger,
   InternalServerErrorException,
   Request,
-  NotFoundException,
 } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
@@ -36,16 +34,11 @@ export class AssignRoleController {
     private readonly logger: Logger = new Logger(AssignRoleController.name),
   ) {}
 
-  @Post(":userId/role")
+  @Post("assignRole")
   @RequirePermissions("com.lotto.service.auth-internal:user:assign-role")
   @ApiOperation({
     summary: "Assign role to user",
     description: "Assigns a role to a user and updates their permissions accordingly",
-  })
-  @ApiParam({
-    name: "userId",
-    description: "ID of the user to assign the role to",
-    type: "string",
   })
   @ApiResponse({
     status: 200,
@@ -133,14 +126,13 @@ export class AssignRoleController {
   })
   async assignRole(
     @Request() req: Request,
-    @Param("userId") userId: string,
     @Body() dto: AssignRoleDto,
   ) {
     const correlationId = req["correlationId"];
-    this.logger.log("Assigning role to user", { correlationId, userId, roleId: dto.roleId });
+    this.logger.log("Assigning role to user", { correlationId, userId: dto.user_id, roleId: dto.role_id });
 
     try {
-      return await this.userService.assignRole(userId, dto.roleId, correlationId);
+      return await this.userService.assignRole(dto.user_id, dto.role_id, correlationId);
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {

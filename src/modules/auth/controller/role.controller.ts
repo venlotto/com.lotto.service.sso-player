@@ -4,7 +4,6 @@ import {
   Body,
   Get,
   Param,
-  Put,
   UseGuards,
   Logger,
   InternalServerErrorException,
@@ -12,7 +11,6 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
-import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
 import { CreateRoleDto } from "../dto/create-role.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
@@ -144,86 +142,6 @@ export class RoleController {
       if (error instanceof InternalServerErrorException) {
         throw new InternalServerErrorException({
           message: "Error creating role",
-          error: "Internal Server Error",
-          correlation_id: correlationId,
-        });
-      }
-      throw error;
-    }
-  }
-
-  @Post(":roleId/permissions")
-  @RequirePermissions("com.lotto.service.auth-internal:role:assign-permission")
-  @ApiOperation({ summary: "Assign permissions to a role" })
-  @ApiResponse({
-    status: 200,
-    description: "Permissions assigned successfully",
-  })
-  @ApiResponse({
-    status: 403,
-    description: "User does not have required permissions",
-    schema: {
-      type: "object",
-      properties: {
-        message: {
-          type: "string",
-          example: "User does not have the required permissions",
-        },
-        error: {
-          type: "string",
-          example: "ForbiddenException",
-        },
-        statusCode: {
-          type: "number",
-          example: 403,
-        },
-        correlationId: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: "Role not found",
-    schema: {
-      type: "object",
-      properties: {
-        message: {
-          type: "string",
-          example: "Role not found",
-        },
-        error: {
-          type: "string",
-          example: "Not Found",
-        },
-        correlation_id: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
-        },
-      },
-    },
-  })
-  async assignPermissions(
-    @Request() req: Request,
-    @Param("roleId") roleId: string,
-    @Body() dto: AssignPermissionsDto,
-  ) {
-    const correlationId = req["correlationId"];
-    this.logger.log("Assigning permissions to role", { correlationId, roleId });
-
-    try {
-      return await this.roleService.assignPermissions(
-        roleId,
-        dto,
-        correlationId,
-      );
-    } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
-      if (error instanceof InternalServerErrorException) {
-        throw new InternalServerErrorException({
-          message: "Error assigning permissions",
           error: "Internal Server Error",
           correlation_id: correlationId,
         });
