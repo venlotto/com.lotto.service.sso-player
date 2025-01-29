@@ -21,6 +21,7 @@ import { RequirePermissions } from "../../auth/decorators/require-permissions.de
 import { UserService } from "../services/user.service";
 import { ListUsersQueryDto } from "../dto/list-users-query.dto";
 import { ListUsersResponseDto } from "../dto/list-users-response.dto";
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("User")
 @Controller("v1/users")
@@ -81,8 +82,8 @@ export class ListUsersController {
   async listUsers(
     @Request() req: Request,
     @Query() query: ListUsersQueryDto,
+    @CorrelationId() correlationId: string | null,
   ): Promise<ListUsersResponseDto> {
-    const correlationId = req["correlationId"];
     this.logger.log("Listing users", { correlationId, query });
 
     try {

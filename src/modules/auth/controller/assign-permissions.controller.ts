@@ -36,10 +36,58 @@ export class AssignPermissionsController {
 
   @Post("assignPermissions")
   @RequirePermissions("com.lotto.service.auth-internal:role:assign-permission")
-  @ApiOperation({ summary: "Assign permissions to a role" })
+  @ApiOperation({ 
+    summary: "Assign permissions to a role",
+    description: "Assigns multiple permissions to a role. Skips permissions that are already assigned to the role."
+  })
   @ApiResponse({
     status: 200,
     description: "Permissions assigned successfully",
+    schema: {
+      type: "object",
+      properties: {
+        role_id: {
+          type: "string",
+          example: "123e4567-e89b-12d3-a456-426614174000",
+        },
+        permission_ids: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          example: ["456e7890-f12d-34e5-a678-901234567890", "789e0123-f45d-67e8-a901-234567890123"],
+        },
+        role: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+            name: {
+              type: "string",
+              example: "admin",
+            },
+            permissions: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  permission_id: {
+                    type: "string",
+                    example: "456e7890-f12d-34e5-a678-901234567890",
+                  },
+                  name: {
+                    type: "string",
+                    example: "com.lotto.service.auth-internal:user:create",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 403,
@@ -92,7 +140,11 @@ export class AssignPermissionsController {
     @Body() dto: AssignPermissionsDto,
   ) {
     const correlationId = req["correlationId"];
-    this.logger.log("Assigning permissions to role", { correlationId, roleId: dto.role_id });
+    this.logger.log("Assigning permissions to role", { 
+      correlationId, 
+      roleId: dto.role_id,
+      permissionCount: dto.permission_ids.length 
+    });
 
     try {
       return await this.roleService.assignPermissions(

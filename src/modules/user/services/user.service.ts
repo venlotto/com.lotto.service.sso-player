@@ -141,8 +141,8 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async assignRole(userId: string, roleId: string, correlationId: string): Promise<User> {
-    this.logger.log("Assigning role to user", { correlationId, userId, roleId });
+  async assignRole(userId: string, roleIds: string[], correlationId: string): Promise<User> {
+    this.logger.log("Assigning roles to user", { correlationId, userId, roleIds });
 
     // Check if user exists
     const user = await this.userRepository.findById(userId);
@@ -154,24 +154,24 @@ export class UserService {
       });
     }
 
-    // Get role with permissions
-    const role = await this.roleService.getRoleWithPermissions(roleId, correlationId);
-    if (!role) {
-      throw new NotFoundException({
-        message: "Role not found",
-        error: "Not Found",
-        correlation_id: correlationId,
-      });
-    }
+    // Process each role
+    for (const roleId of roleIds) {
+      // Get role with permissions
+      const role = await this.roleService.getRoleWithPermissions(roleId, correlationId);
+      if (!role) {
+        this.logger.warn(`Role not found, skipping`, { correlationId, roleId });
+        continue;
+      }
 
-    // Check if user already has this role
-    if (user.roleNames.includes(role.name)) {
-      this.logger.log("User already has this role", { correlationId, userId, roleName: role.name });
-      return user;
-    }
+      // Skip if user already has this role
+      if (user.roleNames.includes(role.name)) {
+        this.logger.log("User already has this role, skipping", { correlationId, userId, roleName: role.name });
+        continue;
+      }
 
-    // Add the new role and its permissions to the user
-    user.addRole(role.name, role.permissions.map(p => p.permission_id));
+      // Add the new role and its permissions to the user
+      user.addRole(role.name, role.permissions.map(p => p.permission_id));
+    }
 
     // Save and return updated user
     return this.userRepository.save(user);

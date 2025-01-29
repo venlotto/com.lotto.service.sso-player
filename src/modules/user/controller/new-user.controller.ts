@@ -14,8 +14,6 @@ import { ApiOperation, ApiResponse, ApiTags, ApiHeader } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
-import { Public } from "../../auth/decorators/public.decorator";
-import { AuthService } from "../../auth/services/auth.service";
 import { NewUserDto } from "../dto/new-user.dto";
 import { User } from "../model/user.model";
 import { UserService } from "../services/user.service";

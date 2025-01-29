@@ -16,6 +16,7 @@ import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
 import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
@@ -131,8 +132,11 @@ export class RoleController {
       },
     },
   })
-  async createRole(@Request() req: Request, @Body() dto: CreateRoleDto) {
-    const correlationId = req["correlationId"];
+  async createRole(
+    @Request() req: Request,
+    @Body() dto: CreateRoleDto,
+    @CorrelationId() correlationId: string | null,
+  ) {
     this.logger.log("Creating new role", { correlationId });
 
     try {
@@ -227,8 +231,10 @@ export class RoleController {
     status: 403,
     description: "User does not have required permissions",
   })
-  async getAllRoles(@Request() req: Request) {
-    const correlationId = req["correlationId"];
+  async getAllRoles(
+    @Request() req: Request,
+    @CorrelationId() correlationId: string | null,
+  ) {
     this.logger.log("Getting all roles", { correlationId });
 
     try {
@@ -332,15 +338,15 @@ export class RoleController {
     status: 404,
     description: "Role not found",
   })
-  async getRole(@Request() req: Request, @Param("roleId") roleId: string) {
-    const correlationId = req["correlationId"];
-    this.logger.log("Getting role details", { correlationId, roleId });
+  async getRole(
+    @Request() req: Request,
+    @Param("roleId") roleId: string,
+    @CorrelationId() correlationId: string | null,
+  ) {
+    this.logger.log("Getting role by ID", { correlationId, roleId });
 
     try {
-      const role = await this.roleService.getRoleWithPermissions(
-        roleId,
-        correlationId,
-      );
+      const role = await this.roleService.getRoleWithPermissions(roleId, correlationId);
       return {
         message: "Success",
         status_code: 200,

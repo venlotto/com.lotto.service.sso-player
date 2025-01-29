@@ -14,6 +14,7 @@ import { PermissionGuard } from "../guards/permission.guard";
 import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
 import { RemovePermissionsDto } from "../dto/remove-permissions.dto";
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
@@ -107,8 +108,8 @@ export class RemovePermissionsController {
   async removePermissions(
     @Request() req: Request,
     @Body() dto: RemovePermissionsDto,
+    @CorrelationId() correlationId: string | null,
   ) {
-    const correlationId = req["correlationId"];
     this.logger.log("Removing permissions from role", { correlationId, roleId: dto.role_id });
 
     try {

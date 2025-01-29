@@ -6,11 +6,11 @@ import { MeResponseDto } from "../dto/me-response.dto";
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("User")
-@Controller("me")
+@Controller("v1/users")
 export class MeController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
+  @Get("me")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: "Get current user information" })

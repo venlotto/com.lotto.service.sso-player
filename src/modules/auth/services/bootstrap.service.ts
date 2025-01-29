@@ -203,8 +203,12 @@ export class BootstrapService implements OnModuleInit {
           correlationId: bootstrapCorrelationId,
         });
         
-        let updatedUser = await this.userService.assignRole(user.id, adminRole.id, bootstrapCorrelationId);
-        updatedUser = await this.userService.assignRole(user.id, basicRole.id, bootstrapCorrelationId);
+        // Assign both roles at once
+        const updatedUser = await this.userService.assignRole(
+          user.id, 
+          [adminRole.id, basicRole.id],
+          bootstrapCorrelationId
+        );
 
         this.logger.log("Admin user created with roles:", {
           correlationId: bootstrapCorrelationId,
@@ -245,9 +249,12 @@ export class BootstrapService implements OnModuleInit {
             correlationId: bootstrapCorrelationId,
           });
 
-          for (const role of missingRoles) {
-            await this.userService.assignRole(adminUser.id, role.id, bootstrapCorrelationId);
-          }
+          // Assign all missing roles at once
+          await this.userService.assignRole(
+            adminUser.id, 
+            missingRoles.map(role => role.id),
+            bootstrapCorrelationId
+          );
 
           this.logger.log("Admin user roles updated", {
             correlationId: bootstrapCorrelationId,

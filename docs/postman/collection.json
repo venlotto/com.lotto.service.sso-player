@@ -282,7 +282,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"role_id\": \"role-id-1\",\n    \"permission_ids\": [\"permission-id-1\", \"permission-id-2\"]\n}",
+              "raw": "{\n    \"role_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"permission_ids\": [\n        \"456e7890-f12d-34e5-a678-901234567890\",\n        \"789e0123-f45d-67e8-a901-234567890123\"\n    ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -294,8 +294,37 @@
               "host": ["{{baseUrl}}"],
               "path": ["v1", "roles", "assignPermissions"]
             },
-            "description": "Assign permissions to a role"
-          }
+            "description": "Assign multiple permissions to a role. Skips permissions that are already assigned to the role."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"role_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"permission_ids\": [\n        \"456e7890-f12d-34e5-a678-901234567890\",\n        \"789e0123-f45d-67e8-a901-234567890123\"\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/v1/roles/assignPermissions"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"role_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"permission_ids\": [\n        \"456e7890-f12d-34e5-a678-901234567890\",\n        \"789e0123-f45d-67e8-a901-234567890123\"\n    ],\n    \"role\": {\n        \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n        \"name\": \"admin\",\n        \"permissions\": [\n            {\n                \"permission_id\": \"456e7890-f12d-34e5-a678-901234567890\",\n                \"name\": \"com.lotto.service.auth-internal:user:create\"\n            },\n            {\n                \"permission_id\": \"789e0123-f45d-67e8-a901-234567890123\",\n                \"name\": \"com.lotto.service.auth-internal:user:update\"\n            }\n        ]\n    }\n}"
+              }
+            }
+          ]
         },
         {
           "name": "Remove Permissions from Role",
@@ -620,7 +649,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user_id\": \"user-id-1\",\n    \"role_id\": \"role-id-1\"\n}",
+              "raw": "{\n    \"user_id\": \"user-id-1\",\n    \"role_ids\": [\"role-id-1\", \"role-id-2\"]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -632,7 +661,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["v1", "users", "assignRole"]
             },
-            "description": "Assign a role to a user"
+            "description": "Assign multiple roles to a user. Skips roles that are already assigned or not found."
           }
         },
         {
@@ -653,9 +682,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/v1/me",
+              "raw": "{{baseUrl}}/v1/users/me",
               "host": ["{{baseUrl}}"],
-              "path": ["v1", "me"]
+              "path": ["v1", "users", "me"]
             },
             "description": "Get current user's information using their access token"
           },
@@ -666,7 +695,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/v1/me"
+                  "raw": "{{baseUrl}}/v1/users/me"
                 }
               },
               "status": "OK",

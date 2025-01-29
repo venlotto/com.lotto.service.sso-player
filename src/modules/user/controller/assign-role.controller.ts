@@ -14,6 +14,7 @@ import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { UserService } from "../services/user.service";
 import { AssignRoleDto } from "../dto/assign-role.dto";
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("User")
 @Controller("v1/users")
@@ -37,12 +38,12 @@ export class AssignRoleController {
   @Post("assignRole")
   @RequirePermissions("com.lotto.service.auth-internal:user:assign-role")
   @ApiOperation({
-    summary: "Assign role to user",
-    description: "Assigns a role to a user and updates their permissions accordingly",
+    summary: "Assign roles to user",
+    description: "Assigns multiple roles to a user and updates their permissions accordingly. Skips roles that are already assigned or not found.",
   })
   @ApiResponse({
     status: 200,
-    description: "Role assigned successfully",
+    description: "Roles assigned successfully",
     schema: {
       type: "object",
       properties: {
@@ -50,9 +51,12 @@ export class AssignRoleController {
           type: "string",
           example: "123e4567-e89b-12d3-a456-426614174000",
         },
-        role_id: {
-          type: "string",
-          example: "456e7890-f12d-34e5-a678-901234567890",
+        role_ids: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          example: ["456e7890-f12d-34e5-a678-901234567890", "789e0123-f45d-67e8-a901-234567890123"],
         },
         user: {
           type: "object",
@@ -65,9 +69,12 @@ export class AssignRoleController {
               type: "string",
               example: "john.doe",
             },
-            role: {
-              type: "string",
-              example: "admin",
+            roles: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+              example: ["admin", "editor"],
             },
             status: {
               type: "string",
@@ -105,7 +112,7 @@ export class AssignRoleController {
   })
   @ApiResponse({
     status: 404,
-    description: "User or role not found",
+    description: "User not found",
     schema: {
       type: "object",
       properties: {
@@ -127,17 +134,17 @@ export class AssignRoleController {
   async assignRole(
     @Request() req: Request,
     @Body() dto: AssignRoleDto,
+    @CorrelationId() correlationId: string | null,
   ) {
-    const correlationId = req["correlationId"];
-    this.logger.log("Assigning role to user", { correlationId, userId: dto.user_id, roleId: dto.role_id });
+    this.logger.log("Assigning roles to user", { correlationId, userId: dto.user_id, roleIds: dto.role_ids });
 
     try {
-      return await this.userService.assignRole(dto.user_id, dto.role_id, correlationId);
+      return await this.userService.assignRole(dto.user_id, dto.role_ids, correlationId);
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {
         throw new InternalServerErrorException({
-          message: "Error assigning role to user",
+          message: "Error assigning roles to user",
           error: "Internal Server Error",
           correlation_id: correlationId,
         });

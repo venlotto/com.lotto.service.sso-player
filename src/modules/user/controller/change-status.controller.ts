@@ -19,6 +19,7 @@ import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { ChangeStatusDto } from "../dto/change-status.dto";
 import { UserService } from "../services/user.service";
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 interface RequestWithUser extends Request {
   user: {
@@ -128,8 +129,11 @@ export class ChangeStatusController {
       },
     },
   })
-  async changeStatus(@Request() req: RequestWithUser, @Body() dto: ChangeStatusDto) {
-    const correlationId = req["correlationId"];
+  async changeStatus(
+    @Request() req: RequestWithUser,
+    @Body() dto: ChangeStatusDto,
+    @CorrelationId() correlationId: string | null,
+  ) {
     const requestorUserId = req.user.sub;
 
     this.logger.log("Changing user status", {
