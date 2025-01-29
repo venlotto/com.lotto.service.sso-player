@@ -178,10 +178,10 @@ export class BootstrapService implements OnModuleInit {
 
         this.logger.log("Admin user created with roles and permissions:", {
           correlationId: bootstrapCorrelationId,
-          userId: updatedUser.user_id,
-          roleId: updatedUser.role_id,
-          roleName: updatedUser.user.roleName,
-          permissions: updatedUser.user.permissions
+          userId: updatedUser.id,
+          roleId: updatedUser.roleName,
+          roleName: updatedUser.roleName,
+          permissions: updatedUser.permissions
         });
 
         // Log admin credentials (only on first deployment)
@@ -215,10 +215,10 @@ export class BootstrapService implements OnModuleInit {
           
           this.logger.log("Admin user updated with roles and permissions:", {
             correlationId: bootstrapCorrelationId,
-            userId: updatedUser.user_id,
-            roleId: updatedUser.role_id,
-            roleName: updatedUser.user.roleName,
-            permissions: updatedUser.user.permissions
+            userId: updatedUser.id,
+            roleId: updatedUser.roleName,
+            roleName: updatedUser.roleName,
+            permissions: updatedUser.permissions
           });
         }
       }

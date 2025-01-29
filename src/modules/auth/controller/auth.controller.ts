@@ -4,12 +4,10 @@ import {
   Logger,
   Post,
   UnauthorizedException,
-  Req,
-  Request,
   Headers,
   UseGuards,
 } from "@nestjs/common";
-import { ApiTags, ApiHeader, ApiOperation, ApiResponse, ApiSecurity, ApiBody } from "@nestjs/swagger";
+import { ApiTags, ApiHeader, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 import { UUID } from "../../../common/value-object/uuid.value-object";
 import { Public } from "../decorators/public.decorator";
@@ -18,6 +16,7 @@ import { RefreshTokenDto } from "../dto/refresh-token.dto";
 import { AuthService } from "../services/auth.service";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { LogoutDto } from "../dto/logout.dto";
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Auth")
 @Controller("v1/auth")
@@ -66,10 +65,9 @@ export class AuthController {
     },
   })
   public async login(
-    @Req() req: Request,
     @Body() loginUserDto: LoginUserDto,
+    @CorrelationId() correlationId: string | null,
   ): Promise<any> {
-    const correlationId = req["correlationId"];
     this.logger.log("Login attempt", { correlationId });
 
     try {
@@ -93,36 +91,10 @@ export class AuthController {
 
   @Post("refreshToken")
   @ApiOperation({ summary: "Refresh access token" })
-  @ApiResponse({
-    status: 200,
-    description: "Tokens successfully refreshed",
-    schema: {
-      type: "object",
-      properties: {
-        user_id: { type: "string", format: "uuid" },
-        access_token: { type: "string" },
-        refresh_token: { type: "string" },
-        correlation_id: { type: "string", format: "uuid" },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: "Invalid or expired refresh token",
-    schema: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-        error: { type: "string" },
-        correlation_id: { type: "string", format: "uuid" },
-      },
-    },
-  })
   public async refresh(
-    @Req() req: Request,
     @Body() dto: RefreshTokenDto,
+    @CorrelationId() correlationId: string | null,
   ): Promise<any> {
-    const correlationId = req["correlationId"];
     this.logger.log("Refreshing token", { correlationId });
 
     try {
@@ -173,26 +145,22 @@ export class AuthController {
     }
   }
 
-  @Post("logout")
   @UseGuards(JwtAuthGuard)
+  @Post("logout")
   @ApiOperation({ summary: "Logout user" })
-  @ApiResponse({
-    status: 200,
-    description: "Successfully logged out",
-  })
-  @ApiResponse({
-    status: 401,
-    description: "Invalid or missing access token",
-  })
-  @ApiSecurity("bearer")
-  @ApiBody({ type: LogoutDto })
   public async logout(
     @Headers("authorization") authHeader: string,
     @Body() body: LogoutDto,
+    @CorrelationId() correlationId: string | null,
   ): Promise<void> {
-    const refreshToken = await this.authService.findRefreshToken(body.refresh_token);
-    if (refreshToken) {
-      await this.authService.revokeToken(refreshToken.token);
+    try {
+      const refreshToken = await this.authService.findRefreshToken(body.refresh_token);
+      if (refreshToken) {
+        await this.authService.revokeToken(refreshToken.token);
+      }
+    } catch (error) {
+      this.logger.error(error.message, error.stack, { correlationId });
+      throw error;
     }
   }
 }
