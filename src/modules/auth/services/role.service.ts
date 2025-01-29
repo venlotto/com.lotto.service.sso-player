@@ -1,15 +1,11 @@
 import {
   Injectable,
   NotFoundException,
-  ConflictException,
-  BadRequestException,
   Logger,
 } from "@nestjs/common";
 
 import { PrismaService } from "../../prisma/prisma.service";
-import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
 import { CreateRoleDto } from "../dto/create-role.dto";
-import { Role } from "../entity/role.entity";
 
 @Injectable()
 export class RoleService {
@@ -46,67 +42,93 @@ export class RoleService {
 
   async assignPermissions(
     roleId: string,
-    dto: AssignPermissionsDto,
+    permissionIds: string[],
     correlationId: string,
-  ): Promise<Role> {
-    this.logger.log("Assigning permissions to role", { correlationId, roleId });
-
-    const role = await this.prisma.roles.findUnique({
-      where: { id: roleId },
-    });
-
-    if (!role) {
-      throw new NotFoundException({
-        message: "Role not found",
-        error: "Not Found",
-        correlation_id: correlationId,
+  ): Promise<any> {
+    try {
+      // Check if role exists
+      const role = await this.prisma.roles.findUnique({
+        where: { id: roleId },
       });
-    }
 
-    // Verify all permissions exist
-    const permissions = await this.prisma.permissions.findMany({
-      where: { id: { in: dto.permission_ids } },
-    });
+      if (!role) {
+        throw new NotFoundException({
+          message: "Role not found",
+          error: "Not Found",
+          correlation_id: correlationId,
+        });
+      }
 
-    if (permissions.length !== dto.permission_ids.length) {
-      throw new BadRequestException({
-        message: "One or more permissions not found",
-        error: "Bad Request",
-        correlation_id: correlationId,
+      // Assign new permissions
+      const permissions = await Promise.all(
+        permissionIds.map((permissionId) =>
+          this.prisma.rolepermissions.create({
+            data: {
+              role_id: roleId,
+              permission_id: permissionId,
+            },
+          }),
+        ),
+      );
+
+      return {
+        role_id: roleId,
+        permissions: permissions.map((p) => p.permission_id),
+      };
+    } catch (error) {
+      this.logger.error("Error assigning permissions to role", error.stack, {
+        correlationId,
       });
+      throw error;
     }
+  }
 
-    // Remove existing permissions
-    await this.prisma.rolepermissions.deleteMany({
-      where: { role_id: roleId },
-    });
+  async removePermissions(
+    roleId: string,
+    permissionIds: string[],
+    correlationId: string,
+  ): Promise<any> {
+    try {
+      // Check if role exists
+      const role = await this.prisma.roles.findUnique({
+        where: { id: roleId },
+      });
 
-    // Add new permissions
-    const rolePermissions = dto.permission_ids.map((permissionId) => ({
-      role_id: roleId,
-      permission_id: permissionId,
-    }));
+      if (!role) {
+        throw new NotFoundException({
+          message: "Role not found",
+          error: "Not Found",
+          correlation_id: correlationId,
+        });
+      }
 
-    await this.prisma.rolepermissions.createMany({
-      data: rolePermissions,
-    });
+      // Remove specified permissions
+      await this.prisma.rolepermissions.deleteMany({
+        where: {
+          role_id: roleId,
+          permission_id: {
+            in: permissionIds,
+          },
+        },
+      });
 
-    const updatedRole = await this.getRoleWithPermissions(roleId, correlationId);
-    
-    return new Role({
-      id: updatedRole.id,
-      name: updatedRole.name,
-      description: updatedRole.description,
-      createdAt: updatedRole.created_at,
-      updatedAt: updatedRole.updated_at,
-      permissions: updatedRole.permissions.map(rp => ({
-        permission: {
-          id: rp.permission.id,
-          name: rp.permission.name,
-          description: rp.permission.description
-        }
-      }))
-    });
+      // Get remaining permissions
+      const remainingPermissions = await this.prisma.rolepermissions.findMany({
+        where: {
+          role_id: roleId,
+        },
+      });
+
+      return {
+        role_id: roleId,
+        permissions: remainingPermissions.map((p) => p.permission_id),
+      };
+    } catch (error) {
+      this.logger.error("Error removing permissions from role", error.stack, {
+        correlationId,
+      });
+      throw error;
+    }
   }
 
   async getRoleWithPermissions(roleId: string, correlationId: string) {
@@ -114,10 +136,20 @@ export class RoleService {
 
     const role = await this.prisma.roles.findUnique({
       where: { id: roleId },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        created_at: true,
+        updated_at: true,
         permissions: {
-          include: {
-            permission: true,
+          select: {
+            permission: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
@@ -131,21 +163,53 @@ export class RoleService {
       });
     }
 
-    return role;
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      created_at: role.created_at,
+      updated_at: role.updated_at,
+      permissions: role.permissions.map((p) => ({
+        permission_id: p.permission.id,
+        name: p.permission.name,
+      })),
+    };
   }
 
   async getAllRoles(correlationId: string) {
     this.logger.log("Getting all roles", { correlationId });
 
-    return this.prisma.roles.findMany({
-      include: {
+    const roles = await this.prisma.roles.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        created_at: true,
+        updated_at: true,
         permissions: {
-          include: {
-            permission: true,
+          select: {
+            permission: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
     });
+
+    return roles.map((role) => ({
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      created_at: role.created_at,
+      updated_at: role.updated_at,
+      permissions: role.permissions.map((p) => ({
+        permission_id: p.permission.id,
+        name: p.permission.name,
+      })),
+    }));
   }
 
   async validateRoleExists(

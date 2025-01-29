@@ -106,6 +106,12 @@ export class User {
     this._lastLogin = new Date();
   }
 
+  public setRole(roleName: string, permissions: string[]): void {
+    this._roleName = roleName;
+    this._permissions = permissions;
+    this._updatedAt = new Date();
+  }
+
   get id(): string {
     return this._id.toString();
   }
@@ -153,6 +159,7 @@ export class User {
   private _setStatus(newStatus: UserStatus): void {
     if (newStatus !== this._status) {
       this._status = newStatus;
+      this._updatedAt = new Date();
     }
   }
 }

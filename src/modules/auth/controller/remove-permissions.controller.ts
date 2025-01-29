@@ -13,7 +13,7 @@ import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
 import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
-import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
+import { RemovePermissionsDto } from "../dto/remove-permissions.dto";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
@@ -28,18 +28,35 @@ import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
     example: "123e4567-e89b-12d3-a456-426614174000",
   },
 })
-export class AssignPermissionsController {
+export class RemovePermissionsController {
   constructor(
     private readonly roleService: RoleService,
-    private readonly logger: Logger = new Logger(AssignPermissionsController.name),
+    private readonly logger: Logger = new Logger(RemovePermissionsController.name),
   ) {}
 
-  @Post("assignPermissions")
-  @RequirePermissions("com.lotto.service.auth-internal:role:assign-permission")
-  @ApiOperation({ summary: "Assign permissions to a role" })
+  @Post("removePermissions")
+  @RequirePermissions("com.lotto.service.auth-internal:role:remove-permission")
+  @ApiOperation({ summary: "Remove permissions from a role" })
   @ApiResponse({
     status: 200,
-    description: "Permissions assigned successfully",
+    description: "Permissions removed successfully",
+    schema: {
+      type: "object",
+      properties: {
+        role_id: {
+          type: "string",
+          example: "123e4567-e89b-12d3-a456-426614174000",
+        },
+        permissions: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description: "Remaining permission IDs after removal",
+          example: ["permission-id-1", "permission-id-2"],
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 403,
@@ -87,15 +104,15 @@ export class AssignPermissionsController {
       },
     },
   })
-  async assignPermissions(
+  async removePermissions(
     @Request() req: Request,
-    @Body() dto: AssignPermissionsDto,
+    @Body() dto: RemovePermissionsDto,
   ) {
     const correlationId = req["correlationId"];
-    this.logger.log("Assigning permissions to role", { correlationId, roleId: dto.role_id });
+    this.logger.log("Removing permissions from role", { correlationId, roleId: dto.role_id });
 
     try {
-      return await this.roleService.assignPermissions(
+      return await this.roleService.removePermissions(
         dto.role_id,
         dto.permission_ids,
         correlationId,
@@ -104,7 +121,7 @@ export class AssignPermissionsController {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {
         throw new InternalServerErrorException({
-          message: "Error assigning permissions",
+          message: "Error removing permissions",
           error: "Internal Server Error",
           correlation_id: correlationId,
         });

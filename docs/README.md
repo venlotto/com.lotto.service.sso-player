@@ -124,7 +124,7 @@ Authenticate a user and receive access and refresh tokens.
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
   "message": "Login successful",
@@ -141,6 +141,10 @@ Authenticate a user and receive access and refresh tokens.
 }
 ```
 
+**Error Responses:**
+- 401: Invalid credentials
+- 500: Internal server error during authentication
+
 #### POST /auth/refresh-token
 Get a new access token using a refresh token.
 
@@ -151,10 +155,10 @@ Get a new access token using a refresh token.
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
-  "message": "Token refreshed",
+  "message": "Token refreshed successfully",
   "status_code": 200,
   "data": {
     "access_token": "string",
@@ -166,8 +170,12 @@ Get a new access token using a refresh token.
 }
 ```
 
+**Error Responses:**
+- 401: Invalid or expired refresh token
+- 500: Error refreshing token
+
 #### POST /auth/logout
-Invalidate the current session by revoking the refresh token. Requires authentication.
+Invalidate the current session.
 
 **Request:**
 ```json
@@ -176,16 +184,20 @@ Invalidate the current session by revoking the refresh token. Requires authentic
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
-  "message": "Logout successful",
+  "message": "Logged out successfully",
   "status_code": 200,
   "meta": {
     "correlation_id": "string"
   }
 }
 ```
+
+**Error Responses:**
+- 401: Invalid session
+- 500: Error during logout
 
 ### User Management
 
@@ -200,7 +212,7 @@ Register a new user.
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
   "message": "User created successfully",
@@ -217,8 +229,12 @@ Register a new user.
 }
 ```
 
+**Error Responses:**
+- 409: User with this email already exists
+- 500: An unexpected error occurred
+
 #### POST /users/changePassword
-Change user password. Requires authentication.
+Change user password.
 
 **Request:**
 ```json
@@ -228,7 +244,7 @@ Change user password. Requires authentication.
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
   "message": "Password changed successfully",
@@ -239,8 +255,12 @@ Change user password. Requires authentication.
 }
 ```
 
+**Error Responses:**
+- 401: Current password is incorrect
+- 500: Error changing password
+
 #### POST /users/changeStatus
-Change user status. Requires authentication and admin privileges.
+Change user status.
 
 **Request:**
 ```json
@@ -249,21 +269,26 @@ Change user status. Requires authentication and admin privileges.
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
-  "message": "User status updated",
+  "message": "User status updated successfully",
   "status_code": 200,
   "data": {
     "id": "string",
     "username": "string",
-    "status": "blocked"
+    "status": "string"
   },
   "meta": {
     "correlation_id": "string"
   }
 }
 ```
+
+**Error Responses:**
+- 403: Insufficient permissions to change user status
+- 404: User not found
+- 500: Error updating user status
 
 ### Role Management
 
@@ -278,7 +303,7 @@ Create a new role.
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
   "message": "Role created successfully",
@@ -294,49 +319,57 @@ Create a new role.
 }
 ```
 
+**Error Responses:**
+- 409: Role with this name already exists
+- 500: Error creating role
+
 #### GET /v1/roles
 Get a list of all roles.
 
-**Response:**
+**Success Response:**
 ```json
 {
-  "message": "Roles retrieved successfully",
+  "message": "Success",
   "status_code": 200,
   "data": [
     {
       "id": "string",
-      "name": "admin",
-      "description": "Administrator role"
-    },
-    {
-      "id": "string",
-      "name": "editor",
-      "description": "Content editor role"
+      "name": "string",
+      "description": "string"
     }
   ],
   "meta": {
-    "correlation_id": "string"
+    "correlation_id": "string",
+    "pagination": {
+      "current_page": 1,
+      "total_pages": 5,
+      "total_items": 50,
+      "items_per_page": 10
+    }
   }
 }
 ```
 
+**Error Responses:**
+- 500: Error retrieving roles
+
 #### GET /v1/roles/:roleId
 Get details of a specific role.
 
-**Response:**
+**Success Response:**
 ```json
 {
-  "message": "Role retrieved successfully",
+  "message": "Success",
   "status_code": 200,
   "data": {
     "id": "string",
-    "name": "editor",
-    "description": "Content editor role",
+    "name": "string",
+    "description": "string",
     "permissions": [
       {
         "id": "string",
-        "name": "create:article",
-        "description": "Can create articles"
+        "name": "string",
+        "description": "string"
       }
     ]
   },
@@ -345,6 +378,10 @@ Get details of a specific role.
   }
 }
 ```
+
+**Error Responses:**
+- 404: Role not found
+- 500: Error retrieving role
 
 #### PUT /v1/roles/:roleId/permissions
 Assign permissions to a role.
@@ -397,7 +434,7 @@ Create a new permission.
 }
 ```
 
-**Response:**
+**Success Response:**
 ```json
 {
   "message": "Permission created successfully",
@@ -413,31 +450,39 @@ Create a new permission.
 }
 ```
 
+**Error Responses:**
+- 409: Permission with this name already exists
+- 500: Error creating permission
+
 #### GET /v1/permissions
 Get a list of all permissions.
 
-**Response:**
+**Success Response:**
 ```json
 {
-  "message": "Permissions retrieved successfully",
+  "message": "Success",
   "status_code": 200,
   "data": [
     {
       "id": "string",
-      "name": "create:article",
-      "description": "Can create articles"
-    },
-    {
-      "id": "string",
-      "name": "edit:article",
-      "description": "Can edit articles"
+      "name": "string",
+      "description": "string"
     }
   ],
   "meta": {
-    "correlation_id": "string"
+    "correlation_id": "string",
+    "pagination": {
+      "current_page": 1,
+      "total_pages": 5,
+      "total_items": 50,
+      "items_per_page": 10
+    }
   }
 }
 ```
+
+**Error Responses:**
+- 500: Error retrieving permissions
 
 ## Development
 

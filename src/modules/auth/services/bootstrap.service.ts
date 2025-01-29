@@ -22,14 +22,16 @@ export class BootstrapService implements OnModuleInit {
     "com.lotto.service.auth-internal:user:change-other-users-password",
     "com.lotto.service.auth-internal:user:change-status",
     "com.lotto.service.auth-internal:user:assign-role",
-
+    "com.lotto.service.auth-internal:user:remove-role",
     // Role Management
     "com.lotto.service.auth-internal:role:create",
     "com.lotto.service.auth-internal:role:view",
     "com.lotto.service.auth-internal:role:assign-permission",
+    "com.lotto.service.auth-internal:role:remove-permission",
     // Permission Management
     "com.lotto.service.auth-internal:permission:create",
     "com.lotto.service.auth-internal:permission:view",
+    "com.lotto.service.auth-internal:permission:delete",
   ];
 
   private readonly basicPermissions = [
@@ -83,7 +85,7 @@ export class BootstrapService implements OnModuleInit {
           this.permissionService.createPermission(
             {
               name,
-              description: `Default permission: ${name}`,
+              description: `Basic permission: ${name}`,
             },
             bootstrapCorrelationId,
           ),
@@ -96,7 +98,7 @@ export class BootstrapService implements OnModuleInit {
       });
       const basicRole = await this.roleService.createRole(
         {
-          name: "Basic permission",
+          name: "Basic",
           description: "Basic permission for all users",
         },
         bootstrapCorrelationId,
@@ -120,9 +122,7 @@ export class BootstrapService implements OnModuleInit {
       });
       await this.roleService.assignPermissions(
         adminRole.id,
-        {
-          permission_ids: adminPermissionObjects.map((p) => p.id),
-        },
+        adminPermissionObjects.map((p) => p.id),
         bootstrapCorrelationId,
       );
 
@@ -132,9 +132,7 @@ export class BootstrapService implements OnModuleInit {
       });
       await this.roleService.assignPermissions(
         basicRole.id,
-        {
-          permission_ids: basicPermissionObjects.map((p) => p.id),
-        },
+        basicPermissionObjects.map((p) => p.id),
         bootstrapCorrelationId,
       );
 

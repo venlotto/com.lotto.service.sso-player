@@ -156,38 +156,91 @@ export class RoleController {
   @ApiResponse({
     status: 200,
     description: "List of all roles with permissions",
-  })
-  @ApiResponse({
-    status: 403,
-    description: "User does not have required permissions",
     schema: {
       type: "object",
       properties: {
         message: {
           type: "string",
-          example: "User does not have the required permissions",
+          example: "Success",
         },
-        error: {
-          type: "string",
-          example: "ForbiddenException",
-        },
-        statusCode: {
+        status_code: {
           type: "number",
-          example: 403,
+          example: 200,
         },
-        correlationId: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
+        },
+        data: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+                example: "123e4567-e89b-12d3-a456-426614174000",
+              },
+              name: {
+                type: "string",
+                example: "User Management",
+              },
+              description: {
+                type: "string",
+                example: "User and role management",
+              },
+              created_at: {
+                type: "string",
+                format: "date-time",
+              },
+              updated_at: {
+                type: "string",
+                format: "date-time",
+              },
+              permissions: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    permission_id: {
+                      type: "string",
+                      example: "123e4567-e89b-12d3-a456-426614174000",
+                    },
+                    name: {
+                      type: "string",
+                      example: "com.lotto.service.auth-internal:user:create",
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
+  })
+  @ApiResponse({
+    status: 403,
+    description: "User does not have required permissions",
   })
   async getAllRoles(@Request() req: Request) {
     const correlationId = req["correlationId"];
     this.logger.log("Getting all roles", { correlationId });
 
     try {
-      return await this.roleService.getAllRoles(correlationId);
+      const roles = await this.roleService.getAllRoles(correlationId);
+      return {
+        message: "Success",
+        status_code: 200,
+        meta: {
+          correlation_id: correlationId,
+        },
+        data: roles,
+      };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {
@@ -207,62 +260,95 @@ export class RoleController {
   @ApiResponse({
     status: 200,
     description: "Role details retrieved successfully",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "Success",
+        },
+        status_code: {
+          type: "number",
+          example: 200,
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
+        },
+        data: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+            name: {
+              type: "string",
+              example: "User Management",
+            },
+            description: {
+              type: "string",
+              example: "User and role management",
+            },
+            created_at: {
+              type: "string",
+              format: "date-time",
+            },
+            updated_at: {
+              type: "string",
+              format: "date-time",
+            },
+            permissions: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  permission_id: {
+                    type: "string",
+                    example: "123e4567-e89b-12d3-a456-426614174000",
+                  },
+                  name: {
+                    type: "string",
+                    example: "com.lotto.service.auth-internal:user:create",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 403,
     description: "User does not have required permissions",
-    schema: {
-      type: "object",
-      properties: {
-        message: {
-          type: "string",
-          example: "User does not have the required permissions",
-        },
-        error: {
-          type: "string",
-          example: "ForbiddenException",
-        },
-        statusCode: {
-          type: "number",
-          example: 403,
-        },
-        correlationId: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
-        },
-      },
-    },
   })
   @ApiResponse({
     status: 404,
     description: "Role not found",
-    schema: {
-      type: "object",
-      properties: {
-        message: {
-          type: "string",
-          example: "Role not found",
-        },
-        error: {
-          type: "string",
-          example: "Not Found",
-        },
-        correlation_id: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
-        },
-      },
-    },
   })
   async getRole(@Request() req: Request, @Param("roleId") roleId: string) {
     const correlationId = req["correlationId"];
     this.logger.log("Getting role details", { correlationId, roleId });
 
     try {
-      return await this.roleService.getRoleWithPermissions(
+      const role = await this.roleService.getRoleWithPermissions(
         roleId,
         correlationId,
       );
+      return {
+        message: "Success",
+        status_code: 200,
+        meta: {
+          correlation_id: correlationId,
+        },
+        data: role,
+      };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {

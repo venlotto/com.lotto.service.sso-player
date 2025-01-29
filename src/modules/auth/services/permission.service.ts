@@ -1,7 +1,13 @@
-import { Injectable, Logger, ConflictException } from "@nestjs/common";
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
 
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreatePermissionDto } from "../dto/create-permission.dto";
+import { DeletePermissionsDto } from "../dto/delete-permissions.dto";
 
 @Injectable()
 export class PermissionService {
@@ -59,6 +65,50 @@ export class PermissionService {
 
     return this.prisma.permissions.create({
       data: dto,
+    });
+  }
+
+  async deletePermissions(
+    permissionId: string,
+    correlationId: string,
+  ): Promise<void> {
+    this.logger.log("Deleting permission", { correlationId, permissionId });
+
+    // Check if permission exists
+    const permission = await this.prisma.permissions.findUnique({
+      where: {
+        id: permissionId,
+      },
+    });
+
+    if (!permission) {
+      throw new NotFoundException({
+        message: "Permission not found",
+        error: "Not Found",
+        correlation_id: correlationId,
+      });
+    }
+
+    // Check if permission is assigned to any role
+    const assignedPermission = await this.prisma.rolepermissions.findFirst({
+      where: {
+        permission_id: permissionId,
+      },
+    });
+
+    if (assignedPermission) {
+      throw new ConflictException({
+        message: "Cannot delete permission that is assigned to a role",
+        error: "Conflict",
+        correlation_id: correlationId,
+      });
+    }
+
+    // Delete permission
+    await this.prisma.permissions.delete({
+      where: {
+        id: permissionId,
+      },
     });
   }
 }

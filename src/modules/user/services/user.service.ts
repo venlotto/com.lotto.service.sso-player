@@ -102,7 +102,7 @@ export class UserService {
     password: string,
     correlationId: string,
   ): Promise<User> {
-    this.logger.log("Creating new user", { username, correlationId });
+    this.logger.log("Creating new user", { correlationId, username });
 
     const existingUser = await this.userRepository.findByUsername(username);
     if (existingUser) {
@@ -110,12 +110,27 @@ export class UserService {
       return existingUser;
     }
 
-    const user = await User.newUser(password, username, null);
+    // Find the Basic role
+    const basicRole = await this.roleService.getRoleWithPermissions("Basic permission", correlationId);
+    if (!basicRole) {
+      this.logger.error("Basic role not found during user creation", { correlationId });
+      throw new Error("Basic role not found. System may not be properly bootstrapped.");
+    }
 
+    // Create new user with Basic role and active status
+    const user = await User.newUser(
+      password, // The newUser method will hash the password
+      username,
+      basicRole.name,
+      null, // lastLogin
+      basicRole.permissions.map(p => p.permission.name)
+    );
+
+    // Save the user
     return this.userRepository.save(user);
   }
 
-  async assignRole(userId: string, roleId: string, correlationId: string) {
+  async assignRole(userId: string, roleId: string, correlationId: string): Promise<User> {
     this.logger.log("Assigning role to user", { correlationId, userId, roleId });
 
     // Check if user exists
@@ -128,7 +143,7 @@ export class UserService {
       });
     }
 
-    // Check if role exists
+    // Get role with permissions
     const role = await this.roleService.getRoleWithPermissions(roleId, correlationId);
     if (!role) {
       throw new NotFoundException({
@@ -138,28 +153,10 @@ export class UserService {
       });
     }
 
-    // Get permissions from the role
-    const permissions = role.permissions.map(rp => rp.permission.name);
+    // Update user's role and permissions
+    user.setRole(role.name, role.permissions.map(p => p.permission.name));
 
-    // Update user's role using save
-    const updatedUser = User.fromRepository(
-      user.id,
-      user.password,
-      user.username,
-      role.name,
-      user.status,
-      user.lastLogin,
-      user.createdAt,
-      user.updatedAt,
-      permissions // Pass the permissions from the role
-    );
-
-    const savedUser = await this.userRepository.save(updatedUser);
-
-    return {
-      user_id: userId,
-      role_id: roleId,
-      user: savedUser
-    };
+    // Save and return updated user
+    return this.userRepository.save(user);
   }
 }
