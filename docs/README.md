@@ -93,7 +93,7 @@ Most endpoints require authentication using a Bearer token. Include the token in
 Authorization: Bearer <access_token>
 ```
 
-All endpoints require a correlation ID for request tracking:
+A correlation ID can be included for request tracking (optional):
 
 ```
 X-Correlation-Id: <uuid>
@@ -289,6 +289,33 @@ Change user status.
 - 403: Insufficient permissions to change user status
 - 404: User not found
 - 500: Error updating user status
+
+#### Get Current User Profile
+
+```http
+GET /v1/me
+```
+
+Retrieves the current user's profile information using their access token.
+
+**Headers:**
+- `Authorization`: Bearer token (required)
+- `X-Correlation-Id`: Request correlation ID (optional)
+
+**Response:**
+```json
+{
+  "username": "john.doe",
+  "created_at": "2024-01-28T21:18:43.225Z",
+  "updated_at": "2024-01-28T21:18:43.225Z",
+  "last_login": "2024-01-28T21:18:43.225Z"
+}
+```
+
+**Status Codes:**
+- `200 OK`: Successfully retrieved user profile
+- `401 Unauthorized`: Invalid or missing access token
+- `404 Not Found`: User not found
 
 ### Role Management
 

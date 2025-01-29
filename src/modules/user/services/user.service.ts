@@ -123,7 +123,7 @@ export class UserService {
       username,
       basicRole.name,
       null, // lastLogin
-      basicRole.permissions.map(p => p.permission.name)
+      basicRole.permissions.map(p => p.permission_id)
     );
 
     // Save the user
@@ -154,9 +154,35 @@ export class UserService {
     }
 
     // Update user's role and permissions
-    user.setRole(role.name, role.permissions.map(p => p.permission.name));
+    user.setRole(role.name, role.permissions.map(p => p.permission_id));
 
     // Save and return updated user
     return this.userRepository.save(user);
+  }
+
+  async getUserDetails(userId: string): Promise<{
+    username: string | null;
+    created_at: Date;
+    updated_at: Date;
+    last_login: Date | null;
+  }> {
+    this.logger.log("Getting user details", { userId });
+
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      this.logger.error("User not found", { userId });
+      throw new NotFoundException({
+        message: "User not found",
+        error: "NotFoundException",
+        statusCode: 404,
+      });
+    }
+
+    return {
+      username: user.username,
+      created_at: user.createdAt,
+      updated_at: user.updatedAt,
+      last_login: user.lastLogin instanceof Date ? user.lastLogin : null,
+    };
   }
 }

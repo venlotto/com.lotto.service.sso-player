@@ -4,6 +4,7 @@ import { ChangePasswordController } from "./controller/change-password.controlle
 import { ChangeStatusController } from "./controller/change-status.controller";
 import { NewUserController } from "./controller/new-user.controller";
 import { AssignRoleController } from "./controller/assign-role.controller";
+import { MeController } from "./controller/me.controller";
 import { UserRepositoryPrisma } from "./repository/user.repository.prisma";
 import { UserService } from "./services/user.service";
 import { AuthModule } from "../auth/auth.module";
@@ -19,6 +20,7 @@ import { PrismaModule } from "../prisma/prisma.module";
     ChangePasswordController,
     ChangeStatusController,
     AssignRoleController,
+    MeController,
   ],
   providers: [
     UserService,

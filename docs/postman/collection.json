@@ -634,6 +634,56 @@
             },
             "description": "Assign a role to a user"
           }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text",
+                "description": "Optional correlation ID for request tracking"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "me"]
+            },
+            "description": "Get current user's information using their access token"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/v1/me"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"username\": \"john.doe\",\n    \"created_at\": \"2024-01-28T21:18:43.225Z\",\n    \"updated_at\": \"2024-01-28T21:18:43.225Z\",\n    \"last_login\": \"2024-01-28T21:18:43.225Z\"\n}"
+              }
+            }
+          ]
         }
       ]
     }
