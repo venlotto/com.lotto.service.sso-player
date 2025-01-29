@@ -21,7 +21,8 @@ import { RefreshTokenRepository } from "../repository/refresh-token.repository";
 interface TokenPayload {
   sub: string;
   username: string;
-  role: string | null;
+  roles: string[];
+  permissions: string[];
   [key: string]: unknown;
 }
 

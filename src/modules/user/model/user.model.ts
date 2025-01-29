@@ -6,7 +6,7 @@ import { UUID } from "../../../common/value-object/uuid.value-object";
 interface TokenPayload {
   sub: string;
   username: string;
-  role: string | null;
+  roles: string[];
   permissions: string[];
   [key: string]: unknown;
 }
@@ -16,7 +16,7 @@ export class User {
   private _password: string;
   private _username: string | null;
   private _lastLogin: Date | string | null;
-  private _roleName: string | null;
+  private _roleNames: string[];
   private _status: UserStatus;
   private _createdAt: Date;
   private _updatedAt: Date;
@@ -26,7 +26,7 @@ export class User {
     id: UUID,
     password: string,
     username: string,
-    roleName: string | null,
+    roleNames: string[],
     status: UserStatus,
     lastLogin: Date | string | null = null,
     createdAt: Date = new Date(),
@@ -36,7 +36,7 @@ export class User {
     this._id = id;
     this._password = password;
     this._username = username || null;
-    this._roleName = roleName;
+    this._roleNames = roleNames;
     this._status = status;
     this._lastLogin = lastLogin;
     this._createdAt = createdAt;
@@ -47,7 +47,7 @@ export class User {
   public static async newUser(
     password: string,
     username: string,
-    roleName: string | null = null,
+    roleNames: string[] = [],
     lastLogin: Date | string | null = null,
     permissions: string[] = []
   ): Promise<User> {
@@ -56,7 +56,7 @@ export class User {
       new UUID(),
       encryptedPassword,
       username,
-      roleName,
+      roleNames,
       UserStatus.ACTIVE,
       lastLogin,
       new Date(),
@@ -69,7 +69,7 @@ export class User {
     id: string,
     password: string,
     username: string,
-    roleName: string | null,
+    roleNames: string[],
     status: UserStatus,
     lastLogin: Date | string | null = null,
     createdAt: Date = new Date(),
@@ -80,7 +80,7 @@ export class User {
       new UUID(id),
       password,
       username,
-      roleName,
+      roleNames,
       status,
       lastLogin,
       createdAt,
@@ -93,7 +93,7 @@ export class User {
     return {
       sub: user.id,
       username: user.username || "",
-      role: user.roleName,
+      roles: user.roleNames,
       permissions: user.permissions,
     };
   }
@@ -106,10 +106,21 @@ export class User {
     this._lastLogin = new Date();
   }
 
-  public setRole(roleName: string, permissions: string[]): void {
-    this._roleName = roleName;
-    this._permissions = permissions;
-    this._updatedAt = new Date();
+  public addRole(roleName: string, permissions: string[]): void {
+    if (!this._roleNames.includes(roleName)) {
+      this._roleNames.push(roleName);
+      this._permissions = [...new Set([...this._permissions, ...permissions])];
+      this._updatedAt = new Date();
+    }
+  }
+
+  public removeRole(roleName: string, rolePermissions: string[]): void {
+    const index = this._roleNames.indexOf(roleName);
+    if (index !== -1) {
+      this._roleNames.splice(index, 1);
+      this._permissions = this._permissions.filter(p => !rolePermissions.includes(p));
+      this._updatedAt = new Date();
+    }
   }
 
   get id(): string {
@@ -128,8 +139,8 @@ export class User {
     return this._lastLogin;
   }
 
-  get roleName(): string | null {
-    return this._roleName;
+  get roleNames(): string[] {
+    return [...this._roleNames];
   }
 
   get status(): UserStatus {

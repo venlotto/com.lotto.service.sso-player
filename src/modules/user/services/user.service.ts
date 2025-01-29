@@ -111,7 +111,17 @@ export class UserService {
     }
 
     // Find the Basic role
-    const basicRole = await this.roleService.getRoleWithPermissions("Basic", correlationId);
+    const basicRole = await this.prisma.roles.findUnique({
+      where: { name: "Basic" },
+      include: {
+        permissions: {
+          include: {
+            permission: true
+          }
+        }
+      }
+    });
+
     if (!basicRole) {
       this.logger.error("Basic role not found during user creation", { correlationId });
       throw new Error("Basic role not found. System may not be properly bootstrapped.");
@@ -121,9 +131,9 @@ export class UserService {
     const user = await User.newUser(
       password, // The newUser method will hash the password
       username,
-      basicRole.name,
+      [basicRole.name], // Now passing an array of role names
       null, // lastLogin
-      basicRole.permissions.map(p => p.permission_id)
+      basicRole.permissions.map(p => p.permission.id)
     );
 
     // Save the user
@@ -153,8 +163,14 @@ export class UserService {
       });
     }
 
-    // Update user's role and permissions
-    user.setRole(role.name, role.permissions.map(p => p.permission_id));
+    // Check if user already has this role
+    if (user.roleNames.includes(role.name)) {
+      this.logger.log("User already has this role", { correlationId, userId, roleName: role.name });
+      return user;
+    }
+
+    // Add the new role and its permissions to the user
+    user.addRole(role.name, role.permissions.map(p => p.permission_id));
 
     // Save and return updated user
     return this.userRepository.save(user);

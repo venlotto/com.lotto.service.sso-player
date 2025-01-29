@@ -17,15 +17,17 @@ export class UserRepositoryPrisma implements IUserRepository {
     this.logger.log("UserRepository::findById", { id });
 
     const user = await this.prismaService.users.findUnique({
-      where: {
-        id: id,
-      },
+      where: { id },
       include: {
-        role: {
+        roles: {
           include: {
-            permissions: {
+            role: {
               include: {
-                permission: true
+                permissions: {
+                  include: {
+                    permission: true
+                  }
+                }
               }
             }
           }
@@ -37,16 +39,21 @@ export class UserRepositoryPrisma implements IUserRepository {
       return null;
     }
 
+    // Collect all permissions from all roles
+    const allPermissions = user.roles.flatMap(ur => 
+      ur.role.permissions.map(rp => rp.permission.name)
+    );
+
     return User.fromRepository(
       user.id,
       user.password,
-      user.username,
-      user.role?.name || null,
+      user.username || "",
+      user.roles.map(ur => ur.role.name),
       user.status as UserStatus,
       user.last_login,
       user.created_at,
       user.updated_at,
-      user.role?.permissions.map(rp => rp.permission.name) || []
+      allPermissions
     );
   }
 
@@ -56,32 +63,41 @@ export class UserRepositoryPrisma implements IUserRepository {
     const user = await this.prismaService.users.findUnique({
       where: { username },
       include: {
-        role: {
+        roles: {
           include: {
-            permissions: {
+            role: {
               include: {
-                permission: true
+                permissions: {
+                  include: {
+                    permission: true
+                  }
+                }
               }
             }
           }
-        },
-      },
+        }
+      }
     });
 
     if (!user) {
       return null;
     }
 
+    // Collect all permissions from all roles
+    const allPermissions = user.roles.flatMap(ur => 
+      ur.role.permissions.map(rp => rp.permission.name)
+    );
+
     return User.fromRepository(
       user.id,
       user.password,
-      user.username,
-      user.role?.name || null,
+      user.username || "",
+      user.roles.map(ur => ur.role.name),
       user.status as UserStatus,
       user.last_login,
       user.created_at,
       user.updated_at,
-      user.role?.permissions.map(rp => rp.permission.name) || []
+      allPermissions
     );
   }
 
@@ -91,35 +107,49 @@ export class UserRepositoryPrisma implements IUserRepository {
     const users = await this.prismaService.users.findMany({
       where: criteria,
       include: {
-        role: {
-          select: {
-            name: true,
-          },
-        },
-      },
+        roles: {
+          include: {
+            role: {
+              include: {
+                permissions: {
+                  include: {
+                    permission: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     });
 
-    if (!users || users.length === 0) {
+    if (!users.length) {
       return null;
     }
 
-    return users.map((user) =>
-      User.fromRepository(
+    return users.map(user => {
+      const allPermissions = user.roles.flatMap(ur => 
+        ur.role.permissions.map(rp => rp.permission.name)
+      );
+
+      return User.fromRepository(
         user.id,
         user.password,
-        user.username,
-        user.role?.name || null,
+        user.username || "",
+        user.roles.map(ur => ur.role.name),
         user.status as UserStatus,
         user.last_login,
         user.created_at,
         user.updated_at,
-      ),
-    );
+        allPermissions
+      );
+    });
   }
 
   public async save(user: User): Promise<User> {
     this.logger.log("UserRepository::save", { user });
 
+    // First save/update the user
     const savedUser = await this.prismaService.users.upsert({
       where: { id: user.id },
       create: {
@@ -128,50 +158,47 @@ export class UserRepositoryPrisma implements IUserRepository {
         password: user.password,
         status: user.status,
         last_login: user.lastLogin,
-        ...(user.roleName && {
-          role: {
-            connect: {
-              name: user.roleName,
-            },
-          },
-        }),
       },
       update: {
         username: user.username,
         password: user.password,
         status: user.status,
         last_login: user.lastLogin,
-        ...(user.roleName && {
-          role: {
-            connect: {
-              name: user.roleName,
-            },
-          },
-        }),
-      },
-      include: {
-        role: {
-          include: {
-            permissions: {
-              include: {
-                permission: true
-              }
-            }
-          }
-        },
       },
     });
 
-    return User.fromRepository(
-      savedUser.id,
-      savedUser.password,
-      savedUser.username,
-      savedUser.role?.name || null,
-      mapEnum(UserStatus, savedUser.status),
-      savedUser.last_login,
-      savedUser.created_at,
-      savedUser.updated_at,
-      savedUser.role?.permissions.map(rp => rp.permission.name) || []
-    );
+    // Then handle role assignments
+    if (user.roleNames.length > 0) {
+      // First delete existing roles
+      await this.prismaService.users.update({
+        where: { id: user.id },
+        data: {
+          roles: {
+            deleteMany: {}
+          }
+        }
+      });
+
+      // Then add new roles
+      const roles = await this.prismaService.roles.findMany({
+        where: { name: { in: user.roleNames } }
+      });
+
+      await this.prismaService.users.update({
+        where: { id: user.id },
+        data: {
+          roles: {
+            create: roles.map(role => ({
+              role: {
+                connect: { id: role.id }
+              }
+            }))
+          }
+        }
+      });
+    }
+
+    // Fetch the updated user with all relations
+    return this.findById(user.id);
   }
 }

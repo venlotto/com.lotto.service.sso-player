@@ -90,7 +90,7 @@ export class PermissionService {
     }
 
     // Check if permission is assigned to any role
-    const assignedPermission = await this.prisma.rolepermissions.findFirst({
+    const assignedPermission = await this.prisma.roles_permissions.findFirst({
       where: {
         permission_id: permissionId,
       },

@@ -64,38 +64,71 @@ export class BootstrapService implements OnModuleInit {
     const bootstrapCorrelationId = `${new UUID().toString()}`;
 
     try {
-      // Create default permissions
-      this.logger.log("Creating default permissions...", {
+      // Check existing permissions
+      this.logger.log("Checking existing permissions...", {
         correlationId: bootstrapCorrelationId,
       });
-      const adminPermissionObjects = await Promise.all(
-        this.adminPermissions.map((name) =>
-          this.permissionService.createPermission(
-            {
-              name,
-              description: `Default permission: ${name}`,
-            },
-            bootstrapCorrelationId,
-          ),
-        ),
+      
+      const allRequiredPermissions = [...this.adminPermissions, ...this.basicPermissions];
+      const existingPermissions = await this.prisma.permissions.findMany({
+        where: {
+          name: {
+            in: allRequiredPermissions
+          }
+        }
+      });
+
+      const existingPermissionNames = existingPermissions.map(p => p.name);
+      const missingPermissions = allRequiredPermissions.filter(
+        name => !existingPermissionNames.includes(name)
       );
 
-      const basicPermissionObjects = await Promise.all(
-        this.basicPermissions.map((name) =>
-          this.permissionService.createPermission(
-            {
-              name,
-              description: `Basic permission: ${name}`,
-            },
-            bootstrapCorrelationId,
-          ),
-        ),
+      let adminPermissionObjects = existingPermissions.filter(p => 
+        this.adminPermissions.includes(p.name)
+      );
+      let basicPermissionObjects = existingPermissions.filter(p => 
+        this.basicPermissions.includes(p.name)
       );
 
-      // Create basic role
-      this.logger.log("Creating Default Basic role...", {
+      if (missingPermissions.length > 0) {
+        this.logger.log(`Creating ${missingPermissions.length} missing permissions...`, {
+          correlationId: bootstrapCorrelationId,
+          missingPermissions,
+        });
+
+        const newPermissions = await Promise.all(
+          missingPermissions.map((name) =>
+            this.permissionService.createPermission(
+              {
+                name,
+                description: `Default permission: ${name}`,
+              },
+              bootstrapCorrelationId,
+            ),
+          ),
+        );
+
+        // Update our permission objects arrays
+        adminPermissionObjects = [
+          ...adminPermissionObjects,
+          ...newPermissions.filter(p => this.adminPermissions.includes(p.name))
+        ];
+        basicPermissionObjects = [
+          ...basicPermissionObjects,
+          ...newPermissions.filter(p => this.basicPermissions.includes(p.name))
+        ];
+      } else {
+        this.logger.log("All required permissions already exist", {
+          correlationId: bootstrapCorrelationId,
+        });
+      }
+
+      // Check and create/update roles
+      this.logger.log("Checking roles...", {
         correlationId: bootstrapCorrelationId,
       });
+
+      // Create or get basic role
       const basicRole = await this.roleService.createRole(
         {
           name: "Basic",
@@ -104,10 +137,7 @@ export class BootstrapService implements OnModuleInit {
         bootstrapCorrelationId,
       );
 
-      // Create admin role
-      this.logger.log("Creating User Management role...", {
-        correlationId: bootstrapCorrelationId,
-      });
+      // Create or get admin role
       const adminRole = await this.roleService.createRole(
         {
           name: "User Management",
@@ -116,35 +146,38 @@ export class BootstrapService implements OnModuleInit {
         bootstrapCorrelationId,
       );
 
-      // Assign all permissions to admin role
-      this.logger.log("Assigning permissions to User Management role...", {
+      // Ensure roles have correct permissions
+      this.logger.log("Ensuring roles have correct permissions...", {
         correlationId: bootstrapCorrelationId,
       });
+
+      // Assign all permissions (both admin and basic) to admin role since it can only have one role
       await this.roleService.assignPermissions(
         adminRole.id,
-        adminPermissionObjects.map((p) => p.id),
+        [...adminPermissionObjects, ...basicPermissionObjects].map((p) => p.id),
         bootstrapCorrelationId,
       );
 
       // Assign basic permissions to basic role
-      this.logger.log("Assigning permissions to Basic role...", {
-        correlationId: bootstrapCorrelationId,
-      });
       await this.roleService.assignPermissions(
         basicRole.id,
         basicPermissionObjects.map((p) => p.id),
         bootstrapCorrelationId,
       );
 
-      // Check if admin user exists
+      // Check admin user and their roles
       const adminUser = await this.prisma.users.findFirst({
         where: { username: "admin" },
         include: {
-          role: {
+          roles: {
             include: {
-              permissions: {
+              role: {
                 include: {
-                  permission: true
+                  permissions: {
+                    include: {
+                      permission: true
+                    }
+                  }
                 }
               }
             }
@@ -155,7 +188,7 @@ export class BootstrapService implements OnModuleInit {
       if (!adminUser) {
         const password = this.generateSecurePassword();
 
-        this.logger.log("Creating User Management user...", {
+        this.logger.log("Creating admin user...", {
           correlationId: bootstrapCorrelationId,
         });
         const user = await this.userService.createUser(
@@ -164,27 +197,21 @@ export class BootstrapService implements OnModuleInit {
           bootstrapCorrelationId,
         );
 
-        // Assign User Management role to admin user
-        this.logger.log("Assigning User Management role to admin user...", {
+        // Assign both admin and basic roles to user
+        this.logger.log("Assigning roles to admin user...", {
           correlationId: bootstrapCorrelationId,
         });
+        
         let updatedUser = await this.userService.assignRole(user.id, adminRole.id, bootstrapCorrelationId);
-
-        // Assign Basic permission to admin user
-        this.logger.log("Assigning Basic permission to admin user...", {
-          correlationId: bootstrapCorrelationId,
-        });
         updatedUser = await this.userService.assignRole(user.id, basicRole.id, bootstrapCorrelationId);
 
-        this.logger.log("Admin user created with roles and permissions:", {
+        this.logger.log("Admin user created with roles:", {
           correlationId: bootstrapCorrelationId,
           userId: updatedUser.id,
-          roleId: updatedUser.roleName,
-          roleName: updatedUser.roleName,
-          permissions: updatedUser.permissions
+          roleNames: updatedUser.roleNames,
         });
 
-        // Log admin credentials (only on first deployment)
+        // Log admin credentials (only on first creation)
         this.logger.warn("==================================================");
         this.logger.warn("IMPORTANT: Default admin user has been created", {
           correlationId: bootstrapCorrelationId,
@@ -201,27 +228,43 @@ export class BootstrapService implements OnModuleInit {
         });
         this.logger.warn("==================================================");
       } else {
-        // If admin user exists but doesn't have the roles, assign them
-        if (!adminUser.role || adminUser.role.name !== "User Management") {
-          this.logger.log("Assigning User Management role to existing admin user...", {
+        // Check if admin user has all required roles
+        const userRoleNames = adminUser.roles.map(ur => ur.role.name);
+        const missingRoles = [];
+        
+        if (!userRoleNames.includes("User Management")) {
+          missingRoles.push(adminRole);
+        }
+        if (!userRoleNames.includes("Basic")) {
+          missingRoles.push(basicRole);
+        }
+
+        if (missingRoles.length > 0) {
+          this.logger.log(`Assigning missing roles to admin user: ${missingRoles.map(r => r.name).join(", ")}`, {
             correlationId: bootstrapCorrelationId,
           });
-          let updatedUser = await this.userService.assignRole(adminUser.id, adminRole.id, bootstrapCorrelationId);
-          
-          this.logger.log("Assigning Basic role to existing admin user...", {
+
+          for (const role of missingRoles) {
+            await this.userService.assignRole(adminUser.id, role.id, bootstrapCorrelationId);
+          }
+
+          this.logger.log("Admin user roles updated", {
             correlationId: bootstrapCorrelationId,
+            userId: adminUser.id,
+            roles: [...userRoleNames, ...missingRoles.map(r => r.name)],
           });
-          updatedUser = await this.userService.assignRole(adminUser.id, basicRole.id, bootstrapCorrelationId);
-          
-          this.logger.log("Admin user updated with roles and permissions:", {
+        } else {
+          this.logger.log("Admin user already has all required roles", {
             correlationId: bootstrapCorrelationId,
-            userId: updatedUser.id,
-            roleId: updatedUser.roleName,
-            roleName: updatedUser.roleName,
-            permissions: updatedUser.permissions
+            userId: adminUser.id,
+            roles: userRoleNames,
           });
         }
       }
+
+      this.logger.log("System bootstrap completed successfully", {
+        correlationId: bootstrapCorrelationId,
+      });
     } catch (error) {
       this.logger.error("Error during system bootstrap:", error, {
         correlationId: bootstrapCorrelationId,

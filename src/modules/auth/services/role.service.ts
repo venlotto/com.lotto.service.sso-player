@@ -49,6 +49,13 @@ export class RoleService {
       // Check if role exists
       const role = await this.prisma.roles.findUnique({
         where: { id: roleId },
+        include: {
+          permissions: {
+            include: {
+              permission: true
+            }
+          }
+        }
       });
 
       if (!role) {
@@ -59,21 +66,34 @@ export class RoleService {
         });
       }
 
-      // Assign new permissions
-      const permissions = await Promise.all(
-        permissionIds.map((permissionId) =>
-          this.prisma.rolepermissions.create({
-            data: {
-              role_id: roleId,
-              permission_id: permissionId,
-            },
-          }),
-        ),
+      // Get existing permission IDs for this role
+      const existingPermissionIds = role.permissions.map(p => p.permission.id);
+
+      // Filter out permissions that already exist
+      const newPermissionIds = permissionIds.filter(
+        id => !existingPermissionIds.includes(id)
       );
 
+      if (newPermissionIds.length === 0) {
+        this.logger.log("All permissions already assigned to role", { correlationId, roleId });
+        return {
+          role_id: roleId,
+          permissions: existingPermissionIds,
+        };
+      }
+
+      // Create new role-permission associations
+      await this.prisma.roles_permissions.createMany({
+        data: newPermissionIds.map(permissionId => ({
+          role_id: roleId,
+          permission_id: permissionId
+        }))
+      });
+
+      // Return all permissions (existing + newly added)
       return {
         role_id: roleId,
-        permissions: permissions.map((p) => p.permission_id),
+        permissions: [...existingPermissionIds, ...newPermissionIds],
       };
     } catch (error) {
       this.logger.error("Error assigning permissions to role", error.stack, {
@@ -92,6 +112,13 @@ export class RoleService {
       // Check if role exists
       const role = await this.prisma.roles.findUnique({
         where: { id: roleId },
+        include: {
+          permissions: {
+            include: {
+              permission: true
+            }
+          }
+        }
       });
 
       if (!role) {
@@ -102,26 +129,31 @@ export class RoleService {
         });
       }
 
-      // Remove specified permissions
-      await this.prisma.rolepermissions.deleteMany({
+      // Remove role-permission associations
+      await this.prisma.roles_permissions.deleteMany({
         where: {
           role_id: roleId,
           permission_id: {
-            in: permissionIds,
-          },
-        },
+            in: permissionIds
+          }
+        }
       });
 
       // Get remaining permissions
-      const remainingPermissions = await this.prisma.rolepermissions.findMany({
-        where: {
-          role_id: roleId,
-        },
+      const updatedRole = await this.prisma.roles.findUnique({
+        where: { id: roleId },
+        include: {
+          permissions: {
+            include: {
+              permission: true
+            }
+          }
+        }
       });
 
       return {
         role_id: roleId,
-        permissions: remainingPermissions.map((p) => p.permission_id),
+        permissions: updatedRole.permissions.map(p => p.permission.id),
       };
     } catch (error) {
       this.logger.error("Error removing permissions from role", error.stack, {
@@ -136,23 +168,13 @@ export class RoleService {
 
     const role = await this.prisma.roles.findUnique({
       where: { id: roleId },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        created_at: true,
-        updated_at: true,
+      include: {
         permissions: {
-          select: {
-            permission: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
-      },
+          include: {
+            permission: true
+          }
+        }
+      }
     });
 
     if (!role) {
@@ -180,23 +202,13 @@ export class RoleService {
     this.logger.log("Getting all roles", { correlationId });
 
     const roles = await this.prisma.roles.findMany({
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        created_at: true,
-        updated_at: true,
+      include: {
         permissions: {
-          select: {
-            permission: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
-      },
+          include: {
+            permission: true
+          }
+        }
+      }
     });
 
     return roles.map((role) => ({
