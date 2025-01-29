@@ -684,6 +684,69 @@
               }
             }
           ]
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Correlation-Id",
+                "value": "{{$guid}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/users?page=1&limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (1-based)",
+                  "disabled": false
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Number of items per page (max: 100)",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Get a paginated list of all users with their roles and permissions"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/v1/users?page=1&limit=50"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"data\": [\n        {\n            \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n            \"username\": \"john.doe\",\n            \"status\": \"ACTIVE\",\n            \"roles\": [\"admin\", \"user\"],\n            \"permissions\": [\"com.lotto.service.auth-internal:user:create\"],\n            \"last_login\": \"2024-03-20T10:00:00Z\",\n            \"created_at\": \"2024-03-20T10:00:00Z\",\n            \"updated_at\": \"2024-03-20T10:00:00Z\"\n        }\n    ],\n    \"meta\": {\n        \"currentPage\": 1,\n        \"totalPages\": 10,\n        \"totalItems\": 100,\n        \"itemsPerPage\": 50\n    }\n}"
+              }
+            }
+          ]
         }
       ]
     }

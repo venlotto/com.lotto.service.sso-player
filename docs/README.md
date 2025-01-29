@@ -290,6 +290,47 @@ Change user status.
 - 404: User not found
 - 500: Error updating user status
 
+#### GET /v1/users
+Get a paginated list of all users with their roles and permissions.
+
+**Headers:**
+- `Authorization`: Bearer token (required)
+- `X-Correlation-Id`: Request correlation ID (optional)
+
+**Query Parameters:**
+- `page` (optional): Page number (1-based, default: 1)
+- `limit` (optional): Items per page (default: 50, max: 100)
+
+**Success Response:**
+```json
+{
+  "data": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "username": "john.doe",
+      "status": "ACTIVE",
+      "roles": ["admin", "user"],
+      "permissions": ["com.lotto.service.auth-internal:user:create"],
+      "last_login": "2024-03-20T10:00:00Z",
+      "created_at": "2024-03-20T10:00:00Z",
+      "updated_at": "2024-03-20T10:00:00Z"
+    }
+  ],
+  "meta": {
+    "currentPage": 1,
+    "totalPages": 10,
+    "totalItems": 100,
+    "itemsPerPage": 50
+  }
+}
+```
+
+**Status Codes:**
+- `200 OK`: Successfully retrieved users
+- `401 Unauthorized`: Invalid or missing access token
+- `403 Forbidden`: Insufficient permissions (requires `com.lotto.service.auth-internal:user:list`)
+- `500 Internal Server Error`: Unexpected server error
+
 #### Get Current User Profile
 
 ```http

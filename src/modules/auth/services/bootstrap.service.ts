@@ -23,6 +23,7 @@ export class BootstrapService implements OnModuleInit {
     "com.lotto.service.auth-internal:user:change-status",
     "com.lotto.service.auth-internal:user:assign-role",
     "com.lotto.service.auth-internal:user:remove-role",
+    "com.lotto.service.auth-internal:user:list",
     // Role Management
     "com.lotto.service.auth-internal:role:create",
     "com.lotto.service.auth-internal:role:view",

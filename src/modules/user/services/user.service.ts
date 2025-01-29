@@ -13,6 +13,7 @@ import { User } from "../model/user.model";
 import { IUserRepository } from "../repository/user.repository.interface";
 import { RoleService } from "../../auth/services/role.service";
 import { PrismaService } from "../../prisma/prisma.service";
+import { ListUsersResponseDto } from "../dto/list-users-response.dto";
 
 @Injectable()
 export class UserService {
@@ -199,6 +200,64 @@ export class UserService {
       created_at: user.createdAt,
       updated_at: user.updatedAt,
       last_login: user.lastLogin instanceof Date ? user.lastLogin : null,
+    };
+  }
+
+  async listUsers(page: number = 1, limit: number = 50): Promise<ListUsersResponseDto> {
+    this.logger.log("Listing users with pagination", { page, limit });
+
+    // Calculate skip for pagination
+    const skip = (page - 1) * limit;
+
+    // Get total count of users
+    const totalCount = await this.prisma.users.count();
+
+    // Get paginated users with their roles and permissions
+    const users = await this.prisma.users.findMany({
+      skip,
+      take: limit,
+      include: {
+        roles: {
+          include: {
+            role: {
+              include: {
+                permissions: {
+                  include: {
+                    permission: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    });
+
+    // Transform the users into the response format
+    const userDetails = users.map(user => ({
+      id: user.id,
+      username: user.username,
+      status: user.status as UserStatus,
+      roles: user.roles.map(ur => ur.role.name),
+      permissions: user.roles.flatMap(ur => 
+        ur.role.permissions.map(rp => rp.permission.name)
+      ),
+      last_login: user.last_login,
+      created_at: user.created_at,
+      updated_at: user.updated_at
+    }));
+
+    return {
+      data: userDetails,
+      meta: {
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+        totalItems: totalCount,
+        itemsPerPage: limit
+      }
     };
   }
 }
