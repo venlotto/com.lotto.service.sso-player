@@ -111,7 +111,7 @@ export class UserService {
     }
 
     // Find the Basic role
-    const basicRole = await this.roleService.getRoleWithPermissions("Basic permission", correlationId);
+    const basicRole = await this.roleService.getRoleWithPermissions("Basic", correlationId);
     if (!basicRole) {
       this.logger.error("Basic role not found during user creation", { correlationId });
       throw new Error("Basic role not found. System may not be properly bootstrapped.");
