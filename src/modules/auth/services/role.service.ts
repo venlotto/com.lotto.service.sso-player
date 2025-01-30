@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   Logger,
+  ConflictException,
 } from "@nestjs/common";
 
 import { PrismaService } from "../../prisma/prisma.service";
@@ -241,5 +242,49 @@ export class RoleService {
         correlation_id: correlationId,
       });
     }
+  }
+
+  async deleteRole(roleId: string, correlationId: string): Promise<void> {
+    this.logger.log("Deleting role", { correlationId, roleId });
+
+    // Check if role exists
+    const role = await this.prisma.roles.findUnique({
+      where: { id: roleId },
+      include: {
+        permissions: true,
+        users: true
+      }
+    });
+
+    if (!role) {
+      throw new NotFoundException({
+        message: "Role not found",
+        error: "Not Found",
+        correlation_id: correlationId,
+      });
+    }
+
+    // Check if role has any permissions
+    if (role.permissions.length > 0) {
+      throw new ConflictException({
+        message: "Cannot delete role that has permissions assigned",
+        error: "Conflict",
+        correlation_id: correlationId,
+      });
+    }
+
+    // Check if role is assigned to any users
+    if (role.users.length > 0) {
+      throw new ConflictException({
+        message: "Cannot delete role that is assigned to users",
+        error: "Conflict",
+        correlation_id: correlationId,
+      });
+    }
+
+    // Delete role
+    await this.prisma.roles.delete({
+      where: { id: roleId }
+    });
   }
 }

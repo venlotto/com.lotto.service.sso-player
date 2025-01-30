@@ -12,6 +12,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiHeader,
 } from "@nestjs/swagger";
 
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
@@ -28,9 +29,19 @@ interface RequestWithUser extends Request {
   };
 }
 
-@ApiTags("User")
+@ApiTags("Users")
 @Controller("v1/users")
 @UseGuards(JwtAuthGuard, PermissionGuard)
+@ApiHeader({
+  name: "X-Correlation-Id",
+  description: "Correlation ID for request tracing (optional)",
+  required: false,
+  schema: {
+    type: "string",
+    format: "uuid",
+    example: "123e4567-e89b-12d3-a456-426614174000",
+  },
+})
 export class ChangeStatusController {
   constructor(
     private readonly userService: UserService,
@@ -47,7 +58,7 @@ export class ChangeStatusController {
   })
   @ApiResponse({
     status: 200,
-    description: "User status changed successfully",
+    description: "User status updated successfully",
     schema: {
       type: "object",
       properties: {
@@ -55,13 +66,36 @@ export class ChangeStatusController {
           type: "string",
           example: "User status updated successfully",
         },
-        status: {
-          type: "string",
-          example: "active",
+        status_code: {
+          type: "number",
+          example: 200,
         },
-        correlation_id: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
+        data: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+            username: {
+              type: "string",
+              example: "john.doe",
+            },
+            status: {
+              type: "string",
+              example: "BLOCKED",
+              enum: ["ACTIVE", "BLOCKED"],
+            },
+          },
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "9fb34360-5372-4b0d-b353-3b14f0b958e9",
+            },
+          },
         },
       },
     },
@@ -129,10 +163,31 @@ export class ChangeStatusController {
       },
     },
   })
+  @ApiResponse({
+    status: 404,
+    description: "User not found",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "User not found",
+        },
+        error: {
+          type: "string",
+          example: "Not Found",
+        },
+        correlation_id: {
+          type: "string",
+          example: "9fb34360-5372-4b0d-b353-3b14f0b958e9",
+        },
+      },
+    },
+  })
   async changeStatus(
     @Request() req: RequestWithUser,
     @Body() dto: ChangeStatusDto,
-    @CorrelationId() correlationId: string | null,
+    @CorrelationId() correlationId: string,
   ) {
     const requestorUserId = req.user.sub;
 
@@ -144,21 +199,24 @@ export class ChangeStatusController {
     });
 
     try {
-      const updatedUser = await this.userService.changeStatus(
-        dto.user_id,
-        dto.status,
-      );
-
+      const user = await this.userService.changeStatus(dto.user_id, dto.status);
       return {
         message: "User status updated successfully",
-        status: updatedUser.status,
-        correlation_id: correlationId,
+        status_code: 200,
+        data: {
+          id: user.id,
+          username: user.username,
+          status: user.status,
+        },
+        meta: {
+          correlation_id: correlationId,
+        },
       };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {
         throw new InternalServerErrorException({
-          message: "Error updating user status",
+          message: "Error changing user status",
           error: "Internal Server Error",
           correlation_id: correlationId,
         });

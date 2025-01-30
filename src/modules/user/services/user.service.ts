@@ -260,4 +260,58 @@ export class UserService {
       }
     };
   }
+
+  async removeRoles(userId: string, roleIds: string[], correlationId: string): Promise<any> {
+    this.logger.log("Removing roles from user", { correlationId, userId });
+
+    // Check if user exists
+    const user = await this.prisma.users.findUnique({
+      where: { id: userId },
+      include: {
+        roles: {
+          include: {
+            role: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      throw new NotFoundException({
+        message: "User not found",
+        error: "Not Found",
+        correlation_id: correlationId,
+      });
+    }
+
+    // Remove user-role associations
+    await this.prisma.users_roles.deleteMany({
+      where: {
+        user_id: userId,
+        role_id: {
+          in: roleIds
+        }
+      }
+    });
+
+    // Get updated user with roles
+    const updatedUser = await this.prisma.users.findUnique({
+      where: { id: userId },
+      include: {
+        roles: {
+          include: {
+            role: true
+          }
+        }
+      }
+    });
+
+    return {
+      user_id: userId,
+      roles: updatedUser.roles.map(r => ({
+        role_id: r.role.id,
+        name: r.role.name
+      }))
+    };
+  }
 }
