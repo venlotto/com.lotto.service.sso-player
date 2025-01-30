@@ -7,6 +7,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { AuthController } from "./controller/auth.controller";
 import { PermissionController } from "./controller/permission.controller";
 import { RoleController } from "./controller/role.controller";
+import { RemovePermissionsController } from "./controller/remove-permissions.controller";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { PermissionGuard } from "./guards/permission.guard";
@@ -32,7 +33,12 @@ export class AuthModule {
     return {
       module: AuthModule,
       global: true,
-      controllers: [AuthController, RoleController, PermissionController],
+      controllers: [
+        AuthController,
+        RoleController,
+        PermissionController,
+        RemovePermissionsController,
+      ],
       imports: [
         ConfigModule,
         PassportModule.register({ defaultStrategy: "jwt" }),
