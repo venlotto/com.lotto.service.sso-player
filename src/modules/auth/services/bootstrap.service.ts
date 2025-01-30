@@ -29,6 +29,7 @@ export class BootstrapService implements OnModuleInit {
     "com.lotto.service.auth-internal:role:view",
     "com.lotto.service.auth-internal:role:assign-permission",
     "com.lotto.service.auth-internal:role:remove-permission",
+    "com.lotto.service.auth-internal:role:delete",
     // Permission Management
     "com.lotto.service.auth-internal:permission:create",
     "com.lotto.service.auth-internal:permission:view",
