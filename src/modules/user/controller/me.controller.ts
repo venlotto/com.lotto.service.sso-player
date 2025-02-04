@@ -31,6 +31,6 @@ export class MeController {
     @Request() req,
     @CorrelationId() correlationId: string | null,
   ): Promise<MeResponseDto> {
-    return this.userService.getUserDetails(req.user.id);
+    return this.userService.getUserDetails(req.user.sub);
   }
 } 

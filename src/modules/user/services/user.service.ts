@@ -141,7 +141,7 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async assignRole(userId: string, roleIds: string[], correlationId: string): Promise<User> {
+  async assignRole(userId: string, roleIds: string[], correlationId: string): Promise<{ user_id: string; roles: Array<{ role_id: string; name: string }> }> {
     this.logger.log("Assigning roles to user", { correlationId, userId, roleIds });
 
     // Check if user exists
@@ -154,15 +154,31 @@ export class UserService {
       });
     }
 
-    // Process each role
-    for (const roleId of roleIds) {
-      // Get role with permissions
-      const role = await this.roleService.getRoleWithPermissions(roleId, correlationId);
-      if (!role) {
-        this.logger.warn(`Role not found, skipping`, { correlationId, roleId });
-        continue;
+    // First verify all roles exist
+    const existingRoles = await this.prisma.roles.findMany({
+      where: { id: { in: roleIds } },
+      include: {
+        permissions: {
+          include: {
+            permission: true
+          }
+        }
       }
+    });
 
+    const foundRoleIds = existingRoles.map(r => r.id);
+    const nonExistentRoles = roleIds.filter(id => !foundRoleIds.includes(id));
+
+    if (nonExistentRoles.length > 0) {
+      throw new NotFoundException({
+        message: `Roles not found: ${nonExistentRoles.join(', ')}`,
+        error: "Not Found",
+        correlation_id: correlationId,
+      });
+    }
+
+    // Process each role
+    for (const role of existingRoles) {
       // Skip if user already has this role
       if (user.roleNames.includes(role.name)) {
         this.logger.log("User already has this role, skipping", { correlationId, userId, roleName: role.name });
@@ -170,14 +186,36 @@ export class UserService {
       }
 
       // Add the new role and its permissions to the user
-      user.addRole(role.name, role.permissions.map(p => p.permission_id));
+      user.addRole(role.name, role.permissions.map(p => p.permission.id));
     }
 
-    // Save and return updated user
-    return this.userRepository.save(user);
+    // Save the user
+    await this.userRepository.save(user);
+
+    // Get updated user with roles
+    const updatedUser = await this.prisma.users.findUnique({
+      where: { id: userId },
+      include: {
+        roles: {
+          include: {
+            role: true
+          }
+        }
+      }
+    });
+
+    // Return only the necessary data
+    return {
+      user_id: userId,
+      roles: updatedUser.roles.map(r => ({
+        role_id: r.role.id,
+        name: r.role.name
+      }))
+    };
   }
 
   async getUserDetails(userId: string): Promise<{
+    id: string;
     username: string | null;
     created_at: Date;
     updated_at: Date;
@@ -196,6 +234,7 @@ export class UserService {
     }
 
     return {
+      id: user.id,
       username: user.username,
       created_at: user.createdAt,
       updated_at: user.updatedAt,

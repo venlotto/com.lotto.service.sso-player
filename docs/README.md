@@ -258,8 +258,35 @@ POST /v1/users/assignRole
 **Request Body:**
 ```json
 {
-    "user_id": "user-id-1",
-    "role_ids": ["role-id-1", "role-id-2"]
+    "user_id": "123e4567-e89b-12d3-a456-426614174000",
+    "role_ids": [
+        "456e7890-f12d-34e5-a678-901234567890",
+        "789e0123-f45d-67e8-a901-234567890123"
+    ]
+}
+```
+
+**Response Example:**
+```json
+{
+    "message": "Success",
+    "status_code": 201,
+    "meta": {
+        "correlation_id": "123e4567-e89b-12d3-a456-426614174000"
+    },
+    "data": {
+        "user_id": "123e4567-e89b-12d3-a456-426614174000",
+        "roles": [
+            {
+                "role_id": "456e7890-f12d-34e5-a678-901234567890",
+                "name": "User Management"
+            },
+            {
+                "role_id": "789e0123-f45d-67e8-a901-234567890123",
+                "name": "Basic"
+            }
+        ]
+    }
 }
 ```
 
@@ -335,24 +362,38 @@ POST /v1/users/removeRoles
 ```json
 {
     "user_id": "123e4567-e89b-12d3-a456-426614174000",
-    "role_ids": ["role-id-1", "role-id-2"]
+    "role_ids": [
+        "456e7890-f12d-34e5-a678-901234567890",
+        "789e0123-f45d-67e8-a901-234567890123"
+    ]
 }
 ```
 
 **Response Example:**
 ```json
 {
-    "user_id": "123e4567-e89b-12d3-a456-426614174000",
-    "roles": [
-        {
-            "role_id": "456e7890-f12d-34e5-a678-901234567890",
-            "name": "admin"
-        }
-    ]
+    "message": "Success",
+    "status_code": 200,
+    "meta": {
+        "correlation_id": "123e4567-e89b-12d3-a456-426614174000"
+    },
+    "data": {
+        "user_id": "123e4567-e89b-12d3-a456-426614174000",
+        "roles": [
+            {
+                "role_id": "456e7890-f12d-34e5-a678-901234567890",
+                "name": "User Management"
+            },
+            {
+                "role_id": "789e0123-f45d-67e8-a901-234567890123",
+                "name": "Basic"
+            }
+        ]
+    }
 }
 ```
 
-**Description:** Remove specified roles from a user
+**Description:** Remove specified roles from a user. Returns the remaining roles after removal.
 
 ### Role Management
 

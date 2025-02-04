@@ -43,26 +43,48 @@ export class RemoveRolesController {
     schema: {
       type: "object",
       properties: {
-        user_id: {
+        message: {
           type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
+          example: "Success",
         },
-        roles: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              role_id: {
-                type: "string",
-                example: "456e7890-f12d-34e5-a678-901234567890",
-              },
-              name: {
-                type: "string",
-                example: "admin",
-              },
+        status_code: {
+          type: "number",
+          example: 200,
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
             },
           },
-          description: "Remaining roles after removal",
+        },
+        data: {
+          type: "object",
+          properties: {
+            user_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+            roles: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  role_id: {
+                    type: "string",
+                    example: "456e7890-f12d-34e5-a678-901234567890",
+                  },
+                  name: {
+                    type: "string",
+                    example: "User Management",
+                  },
+                },
+              },
+              description: "Remaining roles after removal",
+            },
+          },
         },
       },
     },
@@ -81,9 +103,18 @@ export class RemoveRolesController {
           type: "string",
           example: "Not Found",
         },
-        correlation_id: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
+        status_code: {
+          type: "number",
+          example: 404,
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
         },
       },
     },
@@ -93,18 +124,36 @@ export class RemoveRolesController {
     @CorrelationId() correlationId: string,
   ) {
     try {
-      return await this.userService.removeRoles(
+      const result = await this.userService.removeRoles(
         dto.user_id,
         dto.role_ids,
         correlationId,
       );
+
+      return {
+        message: "Success",
+        status_code: 200,
+        meta: {
+          correlation_id: correlationId,
+        },
+        data: {
+          user_id: result.user_id,
+          roles: result.roles.map(role => ({
+            role_id: role.role_id,
+            name: role.name,
+          })),
+        },
+      };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {
         throw new InternalServerErrorException({
           message: "Error removing roles",
           error: "Internal Server Error",
-          correlation_id: correlationId,
+          status_code: 500,
+          meta: {
+            correlation_id: correlationId,
+          },
         });
       }
       throw error;

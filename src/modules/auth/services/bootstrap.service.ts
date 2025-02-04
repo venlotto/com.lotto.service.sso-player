@@ -213,8 +213,8 @@ export class BootstrapService implements OnModuleInit {
 
         this.logger.log("Admin user created with roles:", {
           correlationId: bootstrapCorrelationId,
-          userId: updatedUser.id,
-          roleNames: updatedUser.roleNames,
+          userId: updatedUser.user_id,
+          roleNames: updatedUser.roles,
         });
 
         // Log admin credentials (only on first creation)

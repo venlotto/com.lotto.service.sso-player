@@ -5,7 +5,6 @@ import {
   UseGuards,
   Logger,
   InternalServerErrorException,
-  Request,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
@@ -16,7 +15,7 @@ import { UserService } from "../services/user.service";
 import { AssignRoleDto } from "../dto/assign-role.dto";
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
-@ApiTags("User")
+@ApiTags("Users")
 @Controller("v1/users")
 @UseGuards(JwtAuthGuard, PermissionGuard)
 @ApiHeader({
@@ -37,75 +36,55 @@ export class AssignRoleController {
 
   @Post("assignRole")
   @RequirePermissions("com.lotto.service.auth-internal:user:assign-role")
-  @ApiOperation({
-    summary: "Assign roles to user",
-    description: "Assigns multiple roles to a user and updates their permissions accordingly. Skips roles that are already assigned or not found.",
-  })
+  @ApiOperation({ summary: "Assign roles to a user" })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: "Roles assigned successfully",
-    schema: {
-      type: "object",
-      properties: {
-        user_id: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
-        },
-        role_ids: {
-          type: "array",
-          items: {
-            type: "string",
-          },
-          example: ["456e7890-f12d-34e5-a678-901234567890", "789e0123-f45d-67e8-a901-234567890123"],
-        },
-        user: {
-          type: "object",
-          properties: {
-            id: {
-              type: "string",
-              example: "123e4567-e89b-12d3-a456-426614174000",
-            },
-            username: {
-              type: "string",
-              example: "john.doe",
-            },
-            roles: {
-              type: "array",
-              items: {
-                type: "string",
-              },
-              example: ["admin", "editor"],
-            },
-            status: {
-              type: "string",
-              example: "active",
-            },
-          },
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 403,
-    description: "User does not have required permissions",
     schema: {
       type: "object",
       properties: {
         message: {
           type: "string",
-          example: "User does not have the required permissions",
+          example: "Success",
         },
-        error: {
-          type: "string",
-          example: "ForbiddenException",
-        },
-        statusCode: {
+        status_code: {
           type: "number",
-          example: 403,
+          example: 201,
         },
-        correlationId: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
+        },
+        data: {
+          type: "object",
+          properties: {
+            user_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+            roles: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  role_id: {
+                    type: "string",
+                    example: "456e7890-f12d-34e5-a678-901234567890",
+                  },
+                  name: {
+                    type: "string",
+                    example: "User Management",
+                  },
+                },
+              },
+              description: "Assigned roles",
+            },
+          },
         },
       },
     },
@@ -124,29 +103,57 @@ export class AssignRoleController {
           type: "string",
           example: "Not Found",
         },
-        correlation_id: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
+        status_code: {
+          type: "number",
+          example: 404,
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+          },
         },
       },
     },
   })
   async assignRole(
-    @Request() req: Request,
     @Body() dto: AssignRoleDto,
-    @CorrelationId() correlationId: string | null,
+    @CorrelationId() correlationId: string,
   ) {
-    this.logger.log("Assigning roles to user", { correlationId, userId: dto.user_id, roleIds: dto.role_ids });
-
     try {
-      return await this.userService.assignRole(dto.user_id, dto.role_ids, correlationId);
+      const result = await this.userService.assignRole(
+        dto.user_id,
+        dto.role_ids,
+        correlationId,
+      );
+
+      return {
+        message: "Success",
+        status_code: 201,
+        meta: {
+          correlation_id: correlationId,
+        },
+        data: {
+          user_id: result.user_id,
+          roles: result.roles.map(role => ({
+            role_id: role.role_id,
+            name: role.name,
+          })),
+        },
+      };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       if (error instanceof InternalServerErrorException) {
         throw new InternalServerErrorException({
-          message: "Error assigning roles to user",
+          message: "Error assigning roles",
           error: "Internal Server Error",
-          correlation_id: correlationId,
+          status_code: 500,
+          meta: {
+            correlation_id: correlationId,
+          },
         });
       }
       throw error;
