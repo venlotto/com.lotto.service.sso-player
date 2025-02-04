@@ -4,7 +4,7 @@ This document provides comprehensive documentation for the Auth Service API endp
 
 ## Base URL
 
-All API endpoints are prefixed with: `http://localhost:3000/v1`
+All API endpoints are prefixed with: `{{baseUrl}}/v1`
 
 ## Response Format
 
@@ -90,13 +90,13 @@ All API responses follow this standardized format:
 Most endpoints require authentication using a Bearer token. Include the token in the Authorization header:
 
 ```
-Authorization: Bearer <access_token>
+Authorization: Bearer {{accessToken}}
 ```
 
 A correlation ID can be included for request tracking (optional):
 
 ```
-X-Correlation-Id: <uuid>
+X-Correlation-Id: {{$guid}}
 ```
 
 ## Common Status Codes
@@ -113,444 +113,480 @@ X-Correlation-Id: <uuid>
 
 ### Authentication
 
-#### POST /auth/login
-Authenticate a user and receive access and refresh tokens.
+#### Login
+```http
+POST /v1/auth/login
+```
 
-**Request:**
+**Headers:**
+- `Content-Type: application/json`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
 ```json
 {
-  "username": "string",
-  "password": "string"
+    "username": "{{username}}",
+    "password": "{{password}}"
 }
 ```
 
-**Success Response:**
+**Description:** Authenticate user and get access token
+
+#### Refresh Token
+```http
+POST /v1/auth/refreshToken
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
 ```json
 {
-  "message": "Login successful",
-  "status_code": 200,
-  "data": {
-    "user_id": "string",
-    "username": "string",
-    "access_token": "string",
-    "refresh_token": "string"
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
+    "refresh_token": "{{refreshToken}}"
 }
 ```
 
-**Error Responses:**
-- 401: Invalid credentials
-- 500: Internal server error during authentication
+**Description:** Get new access token using refresh token
 
-#### POST /auth/refresh-token
-Get a new access token using a refresh token.
+#### Logout
+```http
+POST /v1/auth/logout
+```
 
-**Request:**
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
 ```json
 {
-  "refresh_token": "string"
+    "refresh_token": "{{refreshToken}}"
 }
 ```
 
-**Success Response:**
-```json
-{
-  "message": "Token refreshed successfully",
-  "status_code": 200,
-  "data": {
-    "access_token": "string",
-    "refresh_token": "string"
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
-}
-```
-
-**Error Responses:**
-- 401: Invalid or expired refresh token
-- 500: Error refreshing token
-
-#### POST /auth/logout
-Invalidate the current session.
-
-**Request:**
-```json
-{
-  "refresh_token": "string"
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "Logged out successfully",
-  "status_code": 200,
-  "meta": {
-    "correlation_id": "string"
-  }
-}
-```
-
-**Error Responses:**
-- 401: Invalid session
-- 500: Error during logout
+**Description:** Invalidate the current session by revoking the refresh token
 
 ### User Management
 
-#### POST /users/newUser
-Register a new user.
-
-**Request:**
-```json
-{
-  "username": "newuser",
-  "password": "Password123!"
-}
+#### Create New User
+```http
+POST /v1/users/newUser
 ```
-
-**Success Response:**
-```json
-{
-  "message": "User created successfully",
-  "status_code": 201,
-  "data": {
-    "id": "string",
-    "username": "string",
-    "access_token": "string",
-    "refresh_token": "string"
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
-}
-```
-
-**Error Responses:**
-- 409: User with this email already exists
-- 500: An unexpected error occurred
-
-#### POST /users/changePassword
-Change user password.
-
-**Request:**
-```json
-{
-  "currentPassword": "string",
-  "newPassword": "string"
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "Password changed successfully",
-  "status_code": 200,
-  "meta": {
-    "correlation_id": "string"
-  }
-}
-```
-
-**Error Responses:**
-- 401: Current password is incorrect
-- 500: Error changing password
-
-#### POST /users/changeStatus
-Change user status.
-
-**Request:**
-```json
-{
-  "status": "blocked"
-}
-```
-
-**Success Response:**
-```json
-{
-  "message": "User status updated successfully",
-  "status_code": 200,
-  "data": {
-    "id": "string",
-    "username": "string",
-    "status": "string"
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
-}
-```
-
-**Error Responses:**
-- 403: Insufficient permissions to change user status
-- 404: User not found
-- 500: Error updating user status
-
-#### GET /v1/users
-Get a paginated list of all users with their roles and permissions.
 
 **Headers:**
-- `Authorization`: Bearer token (required)
-- `X-Correlation-Id`: Request correlation ID (optional)
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
+```json
+{
+    "username": "newuser",
+    "password": "Password123!"
+}
+```
+
+**Description:** Create a new user account
+
+#### Change Password
+```http
+POST /v1/users/changePassword
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
+```json
+{
+    "current_password": "currentPass123!",
+    "new_password": "newPass123!"
+}
+```
+
+**Description:** Change user password
+
+#### Change User Status
+```http
+POST /v1/users/changeStatus
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
+```json
+{
+    "user_id": "123e4567-e89b-12d3-a456-426614174000",
+    "status": "BLOCKED"
+}
+```
+
+**Response Example:**
+```json
+{
+    "message": "User status updated successfully",
+    "status_code": 200,
+    "data": {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "username": "john.doe",
+        "status": "BLOCKED"
+    },
+    "meta": {
+        "correlation_id": "9fb34360-5372-4b0d-b353-3b14f0b958e9"
+    }
+}
+```
+
+#### Assign Role to User
+```http
+POST /v1/users/assignRole
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
+```json
+{
+    "user_id": "user-id-1",
+    "role_ids": ["role-id-1", "role-id-2"]
+}
+```
+
+**Description:** Assign multiple roles to a user. Skips roles that are already assigned or not found.
+
+#### Get Current User
+```http
+GET /v1/users/me
+```
+
+**Headers:**
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Response Example:**
+```json
+{
+    "username": "john.doe",
+    "created_at": "2024-01-28T21:18:43.225Z",
+    "updated_at": "2024-01-28T21:18:43.225Z",
+    "last_login": "2024-01-28T21:18:43.225Z"
+}
+```
+
+#### List Users
+```http
+GET /v1/users
+```
+
+**Headers:**
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
 
 **Query Parameters:**
 - `page` (optional): Page number (1-based, default: 1)
 - `limit` (optional): Items per page (default: 50, max: 100)
 
-**Success Response:**
+**Response Example:**
 ```json
 {
-  "data": [
-    {
-      "id": "123e4567-e89b-12d3-a456-426614174000",
-      "username": "john.doe",
-      "status": "ACTIVE",
-      "roles": ["admin", "user"],
-      "permissions": ["com.lotto.service.auth-internal:user:create"],
-      "last_login": "2024-03-20T10:00:00Z",
-      "created_at": "2024-03-20T10:00:00Z",
-      "updated_at": "2024-03-20T10:00:00Z"
+    "data": [
+        {
+            "id": "123e4567-e89b-12d3-a456-426614174000",
+            "username": "john.doe",
+            "status": "ACTIVE",
+            "roles": ["admin", "user"],
+            "permissions": ["com.lotto.service.auth-internal:user:create"],
+            "last_login": "2024-03-20T10:00:00Z",
+            "created_at": "2024-03-20T10:00:00Z",
+            "updated_at": "2024-03-20T10:00:00Z"
+        }
+    ],
+    "meta": {
+        "currentPage": 1,
+        "totalPages": 10,
+        "totalItems": 100,
+        "itemsPerPage": 50
     }
-  ],
-  "meta": {
-    "currentPage": 1,
-    "totalPages": 10,
-    "totalItems": 100,
-    "itemsPerPage": 50
-  }
 }
 ```
 
-**Status Codes:**
-- `200 OK`: Successfully retrieved users
-- `401 Unauthorized`: Invalid or missing access token
-- `403 Forbidden`: Insufficient permissions (requires `com.lotto.service.auth-internal:user:list`)
-- `500 Internal Server Error`: Unexpected server error
-
-#### Get Current User Profile
-
+#### Remove Roles from User
 ```http
-GET /v1/me
+POST /v1/users/removeRoles
 ```
-
-Retrieves the current user's profile information using their access token.
 
 **Headers:**
-- `Authorization`: Bearer token (required)
-- `X-Correlation-Id`: Request correlation ID (optional)
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
 
-**Response:**
+**Request Body:**
 ```json
 {
-  "username": "john.doe",
-  "created_at": "2024-01-28T21:18:43.225Z",
-  "updated_at": "2024-01-28T21:18:43.225Z",
-  "last_login": "2024-01-28T21:18:43.225Z"
+    "user_id": "123e4567-e89b-12d3-a456-426614174000",
+    "role_ids": ["role-id-1", "role-id-2"]
 }
 ```
 
-**Status Codes:**
-- `200 OK`: Successfully retrieved user profile
-- `401 Unauthorized`: Invalid or missing access token
-- `404 Not Found`: User not found
+**Response Example:**
+```json
+{
+    "user_id": "123e4567-e89b-12d3-a456-426614174000",
+    "roles": [
+        {
+            "role_id": "456e7890-f12d-34e5-a678-901234567890",
+            "name": "admin"
+        }
+    ]
+}
+```
+
+**Description:** Remove specified roles from a user
 
 ### Role Management
 
-#### POST /v1/roles
-Create a new role.
-
-**Request:**
-```json
-{
-  "name": "editor",
-  "description": "Content editor role"
-}
+#### Create Role
+```http
+POST /v1/roles
 ```
 
-**Success Response:**
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
 ```json
 {
-  "message": "Role created successfully",
-  "status_code": 201,
-  "data": {
-    "id": "string",
     "name": "editor",
     "description": "Content editor role"
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
 }
 ```
 
-**Error Responses:**
-- 409: Role with this name already exists
-- 500: Error creating role
+**Description:** Create a new role
 
-#### GET /v1/roles
-Get a list of all roles.
-
-**Success Response:**
-```json
-{
-  "message": "Success",
-  "status_code": 200,
-  "data": [
-    {
-      "id": "string",
-      "name": "string",
-      "description": "string"
-    }
-  ],
-  "meta": {
-    "correlation_id": "string",
-    "pagination": {
-      "current_page": 1,
-      "total_pages": 5,
-      "total_items": 50,
-      "items_per_page": 10
-    }
-  }
-}
+#### Get All Roles
+```http
+GET /v1/roles
 ```
 
-**Error Responses:**
-- 500: Error retrieving roles
+**Headers:**
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
 
-#### GET /v1/roles/:roleId
-Get details of a specific role.
-
-**Success Response:**
+**Response Example:**
 ```json
 {
-  "message": "Success",
-  "status_code": 200,
-  "data": {
-    "id": "string",
-    "name": "string",
-    "description": "string",
-    "permissions": [
-      {
-        "id": "string",
-        "name": "string",
-        "description": "string"
-      }
+    "message": "Success",
+    "status_code": 200,
+    "meta": {
+        "correlation_id": "123e4567-e89b-12d3-a456-426614174000"
+    },
+    "data": [
+        {
+            "id": "55a641f2-4bf6-4ce9-bea9-aba3949aae25",
+            "name": "User Management",
+            "description": "User and role management",
+            "created_at": "2025-01-28T21:18:43.225Z",
+            "updated_at": "2025-01-28T21:18:43.225Z",
+            "permissions": [
+                {
+                    "permission_id": "caf3fc3f-17a7-41c2-97e4-a1800898afae",
+                    "name": "com.lotto.service.auth-internal:user:create"
+                }
+            ]
+        }
     ]
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
 }
 ```
 
-**Error Responses:**
-- 404: Role not found
-- 500: Error retrieving role
+#### Get Role Details
+```http
+GET /v1/roles/:roleId
+```
 
-#### PUT /v1/roles/:roleId/permissions
-Assign permissions to a role.
+**Headers:**
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
 
-**Request:**
+**Path Parameters:**
+- `roleId`: ID of the role to retrieve
+
+**Response Example:**
 ```json
 {
-  "permissionIds": ["permission-id-1", "permission-id-2"]
+    "message": "Success",
+    "status_code": 200,
+    "meta": {
+        "correlation_id": "123e4567-e89b-12d3-a456-426614174000"
+    },
+    "data": {
+        "id": "55a641f2-4bf6-4ce9-bea9-aba3949aae25",
+        "name": "User Management",
+        "description": "User and role management",
+        "created_at": "2025-01-28T21:18:43.225Z",
+        "updated_at": "2025-01-28T21:18:43.225Z",
+        "permissions": [
+            {
+                "permission_id": "caf3fc3f-17a7-41c2-97e4-a1800898afae",
+                "name": "com.lotto.service.auth-internal:user:create"
+            }
+        ]
+    }
 }
 ```
 
-**Response:**
+#### Assign Permissions to Role
+```http
+POST /v1/roles/assignPermissions
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
 ```json
 {
-  "message": "Permissions assigned successfully",
-  "status_code": 200,
-  "data": {
-    "id": "string",
-    "name": "editor",
-    "description": "Content editor role",
-    "permissions": [
-      {
-        "id": "permission-id-1",
-        "name": "create:article",
-        "description": "Can create articles"
-      },
-      {
-        "id": "permission-id-2",
-        "name": "edit:article",
-        "description": "Can edit articles"
-      }
+    "role_id": "123e4567-e89b-12d3-a456-426614174000",
+    "permission_ids": [
+        "456e7890-f12d-34e5-a678-901234567890",
+        "789e0123-f45d-67e8-a901-234567890123"
     ]
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
 }
 ```
+
+**Response Example:**
+```json
+{
+    "role_id": "123e4567-e89b-12d3-a456-426614174000",
+    "permission_ids": [
+        "456e7890-f12d-34e5-a678-901234567890",
+        "789e0123-f45d-67e8-a901-234567890123"
+    ],
+    "role": {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "name": "admin",
+        "permissions": [
+            {
+                "permission_id": "456e7890-f12d-34e5-a678-901234567890",
+                "name": "com.lotto.service.auth-internal:user:create"
+            },
+            {
+                "permission_id": "789e0123-f45d-67e8-a901-234567890123",
+                "name": "com.lotto.service.auth-internal:user:update"
+            }
+        ]
+    }
+}
+```
+
+**Description:** Assign multiple permissions to a role. Skips permissions that are already assigned to the role.
+
+#### Remove Permissions from Role
+```http
+POST /v1/roles/removePermissions
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
+```json
+{
+    "role_id": "role-id-1",
+    "permission_ids": ["permission-id-1", "permission-id-2"]
+}
+```
+
+**Description:** Remove specified permissions from a role
+
+#### Delete Role
+```http
+DELETE /v1/roles
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
+```json
+{
+    "role_id": "123e4567-e89b-12d3-a456-426614174000"
+}
+```
+
+**Description:** Delete a role. The role must not have any permissions assigned and must not be assigned to any users.
+
+**Response:** 204 No Content
 
 ### Permission Management
 
-#### POST /v1/permissions
-Create a new permission.
-
-**Request:**
-```json
-{
-  "name": "create:article",
-  "description": "Can create articles"
-}
+#### Create Permission
+```http
+POST /v1/permissions
 ```
 
-**Success Response:**
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
 ```json
 {
-  "message": "Permission created successfully",
-  "status_code": 201,
-  "data": {
-    "id": "string",
     "name": "create:article",
     "description": "Can create articles"
-  },
-  "meta": {
-    "correlation_id": "string"
-  }
 }
 ```
 
-**Error Responses:**
-- 409: Permission with this name already exists
-- 500: Error creating permission
+**Description:** Create a new permission
 
-#### GET /v1/permissions
-Get a list of all permissions.
+#### Get All Permissions
+```http
+GET /v1/permissions
+```
 
-**Success Response:**
+**Headers:**
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Description:** Get list of all permissions
+
+#### Delete Permission
+```http
+DELETE /v1/permissions
+```
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer {{accessToken}}`
+- `X-Correlation-Id: {{$guid}}`
+
+**Request Body:**
 ```json
 {
-  "message": "Success",
-  "status_code": 200,
-  "data": [
-    {
-      "id": "string",
-      "name": "string",
-      "description": "string"
-    }
-  ],
-  "meta": {
-    "correlation_id": "string",
-    "pagination": {
-      "current_page": 1,
-      "total_pages": 5,
-      "total_items": 50,
-      "items_per_page": 10
-    }
-  }
+    "permission_id": "permission-id-1"
 }
 ```
 
-**Error Responses:**
-- 500: Error retrieving permissions
+**Description:** Delete a permission that is not assigned to any role
 
 ## Development
 

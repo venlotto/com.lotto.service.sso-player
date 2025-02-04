@@ -12,12 +12,14 @@ export class ChangePasswordDto {
   @IsUUID()
   user_id?: string;
 
-  @ApiProperty({
-    description: "Current password",
-    example: "CurrentPass123!",
-  })
+  @IsOptional()
   @IsString()
-  current_password: string;
+  @ApiProperty({
+    description: "Current password (required only when changing own password)",
+    example: "CurrentPass123!",
+    required: false
+  })
+  current_password?: string;
 
   @ApiProperty({
     description:

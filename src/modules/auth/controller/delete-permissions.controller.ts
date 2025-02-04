@@ -40,7 +40,7 @@ export class DeletePermissionsController {
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @RequirePermissions("permission:delete")
+  @RequirePermissions("com.lotto.service.auth-internal:permission:delete")
   @ApiOperation({ summary: "Delete a permission" })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,

@@ -67,19 +67,39 @@ export class RoleService {
         });
       }
 
+      // Verify all permissions exist
+      const existingPermissions = await this.prisma.permissions.findMany({
+        where: {
+          id: {
+            in: permissionIds
+          }
+        }
+      });
+
+      const foundPermissionIds = existingPermissions.map(p => p.id);
+      const nonExistentPermissions = permissionIds.filter(id => !foundPermissionIds.includes(id));
+
+      if (nonExistentPermissions.length > 0) {
+        throw new NotFoundException({
+          message: `Permissions not found: ${nonExistentPermissions.join(', ')}`,
+          error: "Not Found",
+          correlation_id: correlationId,
+        });
+      }
+
       // Get existing permission IDs for this role
-      const existingPermissionIds = role.permissions.map(p => p.permission.id);
+      const existingRolePermissionIds = role.permissions.map(p => p.permission.id);
 
       // Filter out permissions that already exist
       const newPermissionIds = permissionIds.filter(
-        id => !existingPermissionIds.includes(id)
+        id => !existingRolePermissionIds.includes(id)
       );
 
       if (newPermissionIds.length === 0) {
         this.logger.log("All permissions already assigned to role", { correlationId, roleId });
         return {
           role_id: roleId,
-          permissions: existingPermissionIds,
+          permissions: existingRolePermissionIds,
         };
       }
 
@@ -94,7 +114,7 @@ export class RoleService {
       // Return all permissions (existing + newly added)
       return {
         role_id: roleId,
-        permissions: [...existingPermissionIds, ...newPermissionIds],
+        permissions: [...existingRolePermissionIds, ...newPermissionIds],
       };
     } catch (error) {
       this.logger.error("Error assigning permissions to role", error.stack, {

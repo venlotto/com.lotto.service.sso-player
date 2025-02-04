@@ -8,6 +8,9 @@ import { AuthController } from "./controller/auth.controller";
 import { PermissionController } from "./controller/permission.controller";
 import { RoleController } from "./controller/role.controller";
 import { RemovePermissionsController } from "./controller/remove-permissions.controller";
+import { AssignPermissionsController } from "./controller/assign-permissions.controller";
+import { DeleteRoleController } from "./controller/delete-role.controller";
+import { DeletePermissionsController } from "./controller/delete-permissions.controller";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { PermissionGuard } from "./guards/permission.guard";
@@ -38,6 +41,9 @@ export class AuthModule {
         RoleController,
         PermissionController,
         RemovePermissionsController,
+        AssignPermissionsController,
+        DeleteRoleController,
+        DeletePermissionsController,
       ],
       imports: [
         ConfigModule,
