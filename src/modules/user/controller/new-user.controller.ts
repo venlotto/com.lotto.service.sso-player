@@ -47,26 +47,38 @@ export class NewUserController {
     schema: {
       type: "object",
       properties: {
-        user_id: {
+        message: {
           type: "string",
-          description: "The unique identifier of the created user",
-          example: "5a0f6d41-5afc-4519-acb2-686246829451",
+          example: "User created successfully",
         },
-        username: {
-          type: "string",
-          description: "The username of the created user",
-          example: "testuser",
+        status_code: {
+          type: "number",
+          example: 201,
         },
-        access_token: {
-          type: "string",
-          description: "JWT token for authentication",
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        data: {
+          type: "object",
+          properties: {
+            user_id: {
+              type: "string",
+              description: "The unique identifier of the created user",
+              example: "5a0f6d41-5afc-4519-acb2-686246829451",
+            },
+            username: {
+              type: "string",
+              description: "The username of the created user",
+              example: "testuser",
+            }
+          }
         },
-        refresh_token: {
-          type: "string",
-          description: "Token for refreshing the access token",
-          example: "1d30e30b73647462cb134e37bac4c8aa...",
-        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            }
+          }
+        }
       },
     },
   })
@@ -84,14 +96,19 @@ export class NewUserController {
           type: "string",
           example: "ConflictException",
         },
-        statusCode: {
+        status_code: {
           type: "number",
           example: 409,
         },
-        correlationId: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
-        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            }
+          }
+        }
       },
     },
   })
@@ -109,20 +126,51 @@ export class NewUserController {
           type: "string",
           example: "ForbiddenException",
         },
-        statusCode: {
+        status_code: {
           type: "number",
           example: 403,
         },
-        correlationId: {
-          type: "string",
-          example: "123e4567-e89b-12d3-a456-426614174000",
-        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            }
+          }
+        }
       },
     },
   })
   @ApiResponse({
     status: 500,
     description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          example: "An unexpected error occurred",
+        },
+        error: {
+          type: "string",
+          example: "InternalServerError",
+        },
+        status_code: {
+          type: "number",
+          example: 500,
+        },
+        meta: {
+          type: "object",
+          properties: {
+            correlation_id: {
+              type: "string",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            }
+          }
+        }
+      },
+    },
   })
   @RequirePermissions("com.lotto.service.auth-internal:user:create")
   @Post("newUser")
@@ -139,19 +187,27 @@ export class NewUserController {
         newUserDto.password,
         correlationId,
       );
-      const userPayload = User.toPayload(user);
 
       return {
-        user_id: user.id,
-        username: user.username,
+        message: "User created successfully",
+        status_code: 201,
+        data: {
+          user_id: user.id,
+          username: user.username,
+        },
+        meta: {
+          correlation_id: correlationId,
+        }
       };
     } catch (error) {
       if (error instanceof ConflictException) {
         throw new ConflictException({
-          message: error.message,
-          error: error.name,
-          statusCode: error.getStatus(),
-          correlationId,
+          message: "Username already exists",
+          error: "ConflictException",
+          status_code: 409,
+          meta: {
+            correlation_id: correlationId,
+          }
         });
       }
 
@@ -159,8 +215,10 @@ export class NewUserController {
       throw new InternalServerErrorException({
         message: "An unexpected error occurred",
         error: "InternalServerError",
-        statusCode: 500,
-        correlationId,
+        status_code: 500,
+        meta: {
+          correlation_id: correlationId,
+        }
       });
     }
   }

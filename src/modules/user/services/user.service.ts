@@ -107,8 +107,15 @@ export class UserService {
 
     const existingUser = await this.userRepository.findByUsername(username);
     if (existingUser) {
-      this.logger.log("Username already exists, returning existing", { username, correlationId });
-      return existingUser;
+      this.logger.warn("Username already exists", { username, correlationId });
+      throw new ConflictException({
+        message: "Username already exists",
+        error: "ConflictException",
+        status_code: 409,
+        meta: {
+          correlation_id: correlationId,
+        }
+      });
     }
 
     // Find the Basic role

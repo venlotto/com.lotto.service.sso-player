@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsUUID } from "class-validator";
+import { Transform } from "class-transformer";
 
 import { UserStatus } from "../model/enum/user-status.enum";
 
@@ -12,10 +13,18 @@ export class ChangeStatusDto {
   user_id: string;
 
   @ApiProperty({
-    description: "New status for the user",
+    description: "New status for the user (case-insensitive)",
     enum: UserStatus,
     example: UserStatus.ACTIVE,
   })
-  @IsEnum(UserStatus)
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value.toUpperCase();
+    }
+    return value;
+  })
+  @IsEnum(UserStatus, {
+    message: "status must be one of the following values: ACTIVE, BLOCKED (case-insensitive)"
+  })
   status: UserStatus;
 }
