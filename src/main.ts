@@ -2,9 +2,11 @@ import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { ExpressAdapter } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import * as cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
 import * as express from "express";
 import helmet from "helmet";
+
 import { AppModule } from "./app/app.module";
 import { HttpExceptionFilter } from "./core/filters/http.exception.filters";
 import { TransformInterceptor } from "./core/interceptors/transform.interceptor";
@@ -15,14 +17,25 @@ const logger = new Logger();
 dotenv.config();
 
 async function bootstrap(): Promise<void> {
+  const expressApp = express();
   const app = await NestFactory.create(
     AppModule,
-    new ExpressAdapter(express()),
+    new ExpressAdapter(expressApp),
   );
 
-  app.use(new CorsMiddleware().use);
+  expressApp.set("trust proxy", 1);
 
-  app.use(helmet());
+  app.use(cookieParser(process.env.COOKIE_SECRET));
+
+  const corsMiddleware = new CorsMiddleware();
+  app.use((req, res, next) => corsMiddleware.use(req, res, next));
+
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: "same-site" },
+      crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+    }),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

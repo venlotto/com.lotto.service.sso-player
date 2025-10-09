@@ -1,7 +1,8 @@
+import * as crypto from "crypto";
+
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import * as bcrypt from "bcrypt";
-import * as crypto from "crypto";
 
 import { AppModule } from "../app/app.module";
 import { PrismaService } from "../modules/prisma/prisma.service";
@@ -10,13 +11,13 @@ const logger = new Logger("ResetAdminPassword");
 
 function generateSecurePassword(): string {
   const length = 16;
-  const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
-  const numberChars = '0123456789';
-  const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-  
+  const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+  const numberChars = "0123456789";
+  const specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
   // Ensure at least one of each type
-  let password = '';
+  let password = "";
   password += uppercaseChars[crypto.randomInt(uppercaseChars.length)]; // One uppercase
   password += lowercaseChars[crypto.randomInt(lowercaseChars.length)]; // One lowercase
   password += numberChars[crypto.randomInt(numberChars.length)]; // One number
@@ -29,7 +30,10 @@ function generateSecurePassword(): string {
   }
 
   // Shuffle the password
-  return password.split('').sort(() => crypto.randomInt(3) - 1).join('');
+  return password
+    .split("")
+    .sort(() => crypto.randomInt(3) - 1)
+    .join("");
 }
 
 async function resetAdminPassword(): Promise<void> {
@@ -74,4 +78,4 @@ async function resetAdminPassword(): Promise<void> {
   }
 }
 
-resetAdminPassword(); 
+resetAdminPassword();

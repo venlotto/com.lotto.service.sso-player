@@ -6,8 +6,8 @@ import {
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 
-import { PERMISSIONS_KEY } from "../decorators/require-permissions.decorator";
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
+import { PERMISSIONS_KEY } from "../decorators/require-permissions.decorator";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -69,4 +69,4 @@ export class PermissionGuard implements CanActivate {
 
     return true;
   }
-} 
+}

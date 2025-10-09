@@ -1,4 +1,3 @@
-import { UserStatus } from "../model/enum/user-status.enum";
 import { User } from "../model/user.model";
 
 export interface IUserRepository {

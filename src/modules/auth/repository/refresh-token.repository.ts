@@ -6,7 +6,7 @@ import { RefreshToken } from "../model/refresh-token.model";
 
 @Injectable()
 export class RefreshTokenRepository implements IRefreshTokenRepository {
-  constructor(
+  public constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger = new Logger(RefreshTokenRepository.name),
   ) {}
@@ -17,8 +17,15 @@ export class RefreshTokenRepository implements IRefreshTokenRepository {
     await this.prismaService.refresh_tokens.create({
       data: {
         token: refreshToken.token,
+        token_id: refreshToken.tokenId,
+        family_id: refreshToken.familyId,
         user_id: refreshToken.userId,
         expires_at: refreshToken.expires_at,
+        created_by_ip: refreshToken.created_by_ip ?? undefined,
+        created_by_user_agent: refreshToken.created_by_user_agent ?? undefined,
+        rotated_at: refreshToken.rotated_at ?? undefined,
+        replaced_by_token_id: refreshToken.replaced_by_token_id ?? undefined,
+        revoked_at: refreshToken.revoked_at ?? undefined,
       },
     });
   }
@@ -34,18 +41,32 @@ export class RefreshTokenRepository implements IRefreshTokenRepository {
       return null;
     }
 
-    return new RefreshToken(
-      foundToken.token,
-      foundToken.user_id,
-      foundToken.expires_at,
-    );
+    return RefreshToken.fromRecord(foundToken);
+  }
+
+  public async markRotated(
+    tokenId: string,
+    replacementTokenId: string,
+  ): Promise<void> {
+    this.logger.log("RefreshTokenRepository::markRotated");
+
+    await this.prismaService.refresh_tokens.updateMany({
+      where: { token_id: tokenId },
+      data: {
+        rotated_at: new Date(),
+        replaced_by_token_id: replacementTokenId,
+      },
+    });
   }
 
   public async delete(token: string): Promise<void> {
     this.logger.log("RefreshTokenRepository::delete");
 
-    await this.prismaService.refresh_tokens.delete({
+    await this.prismaService.refresh_tokens.updateMany({
       where: { token },
+      data: {
+        revoked_at: new Date(),
+      },
     });
   }
 }

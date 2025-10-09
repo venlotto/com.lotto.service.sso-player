@@ -15,13 +15,13 @@ import {
   ApiHeader,
 } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
-import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
-import { UserService } from "../services/user.service";
 import { ListUsersQueryDto } from "../dto/list-users-query.dto";
 import { ListUsersResponseDto } from "../dto/list-users-response.dto";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { UserService } from "../services/user.service";
 
 @ApiTags("User")
 @Controller("v1/users")
@@ -44,10 +44,11 @@ export class ListUsersController {
 
   @Get()
   @ApiBearerAuth()
-  @RequirePermissions("com.lotto.service.auth-internal:user:list")
+  @RequirePermissions("com.lotto.service.sso-internal:user:list")
   @ApiOperation({
     summary: "List all users",
-    description: "Returns a paginated list of users with their roles and permissions",
+    description:
+      "Returns a paginated list of users with their roles and permissions",
   })
   @ApiResponse({
     status: 200,
@@ -97,4 +98,4 @@ export class ListUsersController {
       });
     }
   }
-} 
+}

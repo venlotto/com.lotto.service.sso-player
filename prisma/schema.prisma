@@ -19,12 +19,22 @@ model users {
 }
 
 model refresh_tokens {
-  id         Int      @id @default(autoincrement())
-  token      String   @unique
-  user_id    String
-  expires_at DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id                    Int       @id @default(autoincrement())
+  token                 String    @unique
+  token_id              String    @unique @default(uuid()) @db.Uuid
+  family_id             String    @default(uuid()) @db.Uuid
+  user_id               String
+  expires_at            DateTime
+  created_by_ip         String?
+  created_by_user_agent String?
+  rotated_at            DateTime?
+  replaced_by_token_id  String?   @db.Uuid
+  revoked_at            DateTime?
+  created_at            DateTime  @default(now())
+  updated_at            DateTime  @updatedAt
+
+  @@index([user_id])
+  @@index([family_id])
 }
 
 model permissions {

@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "com.lotto.service.auth-internal",
+    "name": "com.lotto.service.sso-internal",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -198,7 +198,7 @@
               ],
               "body": {
                 "mode": "raw",
-                "raw": "{\n    \"message\": \"Success\",\n    \"status_code\": 200,\n    \"meta\": {\n        \"correlation_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n    },\n    \"data\": [\n        {\n            \"id\": \"55a641f2-4bf6-4ce9-bea9-aba3949aae25\",\n            \"name\": \"User Management\",\n            \"description\": \"User and role management\",\n            \"created_at\": \"2025-01-28T21:18:43.225Z\",\n            \"updated_at\": \"2025-01-28T21:18:43.225Z\",\n            \"permissions\": [\n                {\n                    \"permission_id\": \"caf3fc3f-17a7-41c2-97e4-a1800898afae\",\n                    \"name\": \"com.lotto.service.auth-internal:user:create\"\n                }\n            ]\n        }\n    ]\n}"
+                "raw": "{\n    \"message\": \"Success\",\n    \"status_code\": 200,\n    \"meta\": {\n        \"correlation_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n    },\n    \"data\": [\n        {\n            \"id\": \"55a641f2-4bf6-4ce9-bea9-aba3949aae25\",\n            \"name\": \"User Management\",\n            \"description\": \"User and role management\",\n            \"created_at\": \"2025-01-28T21:18:43.225Z\",\n            \"updated_at\": \"2025-01-28T21:18:43.225Z\",\n            \"permissions\": [\n                {\n                    \"permission_id\": \"caf3fc3f-17a7-41c2-97e4-a1800898afae\",\n                    \"name\": \"com.lotto.service.sso-internal:user:create\"\n                }\n            ]\n        }\n    ]\n}"
               }
             }
           ]
@@ -254,7 +254,7 @@
               ],
               "body": {
                 "mode": "raw",
-                "raw": "{\n    \"message\": \"Success\",\n    \"status_code\": 200,\n    \"meta\": {\n        \"correlation_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n    },\n    \"data\": {\n        \"id\": \"55a641f2-4bf6-4ce9-bea9-aba3949aae25\",\n        \"name\": \"User Management\",\n        \"description\": \"User and role management\",\n        \"created_at\": \"2025-01-28T21:18:43.225Z\",\n        \"updated_at\": \"2025-01-28T21:18:43.225Z\",\n        \"permissions\": [\n            {\n                \"permission_id\": \"caf3fc3f-17a7-41c2-97e4-a1800898afae\",\n                \"name\": \"com.lotto.service.auth-internal:user:create\"\n            }\n        ]\n    }\n}"
+                "raw": "{\n    \"message\": \"Success\",\n    \"status_code\": 200,\n    \"meta\": {\n        \"correlation_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n    },\n    \"data\": {\n        \"id\": \"55a641f2-4bf6-4ce9-bea9-aba3949aae25\",\n        \"name\": \"User Management\",\n        \"description\": \"User and role management\",\n        \"created_at\": \"2025-01-28T21:18:43.225Z\",\n        \"updated_at\": \"2025-01-28T21:18:43.225Z\",\n        \"permissions\": [\n            {\n                \"permission_id\": \"caf3fc3f-17a7-41c2-97e4-a1800898afae\",\n                \"name\": \"com.lotto.service.sso-internal:user:create\"\n            }\n        ]\n    }\n}"
               }
             }
           ]
@@ -321,7 +321,7 @@
               ],
               "body": {
                 "mode": "raw",
-                "raw": "{\n    \"role_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"permission_ids\": [\n        \"456e7890-f12d-34e5-a678-901234567890\",\n        \"789e0123-f45d-67e8-a901-234567890123\"\n    ],\n    \"role\": {\n        \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n        \"name\": \"admin\",\n        \"permissions\": [\n            {\n                \"permission_id\": \"456e7890-f12d-34e5-a678-901234567890\",\n                \"name\": \"com.lotto.service.auth-internal:user:create\"\n            },\n            {\n                \"permission_id\": \"789e0123-f45d-67e8-a901-234567890123\",\n                \"name\": \"com.lotto.service.auth-internal:user:update\"\n            }\n        ]\n    }\n}"
+                "raw": "{\n    \"role_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"permission_ids\": [\n        \"456e7890-f12d-34e5-a678-901234567890\",\n        \"789e0123-f45d-67e8-a901-234567890123\"\n    ],\n    \"role\": {\n        \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n        \"name\": \"admin\",\n        \"permissions\": [\n            {\n                \"permission_id\": \"456e7890-f12d-34e5-a678-901234567890\",\n                \"name\": \"com.lotto.service.sso-internal:user:create\"\n            },\n            {\n                \"permission_id\": \"789e0123-f45d-67e8-a901-234567890123\",\n                \"name\": \"com.lotto.service.sso-internal:user:update\"\n            }\n        ]\n    }\n}"
               }
             }
           ]
@@ -848,7 +848,7 @@
               ],
               "body": {
                 "mode": "raw",
-                "raw": "{\n    \"data\": [\n        {\n            \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n            \"username\": \"john.doe\",\n            \"status\": \"ACTIVE\",\n            \"roles\": [\"admin\", \"user\"],\n            \"permissions\": [\"com.lotto.service.auth-internal:user:create\"],\n            \"last_login\": \"2024-03-20T10:00:00Z\",\n            \"created_at\": \"2024-03-20T10:00:00Z\",\n            \"updated_at\": \"2024-03-20T10:00:00Z\"\n        }\n    ],\n    \"meta\": {\n        \"currentPage\": 1,\n        \"totalPages\": 10,\n        \"totalItems\": 100,\n        \"itemsPerPage\": 50\n    }\n}"
+                "raw": "{\n    \"data\": [\n        {\n            \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n            \"username\": \"john.doe\",\n            \"status\": \"ACTIVE\",\n            \"roles\": [\"admin\", \"user\"],\n            \"permissions\": [\"com.lotto.service.sso-internal:user:create\"],\n            \"last_login\": \"2024-03-20T10:00:00Z\",\n            \"created_at\": \"2024-03-20T10:00:00Z\",\n            \"updated_at\": \"2024-03-20T10:00:00Z\"\n        }\n    ],\n    \"meta\": {\n        \"currentPage\": 1,\n        \"totalPages\": 10,\n        \"totalItems\": 100,\n        \"itemsPerPage\": 50\n    }\n}"
               }
             }
           ]

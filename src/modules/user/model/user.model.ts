@@ -31,7 +31,7 @@ export class User {
     lastLogin: Date | string | null = null,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
-    permissions: string[] = []
+    permissions: string[] = [],
   ) {
     this._id = id;
     this._password = password;
@@ -49,7 +49,7 @@ export class User {
     username: string,
     roleNames: string[] = [],
     lastLogin: Date | string | null = null,
-    permissions: string[] = []
+    permissions: string[] = [],
   ): Promise<User> {
     const encryptedPassword = await bcrypt.hash(password, 10);
     return new User(
@@ -61,7 +61,7 @@ export class User {
       lastLogin,
       new Date(),
       new Date(),
-      permissions
+      permissions,
     );
   }
 
@@ -74,7 +74,7 @@ export class User {
     lastLogin: Date | string | null = null,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
-    permissions: string[] = []
+    permissions: string[] = [],
   ): User {
     return new User(
       new UUID(id),
@@ -85,7 +85,7 @@ export class User {
       lastLogin,
       createdAt,
       updatedAt,
-      permissions
+      permissions,
     );
   }
 
@@ -118,7 +118,9 @@ export class User {
     const index = this._roleNames.indexOf(roleName);
     if (index !== -1) {
       this._roleNames.splice(index, 1);
-      this._permissions = this._permissions.filter(p => !rolePermissions.includes(p));
+      this._permissions = this._permissions.filter(
+        (p) => !rolePermissions.includes(p),
+      );
       this._updatedAt = new Date();
     }
   }

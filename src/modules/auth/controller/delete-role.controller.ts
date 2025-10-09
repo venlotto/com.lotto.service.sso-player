@@ -10,12 +10,12 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../decorators/require-permissions.decorator";
+import { DeleteRoleDto } from "../dto/delete-role.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
-import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
-import { DeleteRoleDto } from "../dto/delete-role.dto";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
@@ -38,7 +38,7 @@ export class DeleteRoleController {
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @RequirePermissions("com.lotto.service.auth-internal:role:delete")
+  @RequirePermissions("com.lotto.service.sso-internal:role:delete")
   @ApiOperation({ summary: "Delete a role" })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
@@ -50,7 +50,8 @@ export class DeleteRoleController {
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: "Cannot delete role that has permissions assigned or is assigned to users",
+    description:
+      "Cannot delete role that has permissions assigned or is assigned to users",
   })
   async deleteRole(
     @Body() dto: DeleteRoleDto,
@@ -70,4 +71,4 @@ export class DeleteRoleController {
       throw error;
     }
   }
-} 
+}

@@ -9,12 +9,12 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { CreatePermissionDto } from "../dto/create-permission.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
-import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { PermissionService } from "../services/permission.service";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Permissions")
 @Controller("v1/permissions")
@@ -36,7 +36,7 @@ export class PermissionController {
   ) {}
 
   @Post()
-  @RequirePermissions("com.lotto.service.auth-internal:permission:create")
+  @RequirePermissions("com.lotto.service.sso-internal:permission:create")
   @ApiOperation({ summary: "Create a new permission" })
   @ApiResponse({ status: 201, description: "Permission created successfully" })
   @ApiResponse({
@@ -79,7 +79,7 @@ export class PermissionController {
   }
 
   @Get()
-  @RequirePermissions("com.lotto.service.auth-internal:permission:view")
+  @RequirePermissions("com.lotto.service.sso-internal:permission:view")
   @ApiOperation({ summary: "Get all permissions" })
   @ApiResponse({
     status: 200,

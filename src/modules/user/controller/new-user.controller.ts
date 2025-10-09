@@ -11,11 +11,10 @@ import {
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags, ApiHeader } from "@nestjs/swagger";
 
+import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
-import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { NewUserDto } from "../dto/new-user.dto";
-import { User } from "../model/user.model";
 import { UserService } from "../services/user.service";
 
 @ApiTags("User")
@@ -67,8 +66,8 @@ export class NewUserController {
               type: "string",
               description: "The username of the created user",
               example: "testuser",
-            }
-          }
+            },
+          },
         },
         meta: {
           type: "object",
@@ -76,9 +75,9 @@ export class NewUserController {
             correlation_id: {
               type: "string",
               example: "123e4567-e89b-12d3-a456-426614174000",
-            }
-          }
-        }
+            },
+          },
+        },
       },
     },
   })
@@ -106,9 +105,9 @@ export class NewUserController {
             correlation_id: {
               type: "string",
               example: "123e4567-e89b-12d3-a456-426614174000",
-            }
-          }
-        }
+            },
+          },
+        },
       },
     },
   })
@@ -136,9 +135,9 @@ export class NewUserController {
             correlation_id: {
               type: "string",
               example: "123e4567-e89b-12d3-a456-426614174000",
-            }
-          }
-        }
+            },
+          },
+        },
       },
     },
   })
@@ -166,13 +165,13 @@ export class NewUserController {
             correlation_id: {
               type: "string",
               example: "123e4567-e89b-12d3-a456-426614174000",
-            }
-          }
-        }
+            },
+          },
+        },
       },
     },
   })
-  @RequirePermissions("com.lotto.service.auth-internal:user:create")
+  @RequirePermissions("com.lotto.service.sso-internal:user:create")
   @Post("newUser")
   public async new(
     @Req() req: Request,
@@ -197,7 +196,7 @@ export class NewUserController {
         },
         meta: {
           correlation_id: correlationId,
-        }
+        },
       };
     } catch (error) {
       if (error instanceof ConflictException) {
@@ -207,7 +206,7 @@ export class NewUserController {
           status_code: 409,
           meta: {
             correlation_id: correlationId,
-          }
+          },
         });
       }
 
@@ -218,7 +217,7 @@ export class NewUserController {
         status_code: 500,
         meta: {
           correlation_id: correlationId,
-        }
+        },
       });
     }
   }

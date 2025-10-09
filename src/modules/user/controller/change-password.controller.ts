@@ -16,9 +16,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 
+import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
-import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { ChangePasswordDto } from "../dto/change-password.dto";
 import { UserService } from "../services/user.service";
 
@@ -33,10 +33,11 @@ export class ChangePasswordController {
 
   @Post("changePassword")
   @ApiBearerAuth()
-  @RequirePermissions("com.lotto.service.auth-internal:user:change-password")
+  @RequirePermissions("com.lotto.service.sso-internal:user:change-password")
   @ApiOperation({
     summary: "Change password",
-    description: "Allows a user to change their own password or admin to change other user's password",
+    description:
+      "Allows a user to change their own password or admin to change other user's password",
   })
   @ApiResponse({
     status: 200,
@@ -135,7 +136,7 @@ export class ChangePasswordController {
 
     // First check if user has admin permission to change other users' passwords
     const hasAdminPermission = userPermissions.includes(
-      "com.lotto.service.auth-internal:user:change-other-users-password"
+      "com.lotto.service.sso-internal:user:change-other-users-password",
     );
 
     // If they have admin permission and provided a user_id, proceed with admin flow
@@ -147,7 +148,11 @@ export class ChangePasswordController {
       });
 
       try {
-        await this.userService.changePassword(dto.user_id, null, dto.new_password);
+        await this.userService.changePassword(
+          dto.user_id,
+          null,
+          dto.new_password,
+        );
         return {
           message: "Password changed successfully",
           status_code: 200,

@@ -4,24 +4,25 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 
 import { PrismaService } from "../prisma/prisma.service";
-import { AuthController } from "./controller/auth.controller";
-import { PermissionController } from "./controller/permission.controller";
-import { RoleController } from "./controller/role.controller";
-import { RemovePermissionsController } from "./controller/remove-permissions.controller";
 import { AssignPermissionsController } from "./controller/assign-permissions.controller";
-import { DeleteRoleController } from "./controller/delete-role.controller";
+import { AuthController } from "./controller/auth.controller";
 import { DeletePermissionsController } from "./controller/delete-permissions.controller";
+import { DeleteRoleController } from "./controller/delete-role.controller";
+import { PermissionController } from "./controller/permission.controller";
+import { RemovePermissionsController } from "./controller/remove-permissions.controller";
+import { RoleController } from "./controller/role.controller";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 import { PermissionGuard } from "./guards/permission.guard";
+import { SessionCookieGuard } from "./guards/session-cookie.guard";
 import { RefreshTokenRepository } from "./repository/refresh-token.repository";
 import { AuthService } from "./services/auth.service";
 import { BootstrapService } from "./services/bootstrap.service";
 import { PermissionService } from "./services/permission.service";
-import { LocalStrategy } from "./strategy/local.strategy";
-import { PrismaModule } from "../prisma/prisma.module";
 import { RoleService } from "./services/role.service";
 import { JwtStrategy } from "./strategy/jwt.strategy";
+import { LocalStrategy } from "./strategy/local.strategy";
+import { PrismaModule } from "../prisma/prisma.module";
 import { UserRepositoryPrisma } from "../user/repository/user.repository.prisma";
 import { UserService } from "../user/services/user.service";
 import { UserModule } from "../user/user.module";
@@ -58,7 +59,7 @@ export class AuthModule {
             return {
               secret,
               signOptions: {
-                expiresIn: configService.get<string>("JWT_EXPIRATION") || "1h",
+                expiresIn: configService.get<string>("JWT_EXPIRATION") || "5m",
               },
             };
           },
@@ -79,6 +80,7 @@ export class AuthModule {
         JwtStrategy,
         JwtAuthGuard,
         PermissionGuard,
+        SessionCookieGuard,
         LocalStrategy,
         LocalAuthGuard,
         RoleService,
@@ -112,7 +114,13 @@ export class AuthModule {
           ],
         },
       ],
-      exports: [AuthService, JwtAuthGuard, PermissionGuard, RoleService],
+      exports: [
+        AuthService,
+        JwtAuthGuard,
+        PermissionGuard,
+        SessionCookieGuard,
+        RoleService,
+      ],
     };
   }
 }

@@ -17,7 +17,7 @@ export class ChangePasswordDto {
   @ApiProperty({
     description: "Current password (required only when changing own password)",
     example: "CurrentPass123!",
-    required: false
+    required: false,
   })
   current_password?: string;
 

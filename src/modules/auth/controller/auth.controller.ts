@@ -1,22 +1,34 @@
 import {
   Body,
   Controller,
+  Headers,
+  HttpStatus,
   Logger,
   Post,
+  Request,
+  Res,
   UnauthorizedException,
-  Headers,
   UseGuards,
 } from "@nestjs/common";
-import { ApiTags, ApiHeader, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Throttle, SkipThrottle } from "@nestjs/throttler";
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from "express";
 
-import { UUID } from "../../../common/value-object/uuid.value-object";
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { Public } from "../decorators/public.decorator";
 import { LoginUserDto } from "../dto/login-user.dto";
-import { RefreshTokenDto } from "../dto/refresh-token.dto";
-import { AuthService } from "../services/auth.service";
-import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { LogoutDto } from "../dto/logout.dto";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RefreshTokenDto } from "../dto/refresh-token.dto";
+import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { AuthService, RenewSessionResponse } from "../services/auth.service";
+
+interface SessionMetadata {
+  token: string;
+  expiresAt: Date;
+}
 
 @ApiTags("Auth")
 @Controller("v1/auth")
@@ -37,47 +49,60 @@ export class AuthController {
   ) {}
 
   @Public()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post("login")
   @ApiOperation({ summary: "Login user" })
   @ApiResponse({
     status: 200,
     description: "User successfully logged in",
-    schema: {
-      type: "object",
-      properties: {
-        user_id: { type: "string", format: "uuid" },
-        access_token: { type: "string" },
-        refresh_token: { type: "string" },
-        correlation_id: { type: "string", format: "uuid" },
-      },
-    },
   })
   @ApiResponse({
     status: 401,
     description: "Invalid credentials or inactive user",
-    schema: {
-      type: "object",
-      properties: {
-        message: { type: "string" },
-        error: { type: "string" },
-        correlation_id: { type: "string", format: "uuid" },
-      },
-    },
   })
   public async login(
     @Body() loginUserDto: LoginUserDto,
     @CorrelationId() correlationId: string | null,
-  ): Promise<any> {
+    @Request() req: ExpressRequest,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ): Promise<Record<string, unknown> | void> {
     this.logger.log("Login attempt", { correlationId });
 
     try {
-      const login = await this.authService.login(loginUserDto);
+      const login = await this.authService.login(
+        loginUserDto,
+        this.buildSessionContext(req),
+      );
+
+      this.attachSessionCookie(res, {
+        token: login.refresh_token,
+        expiresAt: new Date(login.refresh_token_expires_at),
+      });
+
+      // Validate redirect_uri if provided (for security), but don't perform redirect
+      let validatedRedirectUri: string | undefined;
+      if (loginUserDto.redirect_uri) {
+        try {
+          validatedRedirectUri = this.authService.resolveRedirectUri(
+            loginUserDto.redirect_uri,
+            loginUserDto.state,
+          );
+        } catch (error) {
+          // If redirect validation fails, log but don't fail the login
+          this.logger.warn(
+            `Invalid redirect_uri: ${loginUserDto.redirect_uri}`,
+            { correlationId },
+          );
+        }
+      }
 
       return {
         user_id: login.user_id,
-        access_token: login.access_token,
-        refresh_token: login.refresh_token,
+        username: login.username,
+        user: login.user,
+        session_family_id: login.session_family_id,
         correlation_id: correlationId,
+        redirect_uri: validatedRedirectUri, // Frontend will handle redirect
       };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
@@ -89,59 +114,50 @@ export class AuthController {
     }
   }
 
-  @Post("refreshToken")
-  @ApiOperation({ summary: "Refresh access token" })
-  public async refresh(
+
+  @Public()
+  @SkipThrottle()
+  @Post("session")
+  @ApiOperation({ summary: "Renew session using cookie or refresh token" })
+  public async session(
     @Body() dto: RefreshTokenDto,
     @CorrelationId() correlationId: string | null,
-  ): Promise<any> {
-    this.logger.log("Refreshing token", { correlationId });
-
-    try {
-      const refreshToken = await this.authService.findRefreshToken(
-        dto.refresh_token,
-      );
-
-      if (!refreshToken) {
-        throw new UnauthorizedException({
-          message: "Invalid refresh token",
-          error: "Unauthorized",
-          correlation_id: correlationId,
-        });
-      }
-
-      const currentTime = new Date().getTime();
-      const expiresAt = new Date(refreshToken.expires_at).getTime();
-      if (expiresAt < currentTime) {
-        await this.authService.revokeToken(refreshToken.token);
-        throw new UnauthorizedException({
-          message: "Refresh token expired",
-          error: "Unauthorized",
-          correlation_id: correlationId,
-        });
-      }
-
-      // Generate new access token
-      const refresh = await this.authService.refreshToken(
-        new UUID(refreshToken.user_id),
-      );
-
-      return {
-        user_id: refreshToken.user_id,
-        access_token: refresh.access_token,
-        refresh_token: refresh.refresh_token,
-        correlation_id: correlationId,
-      };
-    } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
-      if (error instanceof UnauthorizedException) {
-        throw error;
-      }
+    @Request() req: ExpressRequest,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ): Promise<Record<string, unknown>> {
+    const refreshToken = this.authService.extractRefreshToken(
+      req,
+      dto.refresh_token,
+    );
+    if (!refreshToken) {
       throw new UnauthorizedException({
-        message: "Error refreshing token",
+        message: "Refresh token missing",
         error: "Unauthorized",
         correlation_id: correlationId,
       });
+    }
+
+    try {
+      const renewed = await this.authService.renewSession(
+        refreshToken,
+        this.buildSessionContext(req),
+      );
+
+      this.attachSessionCookie(res, {
+        token: renewed.refresh_token,
+        expiresAt: new Date(renewed.refresh_token_expires_at),
+      });
+
+      return this.buildRenewResponse(renewed, correlationId);
+    } catch (error) {
+      this.logger.error(error.message, error.stack, { correlationId });
+      throw error instanceof UnauthorizedException
+        ? error
+        : new UnauthorizedException({
+            message: "Error refreshing session",
+            error: "Unauthorized",
+            correlation_id: correlationId,
+          });
     }
   }
 
@@ -149,18 +165,62 @@ export class AuthController {
   @Post("logout")
   @ApiOperation({ summary: "Logout user" })
   public async logout(
-    @Headers("authorization") authHeader: string,
+    @Headers("authorization") _authHeader: string,
     @Body() body: LogoutDto,
     @CorrelationId() correlationId: string | null,
+    @Request() req: ExpressRequest,
+    @Res({ passthrough: true }) res: ExpressResponse,
   ): Promise<void> {
     try {
-      const refreshToken = await this.authService.findRefreshToken(body.refresh_token);
+      const refreshToken = this.authService.extractRefreshToken(
+        req,
+        body.refresh_token,
+      );
       if (refreshToken) {
-        await this.authService.revokeToken(refreshToken.token);
+        await this.authService.revokeToken(refreshToken);
       }
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       throw error;
+    } finally {
+      this.authService.clearSessionCookie(res);
     }
+  }
+
+  private attachSessionCookie(
+    res: ExpressResponse,
+    metadata: SessionMetadata,
+  ): void {
+    this.authService.attachSessionCookie(res, metadata);
+  }
+
+  private buildSessionContext(request: ExpressRequest): {
+    ip: string | null;
+    userAgent: string | null;
+  } {
+    const userAgentHeader = request.headers["user-agent"];
+    const userAgent = Array.isArray(userAgentHeader)
+      ? userAgentHeader.join(" ")
+      : (userAgentHeader ?? null);
+
+    return {
+      ip: request.ip ?? null,
+      userAgent,
+    };
+  }
+
+  private buildRenewResponse(
+    renewed: RenewSessionResponse,
+    correlationId: string | null,
+  ): Record<string, unknown> {
+    return {
+      user_id: renewed.user.id,
+      user: renewed.user,
+      username: renewed.user.username,
+      access_token: renewed.access_token,
+      refresh_token: renewed.refresh_token,
+      session_family_id: renewed.session_family_id,
+      correlation_id: correlationId,
+    };
   }
 }

@@ -11,12 +11,12 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { CreateRoleDto } from "../dto/create-role.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
-import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
@@ -38,7 +38,7 @@ export class RoleController {
   ) {}
 
   @Post()
-  @RequirePermissions("com.lotto.service.auth-internal:role:create")
+  @RequirePermissions("com.lotto.service.sso-internal:role:create")
   @ApiOperation({ summary: "Create a new role" })
   @ApiResponse({
     status: 201,
@@ -155,7 +155,7 @@ export class RoleController {
   }
 
   @Get()
-  @RequirePermissions("com.lotto.service.auth-internal:role:view")
+  @RequirePermissions("com.lotto.service.sso-internal:role:view")
   @ApiOperation({ summary: "Get all roles with their permissions" })
   @ApiResponse({
     status: 200,
@@ -216,7 +216,7 @@ export class RoleController {
                     },
                     name: {
                       type: "string",
-                      example: "com.lotto.service.auth-internal:user:create",
+                      example: "com.lotto.service.sso-internal:user:create",
                     },
                   },
                 },
@@ -261,7 +261,7 @@ export class RoleController {
   }
 
   @Get(":roleId")
-  @RequirePermissions("com.lotto.service.auth-internal:role:view")
+  @RequirePermissions("com.lotto.service.sso-internal:role:view")
   @ApiOperation({ summary: "Get role details with permissions" })
   @ApiResponse({
     status: 200,
@@ -320,7 +320,7 @@ export class RoleController {
                   },
                   name: {
                     type: "string",
-                    example: "com.lotto.service.auth-internal:user:create",
+                    example: "com.lotto.service.sso-internal:user:create",
                   },
                 },
               },
@@ -346,7 +346,10 @@ export class RoleController {
     this.logger.log("Getting role by ID", { correlationId, roleId });
 
     try {
-      const role = await this.roleService.getRoleWithPermissions(roleId, correlationId);
+      const role = await this.roleService.getRoleWithPermissions(
+        roleId,
+        correlationId,
+      );
       return {
         message: "Success",
         status_code: 200,

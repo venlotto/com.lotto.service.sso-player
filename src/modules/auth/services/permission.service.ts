@@ -7,7 +7,6 @@ import {
 
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreatePermissionDto } from "../dto/create-permission.dto";
-import { DeletePermissionsDto } from "../dto/delete-permissions.dto";
 
 @Injectable()
 export class PermissionService {
@@ -48,8 +47,14 @@ export class PermissionService {
     return this.prisma.permissions.findMany({});
   }
 
-  async createOrUpdatePermission(dto: CreatePermissionDto, correlationId: string) {
-    this.logger.log("Creating or updating permission", { correlationId, name: dto.name });
+  async createOrUpdatePermission(
+    dto: CreatePermissionDto,
+    correlationId: string,
+  ) {
+    this.logger.log("Creating or updating permission", {
+      correlationId,
+      name: dto.name,
+    });
 
     const existingPermission = await this.prisma.permissions.findUnique({
       where: { name: dto.name },

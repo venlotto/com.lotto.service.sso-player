@@ -1,9 +1,15 @@
 import { Controller, Get, UseGuards, Request } from "@nestjs/common";
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
-import { UserService } from "../services/user.service";
-import { MeResponseDto } from "../dto/me-response.dto";
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from "@nestjs/swagger";
+
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
+import { MeResponseDto } from "../dto/me-response.dto";
+import { UserService } from "../services/user.service";
 
 @ApiTags("User")
 @Controller("v1/users")
@@ -33,4 +39,4 @@ export class MeController {
   ): Promise<MeResponseDto> {
     return this.userService.getUserDetails(req.user.sub);
   }
-} 
+}

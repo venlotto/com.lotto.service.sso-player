@@ -8,6 +8,7 @@ import {
 
 interface MatchValidationArguments extends ValidationArguments {
   object: Record<string, any>;
+  constraints: any[];
 }
 
 export function Match(

@@ -8,12 +8,12 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
-import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
-import { UserService } from "../services/user.service";
 import { RemoveRolesDto } from "../dto/remove-roles.dto";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { UserService } from "../services/user.service";
 
 @ApiTags("Users")
 @Controller("v1/users")
@@ -35,7 +35,7 @@ export class RemoveRolesController {
   ) {}
 
   @Post("removeRoles")
-  @RequirePermissions("com.lotto.service.auth-internal:user:remove-role")
+  @RequirePermissions("com.lotto.service.sso-internal:user:remove-role")
   @ApiOperation({ summary: "Remove roles from a user" })
   @ApiResponse({
     status: 200,
@@ -138,7 +138,7 @@ export class RemoveRolesController {
         },
         data: {
           user_id: result.user_id,
-          roles: result.roles.map(role => ({
+          roles: result.roles.map((role) => ({
             role_id: role.role_id,
             name: role.name,
           })),
@@ -159,4 +159,4 @@ export class RemoveRolesController {
       throw error;
     }
   }
-} 
+}

@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsString, IsArray } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString, IsArray } from "class-validator";
 
 export class AssignRoleDto {
   @IsNotEmpty()
@@ -15,8 +15,11 @@ export class AssignRoleDto {
   @IsString({ each: true })
   @ApiProperty({
     description: "Array of role IDs to assign",
-    example: ["456e7890-f12d-34e5-a678-901234567890", "789e0123-f45d-67e8-a901-234567890123"],
+    example: [
+      "456e7890-f12d-34e5-a678-901234567890",
+      "789e0123-f45d-67e8-a901-234567890123",
+    ],
     type: [String],
   })
   role_ids: string[];
-} 
+}

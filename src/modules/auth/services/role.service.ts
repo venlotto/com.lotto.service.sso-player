@@ -53,10 +53,10 @@ export class RoleService {
         include: {
           permissions: {
             include: {
-              permission: true
-            }
-          }
-        }
+              permission: true,
+            },
+          },
+        },
       });
 
       if (!role) {
@@ -71,32 +71,39 @@ export class RoleService {
       const existingPermissions = await this.prisma.permissions.findMany({
         where: {
           id: {
-            in: permissionIds
-          }
-        }
+            in: permissionIds,
+          },
+        },
       });
 
-      const foundPermissionIds = existingPermissions.map(p => p.id);
-      const nonExistentPermissions = permissionIds.filter(id => !foundPermissionIds.includes(id));
+      const foundPermissionIds = existingPermissions.map((p) => p.id);
+      const nonExistentPermissions = permissionIds.filter(
+        (id) => !foundPermissionIds.includes(id),
+      );
 
       if (nonExistentPermissions.length > 0) {
         throw new NotFoundException({
-          message: `Permissions not found: ${nonExistentPermissions.join(', ')}`,
+          message: `Permissions not found: ${nonExistentPermissions.join(", ")}`,
           error: "Not Found",
           correlation_id: correlationId,
         });
       }
 
       // Get existing permission IDs for this role
-      const existingRolePermissionIds = role.permissions.map(p => p.permission.id);
+      const existingRolePermissionIds = role.permissions.map(
+        (p) => p.permission.id,
+      );
 
       // Filter out permissions that already exist
       const newPermissionIds = permissionIds.filter(
-        id => !existingRolePermissionIds.includes(id)
+        (id) => !existingRolePermissionIds.includes(id),
       );
 
       if (newPermissionIds.length === 0) {
-        this.logger.log("All permissions already assigned to role", { correlationId, roleId });
+        this.logger.log("All permissions already assigned to role", {
+          correlationId,
+          roleId,
+        });
         return {
           role_id: roleId,
           permissions: existingRolePermissionIds,
@@ -105,10 +112,10 @@ export class RoleService {
 
       // Create new role-permission associations
       await this.prisma.roles_permissions.createMany({
-        data: newPermissionIds.map(permissionId => ({
+        data: newPermissionIds.map((permissionId) => ({
           role_id: roleId,
-          permission_id: permissionId
-        }))
+          permission_id: permissionId,
+        })),
       });
 
       // Return all permissions (existing + newly added)
@@ -136,10 +143,10 @@ export class RoleService {
         include: {
           permissions: {
             include: {
-              permission: true
-            }
-          }
-        }
+              permission: true,
+            },
+          },
+        },
       });
 
       if (!role) {
@@ -155,9 +162,9 @@ export class RoleService {
         where: {
           role_id: roleId,
           permission_id: {
-            in: permissionIds
-          }
-        }
+            in: permissionIds,
+          },
+        },
       });
 
       // Get remaining permissions
@@ -166,15 +173,15 @@ export class RoleService {
         include: {
           permissions: {
             include: {
-              permission: true
-            }
-          }
-        }
+              permission: true,
+            },
+          },
+        },
       });
 
       return {
         role_id: roleId,
-        permissions: updatedRole.permissions.map(p => p.permission.id),
+        permissions: updatedRole.permissions.map((p) => p.permission.id),
       };
     } catch (error) {
       this.logger.error("Error removing permissions from role", error.stack, {
@@ -192,10 +199,10 @@ export class RoleService {
       include: {
         permissions: {
           include: {
-            permission: true
-          }
-        }
-      }
+            permission: true,
+          },
+        },
+      },
     });
 
     if (!role) {
@@ -226,10 +233,10 @@ export class RoleService {
       include: {
         permissions: {
           include: {
-            permission: true
-          }
-        }
-      }
+            permission: true,
+          },
+        },
+      },
     });
 
     return roles.map((role) => ({
@@ -272,8 +279,8 @@ export class RoleService {
       where: { id: roleId },
       include: {
         permissions: true,
-        users: true
-      }
+        users: true,
+      },
     });
 
     if (!role) {
@@ -304,7 +311,7 @@ export class RoleService {
 
     // Delete role
     await this.prisma.roles.delete({
-      where: { id: roleId }
+      where: { id: roleId },
     });
   }
 }

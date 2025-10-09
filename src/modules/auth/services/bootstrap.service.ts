@@ -18,27 +18,27 @@ import { UserService } from "../../user/services/user.service";
 export class BootstrapService implements OnModuleInit {
   private readonly adminPermissions = [
     // User Management
-    "com.lotto.service.auth-internal:user:create",
-    "com.lotto.service.auth-internal:user:change-other-users-password",
-    "com.lotto.service.auth-internal:user:change-status",
-    "com.lotto.service.auth-internal:user:assign-role",
-    "com.lotto.service.auth-internal:user:remove-role",
-    "com.lotto.service.auth-internal:user:list",
+    "com.lotto.service.sso-internal:user:create",
+    "com.lotto.service.sso-internal:user:change-other-users-password",
+    "com.lotto.service.sso-internal:user:change-status",
+    "com.lotto.service.sso-internal:user:assign-role",
+    "com.lotto.service.sso-internal:user:remove-role",
+    "com.lotto.service.sso-internal:user:list",
     // Role Management
-    "com.lotto.service.auth-internal:role:create",
-    "com.lotto.service.auth-internal:role:view",
-    "com.lotto.service.auth-internal:role:assign-permission",
-    "com.lotto.service.auth-internal:role:remove-permission",
-    "com.lotto.service.auth-internal:role:delete",
+    "com.lotto.service.sso-internal:role:create",
+    "com.lotto.service.sso-internal:role:view",
+    "com.lotto.service.sso-internal:role:assign-permission",
+    "com.lotto.service.sso-internal:role:remove-permission",
+    "com.lotto.service.sso-internal:role:delete",
     // Permission Management
-    "com.lotto.service.auth-internal:permission:create",
-    "com.lotto.service.auth-internal:permission:view",
-    "com.lotto.service.auth-internal:permission:delete",
+    "com.lotto.service.sso-internal:permission:create",
+    "com.lotto.service.sso-internal:permission:view",
+    "com.lotto.service.sso-internal:permission:delete",
   ];
 
   private readonly basicPermissions = [
-    "com.lotto.service.auth-internal:user:view-profile",
-    "com.lotto.service.auth-internal:user:change-password",
+    "com.lotto.service.sso-internal:user:view-profile",
+    "com.lotto.service.sso-internal:user:change-password",
   ];
 
   constructor(
@@ -70,33 +70,39 @@ export class BootstrapService implements OnModuleInit {
       this.logger.log("Checking existing permissions...", {
         correlationId: bootstrapCorrelationId,
       });
-      
-      const allRequiredPermissions = [...this.adminPermissions, ...this.basicPermissions];
+
+      const allRequiredPermissions = [
+        ...this.adminPermissions,
+        ...this.basicPermissions,
+      ];
       const existingPermissions = await this.prisma.permissions.findMany({
         where: {
           name: {
-            in: allRequiredPermissions
-          }
-        }
+            in: allRequiredPermissions,
+          },
+        },
       });
 
-      const existingPermissionNames = existingPermissions.map(p => p.name);
+      const existingPermissionNames = existingPermissions.map((p) => p.name);
       const missingPermissions = allRequiredPermissions.filter(
-        name => !existingPermissionNames.includes(name)
+        (name) => !existingPermissionNames.includes(name),
       );
 
-      let adminPermissionObjects = existingPermissions.filter(p => 
-        this.adminPermissions.includes(p.name)
+      let adminPermissionObjects = existingPermissions.filter((p) =>
+        this.adminPermissions.includes(p.name),
       );
-      let basicPermissionObjects = existingPermissions.filter(p => 
-        this.basicPermissions.includes(p.name)
+      let basicPermissionObjects = existingPermissions.filter((p) =>
+        this.basicPermissions.includes(p.name),
       );
 
       if (missingPermissions.length > 0) {
-        this.logger.log(`Creating ${missingPermissions.length} missing permissions...`, {
-          correlationId: bootstrapCorrelationId,
-          missingPermissions,
-        });
+        this.logger.log(
+          `Creating ${missingPermissions.length} missing permissions...`,
+          {
+            correlationId: bootstrapCorrelationId,
+            missingPermissions,
+          },
+        );
 
         const newPermissions = await Promise.all(
           missingPermissions.map((name) =>
@@ -113,11 +119,15 @@ export class BootstrapService implements OnModuleInit {
         // Update our permission objects arrays
         adminPermissionObjects = [
           ...adminPermissionObjects,
-          ...newPermissions.filter(p => this.adminPermissions.includes(p.name))
+          ...newPermissions.filter((p) =>
+            this.adminPermissions.includes(p.name),
+          ),
         ];
         basicPermissionObjects = [
           ...basicPermissionObjects,
-          ...newPermissions.filter(p => this.basicPermissions.includes(p.name))
+          ...newPermissions.filter((p) =>
+            this.basicPermissions.includes(p.name),
+          ),
         ];
       } else {
         this.logger.log("All required permissions already exist", {
@@ -177,14 +187,14 @@ export class BootstrapService implements OnModuleInit {
                 include: {
                   permissions: {
                     include: {
-                      permission: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                      permission: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       if (!adminUser) {
@@ -203,12 +213,12 @@ export class BootstrapService implements OnModuleInit {
         this.logger.log("Assigning roles to admin user...", {
           correlationId: bootstrapCorrelationId,
         });
-        
+
         // Assign both roles at once
         const updatedUser = await this.userService.assignRole(
-          user.id, 
+          user.id,
           [adminRole.id, basicRole.id],
-          bootstrapCorrelationId
+          bootstrapCorrelationId,
         );
 
         this.logger.log("Admin user created with roles:", {
@@ -235,9 +245,9 @@ export class BootstrapService implements OnModuleInit {
         this.logger.warn("==================================================");
       } else {
         // Check if admin user has all required roles
-        const userRoleNames = adminUser.roles.map(ur => ur.role.name);
+        const userRoleNames = adminUser.roles.map((ur) => ur.role.name);
         const missingRoles = [];
-        
+
         if (!userRoleNames.includes("User Management")) {
           missingRoles.push(adminRole);
         }
@@ -246,21 +256,24 @@ export class BootstrapService implements OnModuleInit {
         }
 
         if (missingRoles.length > 0) {
-          this.logger.log(`Assigning missing roles to admin user: ${missingRoles.map(r => r.name).join(", ")}`, {
-            correlationId: bootstrapCorrelationId,
-          });
+          this.logger.log(
+            `Assigning missing roles to admin user: ${missingRoles.map((r) => r.name).join(", ")}`,
+            {
+              correlationId: bootstrapCorrelationId,
+            },
+          );
 
           // Assign all missing roles at once
           await this.userService.assignRole(
-            adminUser.id, 
-            missingRoles.map(role => role.id),
-            bootstrapCorrelationId
+            adminUser.id,
+            missingRoles.map((role) => role.id),
+            bootstrapCorrelationId,
           );
 
           this.logger.log("Admin user roles updated", {
             correlationId: bootstrapCorrelationId,
             userId: adminUser.id,
-            roles: [...userRoleNames, ...missingRoles.map(r => r.name)],
+            roles: [...userRoleNames, ...missingRoles.map((r) => r.name)],
           });
         } else {
           this.logger.log("Admin user already has all required roles", {

@@ -15,12 +15,12 @@ import {
   ApiHeader,
 } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
-import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { ChangeStatusDto } from "../dto/change-status.dto";
 import { UserService } from "../services/user.service";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 interface RequestWithUser extends Request {
   user: {
@@ -49,7 +49,7 @@ export class ChangeStatusController {
   ) {}
 
   @Post("changeStatus")
-  @RequirePermissions("com.lotto.service.auth-internal:user:change-status")
+  @RequirePermissions("com.lotto.service.sso-internal:user:change-status")
   @ApiBearerAuth()
   @ApiOperation({
     summary: "Change user status",

@@ -1,7 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 
 import { IUserRepository } from "./user.repository.interface";
-import { mapEnum } from "../../../common/enum/utils.enum";
 import { PrismaService } from "../../prisma/prisma.service";
 import { UserStatus } from "../model/enum/user-status.enum";
 import { User } from "../model/user.model";
@@ -25,14 +24,14 @@ export class UserRepositoryPrisma implements IUserRepository {
               include: {
                 permissions: {
                   include: {
-                    permission: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    permission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -40,20 +39,20 @@ export class UserRepositoryPrisma implements IUserRepository {
     }
 
     // Collect all permissions from all roles
-    const allPermissions = user.roles.flatMap(ur => 
-      ur.role.permissions.map(rp => rp.permission.name)
+    const allPermissions = user.roles.flatMap((ur) =>
+      ur.role.permissions.map((rp) => rp.permission.name),
     );
 
     return User.fromRepository(
       user.id,
       user.password,
       user.username || "",
-      user.roles.map(ur => ur.role.name),
+      user.roles.map((ur) => ur.role.name),
       user.status as UserStatus,
       user.last_login,
       user.created_at,
       user.updated_at,
-      allPermissions
+      allPermissions,
     );
   }
 
@@ -69,14 +68,14 @@ export class UserRepositoryPrisma implements IUserRepository {
               include: {
                 permissions: {
                   include: {
-                    permission: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    permission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -84,20 +83,20 @@ export class UserRepositoryPrisma implements IUserRepository {
     }
 
     // Collect all permissions from all roles
-    const allPermissions = user.roles.flatMap(ur => 
-      ur.role.permissions.map(rp => rp.permission.name)
+    const allPermissions = user.roles.flatMap((ur) =>
+      ur.role.permissions.map((rp) => rp.permission.name),
     );
 
     return User.fromRepository(
       user.id,
       user.password,
       user.username || "",
-      user.roles.map(ur => ur.role.name),
+      user.roles.map((ur) => ur.role.name),
       user.status as UserStatus,
       user.last_login,
       user.created_at,
       user.updated_at,
-      allPermissions
+      allPermissions,
     );
   }
 
@@ -113,35 +112,35 @@ export class UserRepositoryPrisma implements IUserRepository {
               include: {
                 permissions: {
                   include: {
-                    permission: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    permission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!users.length) {
       return null;
     }
 
-    return users.map(user => {
-      const allPermissions = user.roles.flatMap(ur => 
-        ur.role.permissions.map(rp => rp.permission.name)
+    return users.map((user) => {
+      const allPermissions = user.roles.flatMap((ur) =>
+        ur.role.permissions.map((rp) => rp.permission.name),
       );
 
       return User.fromRepository(
         user.id,
         user.password,
         user.username || "",
-        user.roles.map(ur => ur.role.name),
+        user.roles.map((ur) => ur.role.name),
         user.status as UserStatus,
         user.last_login,
         user.created_at,
         user.updated_at,
-        allPermissions
+        allPermissions,
       );
     });
   }
@@ -174,27 +173,27 @@ export class UserRepositoryPrisma implements IUserRepository {
         where: { id: user.id },
         data: {
           roles: {
-            deleteMany: {}
-          }
-        }
+            deleteMany: {},
+          },
+        },
       });
 
       // Then add new roles
       const roles = await this.prismaService.roles.findMany({
-        where: { name: { in: user.roleNames } }
+        where: { name: { in: user.roleNames } },
       });
 
       await this.prismaService.users.update({
         where: { id: user.id },
         data: {
           roles: {
-            create: roles.map(role => ({
+            create: roles.map((role) => ({
               role: {
-                connect: { id: role.id }
-              }
-            }))
-          }
-        }
+                connect: { id: role.id },
+              },
+            })),
+          },
+        },
       });
     }
 

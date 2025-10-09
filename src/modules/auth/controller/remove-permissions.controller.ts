@@ -9,12 +9,12 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../decorators/require-permissions.decorator";
+import { RemovePermissionsDto } from "../dto/remove-permissions.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
-import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
-import { RemovePermissionsDto } from "../dto/remove-permissions.dto";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
@@ -32,11 +32,13 @@ import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 export class RemovePermissionsController {
   constructor(
     private readonly roleService: RoleService,
-    private readonly logger: Logger = new Logger(RemovePermissionsController.name),
+    private readonly logger: Logger = new Logger(
+      RemovePermissionsController.name,
+    ),
   ) {}
 
   @Post("removePermissions")
-  @RequirePermissions("com.lotto.service.auth-internal:role:remove-permission")
+  @RequirePermissions("com.lotto.service.sso-internal:role:remove-permission")
   @ApiOperation({ summary: "Remove permissions from a role" })
   @ApiResponse({
     status: 200,
@@ -110,7 +112,10 @@ export class RemovePermissionsController {
     @Body() dto: RemovePermissionsDto,
     @CorrelationId() correlationId: string | null,
   ) {
-    this.logger.log("Removing permissions from role", { correlationId, roleId: dto.role_id });
+    this.logger.log("Removing permissions from role", {
+      correlationId,
+      roleId: dto.role_id,
+    });
 
     try {
       return await this.roleService.removePermissions(
@@ -130,4 +135,4 @@ export class RemovePermissionsController {
       throw error;
     }
   }
-} 
+}

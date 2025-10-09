@@ -8,12 +8,12 @@ import {
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 
-import { UserStatus } from "../model/enum/user-status.enum";
-import { User } from "../model/user.model";
-import { IUserRepository } from "../repository/user.repository.interface";
 import { RoleService } from "../../auth/services/role.service";
 import { PrismaService } from "../../prisma/prisma.service";
 import { ListUsersResponseDto } from "../dto/list-users-response.dto";
+import { UserStatus } from "../model/enum/user-status.enum";
+import { User } from "../model/user.model";
+import { IUserRepository } from "../repository/user.repository.interface";
 
 @Injectable()
 export class UserService {
@@ -67,7 +67,7 @@ export class UserService {
 
     this.logger.debug("Hashing new password");
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
+
     // Update password using save
     user.setNewPassword(hashedPassword);
     await this.userRepository.save(user);
@@ -114,7 +114,7 @@ export class UserService {
         status_code: 409,
         meta: {
           correlation_id: correlationId,
-        }
+        },
       });
     }
 
@@ -124,15 +124,19 @@ export class UserService {
       include: {
         permissions: {
           include: {
-            permission: true
-          }
-        }
-      }
+            permission: true,
+          },
+        },
+      },
     });
 
     if (!basicRole) {
-      this.logger.error("Basic role not found during user creation", { correlationId });
-      throw new Error("Basic role not found. System may not be properly bootstrapped.");
+      this.logger.error("Basic role not found during user creation", {
+        correlationId,
+      });
+      throw new Error(
+        "Basic role not found. System may not be properly bootstrapped.",
+      );
     }
 
     // Create new user with Basic role and active status
@@ -141,15 +145,26 @@ export class UserService {
       username,
       [basicRole.name], // Now passing an array of role names
       null, // lastLogin
-      basicRole.permissions.map(p => p.permission.id)
+      basicRole.permissions.map((p) => p.permission.id),
     );
 
     // Save the user
     return this.userRepository.save(user);
   }
 
-  async assignRole(userId: string, roleIds: string[], correlationId: string): Promise<{ user_id: string; roles: Array<{ role_id: string; name: string }> }> {
-    this.logger.log("Assigning roles to user", { correlationId, userId, roleIds });
+  async assignRole(
+    userId: string,
+    roleIds: string[],
+    correlationId: string,
+  ): Promise<{
+    user_id: string;
+    roles: Array<{ role_id: string; name: string }>;
+  }> {
+    this.logger.log("Assigning roles to user", {
+      correlationId,
+      userId,
+      roleIds,
+    });
 
     // Check if user exists
     const user = await this.userRepository.findById(userId);
@@ -167,18 +182,18 @@ export class UserService {
       include: {
         permissions: {
           include: {
-            permission: true
-          }
-        }
-      }
+            permission: true,
+          },
+        },
+      },
     });
 
-    const foundRoleIds = existingRoles.map(r => r.id);
-    const nonExistentRoles = roleIds.filter(id => !foundRoleIds.includes(id));
+    const foundRoleIds = existingRoles.map((r) => r.id);
+    const nonExistentRoles = roleIds.filter((id) => !foundRoleIds.includes(id));
 
     if (nonExistentRoles.length > 0) {
       throw new NotFoundException({
-        message: `Roles not found: ${nonExistentRoles.join(', ')}`,
+        message: `Roles not found: ${nonExistentRoles.join(", ")}`,
         error: "Not Found",
         correlation_id: correlationId,
       });
@@ -188,12 +203,19 @@ export class UserService {
     for (const role of existingRoles) {
       // Skip if user already has this role
       if (user.roleNames.includes(role.name)) {
-        this.logger.log("User already has this role, skipping", { correlationId, userId, roleName: role.name });
+        this.logger.log("User already has this role, skipping", {
+          correlationId,
+          userId,
+          roleName: role.name,
+        });
         continue;
       }
 
       // Add the new role and its permissions to the user
-      user.addRole(role.name, role.permissions.map(p => p.permission.id));
+      user.addRole(
+        role.name,
+        role.permissions.map((p) => p.permission.id),
+      );
     }
 
     // Save the user
@@ -205,19 +227,19 @@ export class UserService {
       include: {
         roles: {
           include: {
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
 
     // Return only the necessary data
     return {
       user_id: userId,
-      roles: updatedUser.roles.map(r => ({
+      roles: updatedUser.roles.map((r) => ({
         role_id: r.role.id,
-        name: r.role.name
-      }))
+        name: r.role.name,
+      })),
     };
   }
 
@@ -249,7 +271,10 @@ export class UserService {
     };
   }
 
-  async listUsers(page: number = 1, limit: number = 50): Promise<ListUsersResponseDto> {
+  async listUsers(
+    page: number = 1,
+    limit: number = 50,
+  ): Promise<ListUsersResponseDto> {
     this.logger.log("Listing users with pagination", { page, limit });
 
     // Calculate skip for pagination
@@ -269,31 +294,31 @@ export class UserService {
               include: {
                 permissions: {
                   include: {
-                    permission: true
-                  }
-                }
-              }
-            }
-          }
-        }
+                    permission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       orderBy: {
-        created_at: 'desc'
-      }
+        created_at: "desc",
+      },
     });
 
     // Transform the users into the response format
-    const userDetails = users.map(user => ({
+    const userDetails = users.map((user) => ({
       id: user.id,
       username: user.username,
       status: user.status as UserStatus,
-      roles: user.roles.map(ur => ur.role.name),
-      permissions: user.roles.flatMap(ur => 
-        ur.role.permissions.map(rp => rp.permission.name)
+      roles: user.roles.map((ur) => ur.role.name),
+      permissions: user.roles.flatMap((ur) =>
+        ur.role.permissions.map((rp) => rp.permission.name),
       ),
       last_login: user.last_login,
       created_at: user.created_at,
-      updated_at: user.updated_at
+      updated_at: user.updated_at,
     }));
 
     return {
@@ -302,12 +327,16 @@ export class UserService {
         currentPage: page,
         totalPages: Math.ceil(totalCount / limit),
         totalItems: totalCount,
-        itemsPerPage: limit
-      }
+        itemsPerPage: limit,
+      },
     };
   }
 
-  async removeRoles(userId: string, roleIds: string[], correlationId: string): Promise<any> {
+  async removeRoles(
+    userId: string,
+    roleIds: string[],
+    correlationId: string,
+  ): Promise<any> {
     this.logger.log("Removing roles from user", { correlationId, userId });
 
     // Check if user exists
@@ -316,10 +345,10 @@ export class UserService {
       include: {
         roles: {
           include: {
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -335,9 +364,9 @@ export class UserService {
       where: {
         user_id: userId,
         role_id: {
-          in: roleIds
-        }
-      }
+          in: roleIds,
+        },
+      },
     });
 
     // Get updated user with roles
@@ -346,18 +375,18 @@ export class UserService {
       include: {
         roles: {
           include: {
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
 
     return {
       user_id: userId,
-      roles: updatedUser.roles.map(r => ({
+      roles: updatedUser.roles.map((r) => ({
         role_id: r.role.id,
-        name: r.role.name
-      }))
+        name: r.role.name,
+      })),
     };
   }
 }

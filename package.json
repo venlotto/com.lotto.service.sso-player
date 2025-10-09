@@ -1,5 +1,5 @@
 {
-  "name": "com.lotto.service.auth-internal",
+  "name": "com.lotto.service.sso-internal",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -8,10 +8,12 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "dev": "npm run start:dev",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "prod": "npm run start:prod",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "lint:strict": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-warnings=0",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -24,7 +26,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "push:db": "prisma migrate deploy",
     "lint:fix-types": "tsc --noEmit && npm run lint:fix",
-    "reset:admin": "ts-node src/scripts/reset-admin-password.ts"
+    "reset:admin": "ts-node src/scripts/reset-admin-password.ts",
+    "create:testuser": "ts-node src/scripts/create-test-user.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -35,15 +38,17 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/terminus": "^10.2.3",
+    "@nestjs/throttler": "^5.1.0",
     "@prisma/client": "^5.12.1",
     "@types/bcrypt": "^5.0.2",
     "@types/passport-local": "^1.0.38",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
+    "express": "^4.21.2",
     "helmet": "^7.1.0",
-    "nodemailer": "^6.9.14",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -52,8 +57,8 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.0.0",
-    "@nestjs/schematics": "^10.0.0",
+    "@nestjs/cli": "^11.0.10",
+    "@nestjs/schematics": "^11.0.8",
     "@nestjs/testing": "^10.0.0",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
@@ -100,7 +105,10 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint", "unused-imports"],
+    "plugins": [
+      "@typescript-eslint",
+      "unused-imports"
+    ],
     "extends": [
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended"
@@ -112,7 +120,9 @@
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
         "error",
-        { "argsIgnorePattern": "^_" }
+        {
+          "argsIgnorePattern": "^_"
+        }
       ]
     }
   }

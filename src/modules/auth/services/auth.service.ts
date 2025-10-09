@@ -1,14 +1,16 @@
 import * as crypto from "crypto";
 
 import {
+  BadRequestException,
+  Inject,
   Injectable,
   Logger,
   UnauthorizedException,
-  Inject,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import { CookieOptions, Request, Response } from "express";
 
 import { UUID } from "../../../common/value-object/uuid.value-object";
 import { UserStatus } from "../../user/model/enum/user-status.enum";
@@ -26,30 +28,92 @@ interface TokenPayload {
   [key: string]: unknown;
 }
 
-interface LoginResponse {
-  user_id: string;
-  username: string;
-  access_token: string;
-  refresh_token: string;
+interface SessionContext {
+  ip?: string | null;
+  userAgent?: string | null;
 }
 
-interface TokenResponse {
+interface GeneratedRefreshToken {
+  token: string;
+  tokenId: string;
+  familyId: string;
+  expiresAt: Date;
+}
+
+interface RefreshTokenOptions {
+  familyId?: string;
+  context?: SessionContext;
+}
+
+export interface UserSummary {
+  id: string;
+  username: string | null;
+  roles: string[];
+  permissions: string[];
+}
+
+export interface LoginResponse {
+  user_id: string;
+  username: string | null;
+  user: UserSummary;
   access_token: string;
   refresh_token: string;
+  refresh_token_expires_at: string;
+  session_family_id: string;
+}
+
+export interface RenewSessionResponse {
+  user: UserSummary;
+  username: string | null;
+  access_token: string;
+  refresh_token: string;
+  refresh_token_expires_at: string;
+  session_family_id: string;
 }
 
 @Injectable()
 export class AuthService {
+  private readonly sessionCookieName: string;
+  private readonly cookieDomain: string | undefined;
+  private readonly cookieSecure: boolean;
+  private readonly cookieSameSite: "lax" | "strict" | "none";
+  private readonly cookiePath: string;
+  private readonly rotateRefreshTokens: boolean;
+  private readonly redirectWhitelist: string[];
+
   public constructor(
     private readonly jwtService: JwtService,
     @Inject("UserRepository") private readonly userRepository: IUserRepository,
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly logger: Logger,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.sessionCookieName = (
+      this.configService.get<string>("SESSION_COOKIE_NAME") ?? "plus_session"
+    ).trim();
+    this.cookieDomain =
+      this.configService.get<string>("COOKIE_DOMAIN") ?? undefined;
+    this.cookieSecure = this.toBoolean(
+      this.configService.get<string>("COOKIE_SECURE") ?? "true",
+    );
+    this.cookieSameSite = this.normaliseSameSite(
+      this.configService.get<string>("COOKIE_SAMESITE") ?? "lax",
+    );
+    this.cookiePath = this.configService.get<string>("COOKIE_PATH") ?? "/";
+    this.rotateRefreshTokens = this.toBoolean(
+      this.configService.get<string>("REFRESH_TOKEN_ROTATION_ENABLED") ??
+        "true",
+    );
+    this.redirectWhitelist = (
+      this.configService.get<string>("REDIRECT_WHITELIST") ?? ""
+    )
+      .split(",")
+      .map((value) => value.trim())
+      .filter((value) => value.length > 0);
+  }
 
   public async validateUser(username: string, password: string): Promise<User> {
-    this.logger.log("AuthService::validateUser", { username: username });
+    this.logger.log("AuthService::validateUser", { username });
 
     const user = await this.userRepository.findByUsername(username);
     if (!user) {
@@ -68,90 +132,135 @@ export class AuthService {
     return user;
   }
 
-  public async login(loginUserDto: LoginUserDto): Promise<LoginResponse> {
-    this.logger.log("AuthService::login - Starting login process", {
-      username: loginUserDto.username,
-      providedPassword: loginUserDto.password,
-    });
+  public async login(
+    loginUserDto: LoginUserDto,
+    context?: SessionContext,
+  ): Promise<LoginResponse> {
+    this.logger.log("AuthService::login", { username: loginUserDto.username });
 
     const user = await this.userRepository.findByUsername(
       loginUserDto.username,
     );
 
     if (!user) {
-      this.logger.error("User not found:", loginUserDto.username);
       throw new UnauthorizedException("Invalid login credentials");
     }
 
-    this.logger.log("Found user:", {
-      id: user.id,
-      username: user.username,
-      status: user.status,
-      storedPassword: user.password,
-    });
-
     if (user.status === UserStatus.BLOCKED) {
-      this.logger.error(
-        "AuthService::login",
-        { username: loginUserDto.username },
-        "User is not active",
-      );
       throw new UnauthorizedException("User is not active");
     }
-
-    this.logger.log("Comparing passwords:", {
-      provided: loginUserDto.password,
-      stored: user.password,
-    });
 
     const isPasswordValid = await bcrypt.compare(
       loginUserDto.password,
       user.password,
     );
 
-    this.logger.log("Password validation result:", isPasswordValid);
-
     if (!isPasswordValid) {
-      this.logger.error("Invalid password for user:", loginUserDto.username);
       throw new UnauthorizedException("Invalid login credentials");
     }
 
-    // Update last login time
     user.updateLastLogin();
     await this.userRepository.save(user);
 
-    const payload = User.toPayload(user);
+    const { accessToken, refresh } = await this.issueTokens(user, context);
 
     return {
       user_id: user.id,
       username: user.username,
-      access_token: await this.generateAccessToken(payload),
-      refresh_token: await this.generateRefreshToken(payload),
+      user: this.buildUserSummary(user),
+      access_token: accessToken,
+      refresh_token: refresh.token,
+      refresh_token_expires_at: refresh.expiresAt.toISOString(),
+      session_family_id: refresh.familyId,
+    };
+  }
+
+  public async renewSession(
+    refreshTokenValue: string,
+    context?: SessionContext,
+  ): Promise<RenewSessionResponse> {
+    const storedToken = await this.findRefreshToken(refreshTokenValue);
+
+    if (!storedToken) {
+      throw new UnauthorizedException("Invalid refresh token");
+    }
+
+    if (storedToken.revoked_at) {
+      throw new UnauthorizedException("Refresh token revoked");
+    }
+
+    if (storedToken.rotated_at) {
+      throw new UnauthorizedException("Refresh token already rotated");
+    }
+
+    if (storedToken.isExpired()) {
+      await this.refreshTokenRepository.delete(storedToken.token);
+      throw new UnauthorizedException("Refresh token expired");
+    }
+
+    const user = await this.userRepository.findById(storedToken.userId);
+    if (!user) {
+      await this.refreshTokenRepository.delete(storedToken.token);
+      throw new UnauthorizedException("User not found");
+    }
+
+    if (user.status === UserStatus.BLOCKED) {
+      throw new UnauthorizedException("User is not active");
+    }
+
+    const { accessToken, refresh } = await this.issueTokens(user, context, {
+      familyId: storedToken.familyId,
+    });
+
+    if (this.rotateRefreshTokens) {
+      await this.refreshTokenRepository.markRotated(
+        storedToken.tokenId,
+        refresh.tokenId,
+      );
+      await this.refreshTokenRepository.delete(storedToken.token);
+    }
+
+    return {
+      user: this.buildUserSummary(user),
+      username: user.username,
+      access_token: accessToken,
+      refresh_token: refresh.token,
+      refresh_token_expires_at: refresh.expiresAt.toISOString(),
+      session_family_id: refresh.familyId,
     };
   }
 
   public async generateAccessToken(payload: TokenPayload): Promise<string> {
-    this.logger.log("AuthService::generateAccessToken", { payload: payload });
-    const expiration = this.configService.get<string>("JWT_EXPIRATION") || "1h";
+    const expiration =
+      this.configService.get<string>("JWT_EXPIRATION") ?? "5m";
     return this.jwtService.sign(payload, { expiresIn: expiration });
   }
 
-  public async generateRefreshToken(payload: TokenPayload): Promise<string> {
-    this.logger.log("AuthService::generateRefreshToken", { payload: payload });
-
-    const refreshToken = new RefreshToken(
-      crypto.randomUUID(),
-      payload.sub,
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-    );
+  public async generateRefreshToken(
+    payload: TokenPayload,
+    options?: RefreshTokenOptions,
+  ): Promise<GeneratedRefreshToken> {
+    const tokenValue = crypto.randomUUID();
+    const refreshToken = new RefreshToken({
+      token: tokenValue,
+      userId: payload.sub,
+      expiresAt: this.buildRefreshTokenExpiration(),
+      familyId: options?.familyId,
+      createdByIp: options?.context?.ip ?? null,
+      createdByUserAgent: options?.context?.userAgent ?? null,
+    });
 
     await this.refreshTokenRepository.save(refreshToken);
 
-    return refreshToken.token;
+    return {
+      token: refreshToken.token,
+      tokenId: refreshToken.tokenId,
+      familyId: refreshToken.familyId,
+      expiresAt: refreshToken.expires_at,
+    };
   }
 
   public async findRefreshToken(token: string): Promise<RefreshToken | null> {
-    this.logger.log("AuthService::findRefreshToken");
     return this.refreshTokenRepository.findByToken(token);
   }
 
@@ -159,24 +268,168 @@ export class AuthService {
     await this.refreshTokenRepository.delete(token);
   }
 
-  public async refreshToken(userId: UUID): Promise<TokenResponse> {
-    this.logger.log(AuthService.name + "::refreshToken");
 
-    const user = await this.userRepository.findById(userId.toString());
-    if (user.status === UserStatus.BLOCKED) {
-      this.logger.error(
-        "AuthService::login",
-        { username: user.username },
-        "User is not active",
-      );
-      throw new UnauthorizedException("User is not active");
+  public attachSessionCookie(
+    response: Response,
+    refresh: GeneratedRefreshToken | { token: string; expiresAt: Date },
+  ): void {
+    const options = this.buildCookieOptions(refresh.expiresAt);
+    response.cookie(this.sessionCookieName, refresh.token, options);
+  }
+
+  public clearSessionCookie(response: Response): void {
+    const options = this.buildCookieOptions(new Date(0));
+    options.maxAge = 0;
+    response.cookie(this.sessionCookieName, "", options);
+  }
+
+  public extractRefreshToken(
+    request: Request,
+    fallback?: string | null,
+  ): string | null {
+    if (fallback && fallback.length > 0) {
+      return fallback;
     }
 
-    const payload = User.toPayload(user);
-
-    return {
-      access_token: await this.generateAccessToken(payload),
-      refresh_token: await this.generateRefreshToken(payload),
+    const requestWithCookies = request as Request & {
+      cookies?: Record<string, string>;
+      signedCookies?: Record<string, string>;
     };
+
+    return (
+      requestWithCookies.cookies?.[this.sessionCookieName] ??
+      requestWithCookies.signedCookies?.[this.sessionCookieName] ??
+      null
+    );
+  }
+
+  public resolveRedirectUri(
+    redirectUri?: string,
+    state?: string,
+  ): string | null {
+    if (!redirectUri) {
+      return null;
+    }
+
+    let parsed: URL;
+    try {
+      parsed = new URL(redirectUri);
+    } catch (error) {
+      throw new BadRequestException(
+        "redirect_uri must be a valid absolute URL",
+      );
+    }
+
+    if (!this.isRedirectAllowed(parsed)) {
+      throw new UnauthorizedException("redirect_uri is not allowed");
+    }
+
+    if (state) {
+      parsed.searchParams.set("state", state);
+    }
+
+    return parsed.toString();
+  }
+
+  public getSessionCookieName(): string {
+    return this.sessionCookieName;
+  }
+
+  private async issueTokens(
+    user: User,
+    context?: SessionContext,
+    options?: { familyId?: string },
+  ): Promise<{ accessToken: string; refresh: GeneratedRefreshToken }> {
+    const payload = User.toPayload(user);
+    const accessToken = await this.generateAccessToken(payload);
+    const refresh = await this.generateRefreshToken(payload, {
+      context,
+      familyId: options?.familyId,
+    });
+
+    return { accessToken, refresh };
+  }
+
+  private buildUserSummary(user: User): UserSummary {
+    return {
+      id: user.id,
+      username: user.username,
+      roles: user.roleNames,
+      permissions: user.permissions,
+    };
+  }
+
+  private buildRefreshTokenExpiration(): Date {
+    const ttlSecondsValue = this.configService.get<string>(
+      "REFRESH_TOKEN_TTL_SECONDS",
+    );
+    if (ttlSecondsValue) {
+      const seconds = Number(ttlSecondsValue);
+      if (!Number.isNaN(seconds) && seconds > 0) {
+        return new Date(Date.now() + seconds * 1000);
+      }
+    }
+
+    const ttlDaysValue = this.configService.get<string>(
+      "REFRESH_TOKEN_TTL_DAYS",
+    );
+    const days = Number(ttlDaysValue ?? "30");
+    const safeDays = Number.isNaN(days) || days <= 0 ? 30 : days;
+    return new Date(Date.now() + safeDays * 24 * 60 * 60 * 1000);
+  }
+
+  private buildCookieOptions(expires: Date): CookieOptions {
+    return {
+      httpOnly: true,
+      secure: this.cookieSameSite === "none" ? true : this.cookieSecure,
+      sameSite: this.cookieSameSite,
+      domain: this.cookieDomain,
+      path: this.cookiePath,
+      expires,
+    };
+  }
+
+  private toBoolean(value: string): boolean {
+    return value.toLowerCase() !== "false";
+  }
+
+  private normaliseSameSite(value: string): "lax" | "strict" | "none" {
+    const candidate = value.toLowerCase();
+    if (candidate === "strict" || candidate === "none") {
+      return candidate;
+    }
+    return "lax";
+  }
+
+  private isRedirectAllowed(target: URL): boolean {
+    if (this.redirectWhitelist.length === 0) {
+      return false;
+    }
+
+    if (target.protocol !== "https:" && target.protocol !== "http:") {
+      return false;
+    }
+
+    const candidate = `${target.protocol}//${target.host}${target.pathname}`;
+
+    return this.redirectWhitelist.some((allowed) => {
+      if (!allowed.startsWith("http://") && !allowed.startsWith("https://")) {
+        this.logger.warn(
+          `redirect whitelist entry ignored because it is not absolute: ${allowed}`,
+        );
+        return false;
+      }
+
+      const normalized = allowed.endsWith("/") ? allowed : `${allowed}/`;
+      const candidateWithSlash = candidate.endsWith("/")
+        ? candidate
+        : `${candidate}/`;
+
+      return (
+        candidate.startsWith(allowed) ||
+        candidate.startsWith(normalized) ||
+        candidateWithSlash.startsWith(normalized)
+      );
+    });
   }
 }

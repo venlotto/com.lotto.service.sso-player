@@ -9,11 +9,11 @@ import {
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { RequirePermissions } from "../decorators/require-permissions.decorator";
+import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
-import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { RoleService } from "../services/role.service";
-import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
 
 @ApiTags("Roles")
 @Controller("v1/roles")
@@ -31,14 +31,17 @@ import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
 export class AssignPermissionsController {
   constructor(
     private readonly roleService: RoleService,
-    private readonly logger: Logger = new Logger(AssignPermissionsController.name),
+    private readonly logger: Logger = new Logger(
+      AssignPermissionsController.name,
+    ),
   ) {}
 
   @Post("assignPermissions")
-  @RequirePermissions("com.lotto.service.auth-internal:role:assign-permission")
-  @ApiOperation({ 
+  @RequirePermissions("com.lotto.service.sso-internal:role:assign-permission")
+  @ApiOperation({
     summary: "Assign permissions to a role",
-    description: "Assigns multiple permissions to a role. Skips permissions that are already assigned to the role."
+    description:
+      "Assigns multiple permissions to a role. Skips permissions that are already assigned to the role.",
   })
   @ApiResponse({
     status: 200,
@@ -55,7 +58,10 @@ export class AssignPermissionsController {
           items: {
             type: "string",
           },
-          example: ["456e7890-f12d-34e5-a678-901234567890", "789e0123-f45d-67e8-a901-234567890123"],
+          example: [
+            "456e7890-f12d-34e5-a678-901234567890",
+            "789e0123-f45d-67e8-a901-234567890123",
+          ],
         },
         role: {
           type: "object",
@@ -79,7 +85,7 @@ export class AssignPermissionsController {
                   },
                   name: {
                     type: "string",
-                    example: "com.lotto.service.auth-internal:user:create",
+                    example: "com.lotto.service.sso-internal:user:create",
                   },
                 },
               },
@@ -140,10 +146,10 @@ export class AssignPermissionsController {
     @Body() dto: AssignPermissionsDto,
   ) {
     const correlationId = req["correlationId"];
-    this.logger.log("Assigning permissions to role", { 
-      correlationId, 
+    this.logger.log("Assigning permissions to role", {
+      correlationId,
       roleId: dto.role_id,
-      permissionCount: dto.permission_ids.length 
+      permissionCount: dto.permission_ids.length,
     });
 
     try {
@@ -164,4 +170,4 @@ export class AssignPermissionsController {
       throw error;
     }
   }
-} 
+}

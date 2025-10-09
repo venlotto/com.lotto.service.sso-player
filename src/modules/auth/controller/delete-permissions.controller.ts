@@ -1,23 +1,20 @@
 import {
   Controller,
-  Post,
   Body,
   UseGuards,
   Logger,
-  InternalServerErrorException,
-  Request,
   Delete,
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
+import { RequirePermissions } from "../decorators/require-permissions.decorator";
+import { DeletePermissionsDto } from "../dto/delete-permissions.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
-import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { PermissionService } from "../services/permission.service";
-import { DeletePermissionsDto } from "../dto/delete-permissions.dto";
-import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 
 @ApiTags("Permissions")
 @Controller("v1/permissions")
@@ -35,12 +32,14 @@ import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 export class DeletePermissionsController {
   constructor(
     private readonly permissionService: PermissionService,
-    private readonly logger: Logger = new Logger(DeletePermissionsController.name),
+    private readonly logger: Logger = new Logger(
+      DeletePermissionsController.name,
+    ),
   ) {}
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @RequirePermissions("com.lotto.service.auth-internal:permission:delete")
+  @RequirePermissions("com.lotto.service.sso-internal:permission:delete")
   @ApiOperation({ summary: "Delete a permission" })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
@@ -63,4 +62,4 @@ export class DeletePermissionsController {
       correlationId,
     );
   }
-} 
+}

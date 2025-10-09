@@ -5,8 +5,10 @@ import {
   NestModule,
   DynamicModule,
 } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { TerminusModule } from "@nestjs/terminus";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
 import { AppController } from "./app.controller";
 import { CoreModule } from "../core/core.module";
@@ -19,12 +21,26 @@ import { UserModule } from "../modules/user/user.module";
   imports: [
     CoreModule,
     TerminusModule,
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000, // 60 seconds in milliseconds
+          limit: 10,
+        },
+      ],
+    }),
     AuthModule.forRoot(),
     UserModule,
     PrismaModule,
   ],
   controllers: [AppController],
-  providers: [Logger],
+  providers: [
+    Logger,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

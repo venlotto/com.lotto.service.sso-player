@@ -110,7 +110,7 @@ cp .env.example .env
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/auth"
 JWT_SECRET="your-jwt-secret"
-JWT_EXPIRATION="1h"
+JWT_EXPIRATION="5m"
 ```
 
 5. Run database migrations:

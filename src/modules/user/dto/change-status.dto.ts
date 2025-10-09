@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsUUID } from "class-validator";
 import { Transform } from "class-transformer";
+import { IsEnum, IsUUID } from "class-validator";
 
 import { UserStatus } from "../model/enum/user-status.enum";
 
@@ -18,13 +18,14 @@ export class ChangeStatusDto {
     example: UserStatus.ACTIVE,
   })
   @Transform(({ value }) => {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       return value.toUpperCase();
     }
     return value;
   })
   @IsEnum(UserStatus, {
-    message: "status must be one of the following values: ACTIVE, BLOCKED (case-insensitive)"
+    message:
+      "status must be one of the following values: ACTIVE, BLOCKED (case-insensitive)",
   })
   status: UserStatus;
 }
