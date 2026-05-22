@@ -5,10 +5,10 @@ import {
   UseGuards,
   Logger,
   InternalServerErrorException,
-  Request,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { AssignPermissionsDto } from "../dto/assign-permissions.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
@@ -142,10 +142,9 @@ export class AssignPermissionsController {
     },
   })
   async assignPermissions(
-    @Request() req: Request,
     @Body() dto: AssignPermissionsDto,
-  ) {
-    const correlationId = req["correlationId"];
+    @CorrelationId() correlationId: string | null,
+  ): Promise<{ role_id: string; permissions: string[] }> {
     this.logger.log("Assigning permissions to role", {
       correlationId,
       roleId: dto.role_id,

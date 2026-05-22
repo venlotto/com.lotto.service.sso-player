@@ -34,6 +34,8 @@ export class BootstrapService implements OnModuleInit {
     "com.lotto.service.sso-internal:permission:create",
     "com.lotto.service.sso-internal:permission:view",
     "com.lotto.service.sso-internal:permission:delete",
+    // Bingo Self-Service Reports
+    "com.lotto.web.bingo-selfservice-reports:reports:view",
   ];
 
   private readonly basicPermissions = [
@@ -51,7 +53,7 @@ export class BootstrapService implements OnModuleInit {
     private readonly userService: UserService,
   ) {}
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     if (this.isTestEnvironment) {
       this.logger.log("Skipping system bootstrap in test environment");
       return;
@@ -59,7 +61,7 @@ export class BootstrapService implements OnModuleInit {
     await this.bootstrapSystem();
   }
 
-  private async bootstrapSystem() {
+  private async bootstrapSystem(): Promise<void> {
     this.logger.log("Starting system bootstrap...");
 
     // Generate a bootstrap correlation ID

@@ -15,6 +15,14 @@ import { UserStatus } from "../model/enum/user-status.enum";
 import { User } from "../model/user.model";
 import { IUserRepository } from "../repository/user.repository.interface";
 
+interface UserRolesResponse {
+  user_id: string;
+  roles: Array<{
+    role_id: string;
+    name: string;
+  }>;
+}
+
 @Injectable()
 export class UserService {
   constructor(
@@ -29,55 +37,70 @@ export class UserService {
     userId: string,
     currentPassword: string | null,
     newPassword: string,
+    correlationId?: string | null,
   ): Promise<void> {
-    this.logger.log("Changing password", { userId });
+    this.logger.log("Changing password", { userId, correlationId });
 
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      this.logger.error("User not found", { userId });
+      this.logger.error("User not found", { userId, correlationId });
       throw new NotFoundException({
         message: "User not found",
         error: "NotFoundException",
         status_code: 404,
         meta: {
-          correlation_id: "unknown",
+          correlation_id: correlationId,
         },
       });
     }
 
     // If currentPassword is provided, validate it (user changing their own password)
     if (currentPassword !== null) {
-      this.logger.debug("Validating current password");
+      this.logger.debug("Validating current password", { correlationId });
       const isPasswordValid = await bcrypt.compare(
         currentPassword,
         user.password,
       );
       if (!isPasswordValid) {
-        this.logger.error("Invalid current password", { userId });
+        this.logger.error("Invalid current password", {
+          userId,
+          correlationId,
+        });
         throw new UnauthorizedException({
           message: "Current password is incorrect",
           error: "UnauthorizedException",
           status_code: 401,
           meta: {
-            correlation_id: "unknown",
+            correlation_id: correlationId,
           },
         });
       }
     }
 
-    this.logger.debug("Hashing new password");
+    this.logger.debug("Hashing new password", { correlationId });
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update password using save
     user.setNewPassword(hashedPassword);
     await this.userRepository.save(user);
 
-    this.logger.log("Password changed successfully", { userId });
+    this.logger.log("Password changed successfully", { userId, correlationId });
   }
 
-  async changeStatus(userId: string, status: UserStatus): Promise<User> {
+  async changeStatus(
+    userId: string,
+    status: UserStatus,
+    correlationId?: string | null,
+  ): Promise<User> {
+    this.logger.log("Changing user status", {
+      userId,
+      status,
+      correlationId,
+    });
+
     const user = await this.userRepository.findById(userId);
     if (!user) {
+      this.logger.error("User not found", { userId, correlationId });
       throw new NotFoundException("User not found");
     }
 
@@ -87,6 +110,12 @@ export class UserService {
     } else if (status === UserStatus.ACTIVE) {
       user.activateUser();
     }
+
+    this.logger.log("User status changed successfully", {
+      userId,
+      status,
+      correlationId,
+    });
 
     return this.userRepository.save(user);
   }
@@ -243,18 +272,21 @@ export class UserService {
     };
   }
 
-  async getUserDetails(userId: string): Promise<{
+  async getUserDetails(
+    userId: string,
+    correlationId?: string | null,
+  ): Promise<{
     id: string;
     username: string | null;
     created_at: Date;
     updated_at: Date;
     last_login: Date | null;
   }> {
-    this.logger.log("Getting user details", { userId });
+    this.logger.log("Getting user details", { userId, correlationId });
 
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      this.logger.error("User not found", { userId });
+      this.logger.error("User not found", { userId, correlationId });
       throw new NotFoundException({
         message: "User not found",
         error: "NotFoundException",
@@ -274,8 +306,13 @@ export class UserService {
   async listUsers(
     page: number = 1,
     limit: number = 50,
+    correlationId?: string | null,
   ): Promise<ListUsersResponseDto> {
-    this.logger.log("Listing users with pagination", { page, limit });
+    this.logger.log("Listing users with pagination", {
+      page,
+      limit,
+      correlationId,
+    });
 
     // Calculate skip for pagination
     const skip = (page - 1) * limit;
@@ -336,7 +373,7 @@ export class UserService {
     userId: string,
     roleIds: string[],
     correlationId: string,
-  ): Promise<any> {
+  ): Promise<UserRolesResponse> {
     this.logger.log("Removing roles from user", { correlationId, userId });
 
     // Check if user exists

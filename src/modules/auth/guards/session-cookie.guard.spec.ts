@@ -1,10 +1,10 @@
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
 
-import { AuthService } from '../services/auth.service';
-import { SessionCookieGuard } from './session-cookie.guard';
+import { SessionCookieGuard } from "./session-cookie.guard";
+import { AuthService } from "../services/auth.service";
 
-describe('SessionCookieGuard', () => {
+describe("SessionCookieGuard", () => {
   let guard: SessionCookieGuard;
   let authService: AuthService;
 
@@ -31,7 +31,9 @@ describe('SessionCookieGuard', () => {
     jest.clearAllMocks();
   });
 
-  const createMockExecutionContext = (request: any): ExecutionContext => {
+  const createMockExecutionContext = (
+    request: Record<string, unknown>,
+  ): ExecutionContext => {
     return {
       switchToHttp: () => ({
         getRequest: () => request,
@@ -39,14 +41,14 @@ describe('SessionCookieGuard', () => {
     } as ExecutionContext;
   };
 
-  describe('canActivate', () => {
-    it('should return true when refresh token is present', () => {
+  describe("canActivate", () => {
+    it("should return true when refresh token is present", () => {
       const mockRequest = {
-        cookies: { plus_session: 'valid-token' },
+        cookies: { plus_session: "valid-token" },
       };
       const context = createMockExecutionContext(mockRequest);
 
-      mockAuthService.extractRefreshToken.mockReturnValue('valid-token');
+      mockAuthService.extractRefreshToken.mockReturnValue("valid-token");
 
       const result = guard.canActivate(context);
 
@@ -54,7 +56,7 @@ describe('SessionCookieGuard', () => {
       expect(authService.extractRefreshToken).toHaveBeenCalledWith(mockRequest);
     });
 
-    it('should throw UnauthorizedException when refresh token is missing', () => {
+    it("should throw UnauthorizedException when refresh token is missing", () => {
       const mockRequest = {
         cookies: {},
       };
@@ -64,18 +66,18 @@ describe('SessionCookieGuard', () => {
 
       expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
       expect(() => guard.canActivate(context)).toThrow(
-        'Authentication session cookie missing',
+        "Authentication session cookie missing",
       );
       expect(authService.extractRefreshToken).toHaveBeenCalledWith(mockRequest);
     });
 
-    it('should throw UnauthorizedException when refresh token is empty string', () => {
+    it("should throw UnauthorizedException when refresh token is empty string", () => {
       const mockRequest = {
-        cookies: { plus_session: '' },
+        cookies: { plus_session: "" },
       };
       const context = createMockExecutionContext(mockRequest);
 
-      mockAuthService.extractRefreshToken.mockReturnValue('');
+      mockAuthService.extractRefreshToken.mockReturnValue("");
 
       expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
     });

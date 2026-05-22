@@ -14,6 +14,7 @@ import {
   ApiTags,
   ApiHeader,
 } from "@nestjs/swagger";
+import { Request as ExpressRequest } from "express";
 
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
@@ -22,10 +23,23 @@ import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { ChangeStatusDto } from "../dto/change-status.dto";
 import { UserService } from "../services/user.service";
 
-interface RequestWithUser extends Request {
+interface RequestWithUser extends ExpressRequest {
   user: {
     sub: string;
     permissions: string[];
+  };
+}
+
+interface ChangeStatusResponse {
+  message: string;
+  status_code: number;
+  data: {
+    id: string;
+    username: string | null;
+    status: string;
+  };
+  meta: {
+    correlation_id: string;
   };
 }
 
@@ -188,7 +202,7 @@ export class ChangeStatusController {
     @Request() req: RequestWithUser,
     @Body() dto: ChangeStatusDto,
     @CorrelationId() correlationId: string,
-  ) {
+  ): Promise<ChangeStatusResponse> {
     const requestorUserId = req.user.sub;
 
     this.logger.log("Changing user status", {
@@ -199,7 +213,11 @@ export class ChangeStatusController {
     });
 
     try {
-      const user = await this.userService.changeStatus(dto.user_id, dto.status);
+      const user = await this.userService.changeStatus(
+        dto.user_id,
+        dto.status,
+        correlationId,
+      );
       return {
         message: "User status updated successfully",
         status_code: 200,

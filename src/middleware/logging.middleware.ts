@@ -5,7 +5,7 @@ export class LoggingMiddleware implements NestMiddleware {
   logger = new Logger("Response");
   constructor() {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: Request, res: Response, next: NextFunction): void {
     const { method, originalUrl: url } = req;
     const reqTime = new Date().getTime();
     res.on("finish", () => {

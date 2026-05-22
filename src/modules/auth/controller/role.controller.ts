@@ -18,6 +18,15 @@ import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { PermissionGuard } from "../guards/permission.guard";
 import { RoleService } from "../services/role.service";
 
+interface RoleDetailsResponse {
+  message: string;
+  status_code: number;
+  meta: {
+    correlation_id: string | null;
+  };
+  data: unknown;
+}
+
 @ApiTags("Roles")
 @Controller("v1/roles")
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -136,7 +145,7 @@ export class RoleController {
     @Request() req: Request,
     @Body() dto: CreateRoleDto,
     @CorrelationId() correlationId: string | null,
-  ) {
+  ): Promise<unknown> {
     this.logger.log("Creating new role", { correlationId });
 
     try {
@@ -234,7 +243,7 @@ export class RoleController {
   async getAllRoles(
     @Request() req: Request,
     @CorrelationId() correlationId: string | null,
-  ) {
+  ): Promise<RoleDetailsResponse> {
     this.logger.log("Getting all roles", { correlationId });
 
     try {
@@ -342,7 +351,7 @@ export class RoleController {
     @Request() req: Request,
     @Param("roleId") roleId: string,
     @CorrelationId() correlationId: string | null,
-  ) {
+  ): Promise<RoleDetailsResponse> {
     this.logger.log("Getting role by ID", { correlationId, roleId });
 
     try {

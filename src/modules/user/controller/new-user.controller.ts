@@ -5,17 +5,28 @@ import {
   InternalServerErrorException,
   Logger,
   Post,
-  Req,
-  Request,
   UseGuards,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags, ApiHeader } from "@nestjs/swagger";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { NewUserDto } from "../dto/new-user.dto";
 import { UserService } from "../services/user.service";
+
+interface NewUserResponse {
+  message: string;
+  status_code: number;
+  data: {
+    user_id: string;
+    username: string | null;
+  };
+  meta: {
+    correlation_id: string | null;
+  };
+}
 
 @ApiTags("User")
 @Controller("v1/users")
@@ -174,10 +185,9 @@ export class NewUserController {
   @RequirePermissions("com.lotto.service.sso-internal:user:create")
   @Post("newUser")
   public async new(
-    @Req() req: Request,
     @Body() newUserDto: NewUserDto,
-  ): Promise<any> {
-    const correlationId = req["correlationId"];
+    @CorrelationId() correlationId: string | null,
+  ): Promise<NewUserResponse> {
     this.logger.log(`Creating new user`, { correlationId });
 
     try {

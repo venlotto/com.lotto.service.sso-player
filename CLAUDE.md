@@ -260,11 +260,11 @@ This enables fine-grained access control. Use the `@RequirePermissions()` decora
 ## Bootstrap Process
 
 On application startup, `BootstrapService` (in auth module):
-1. Creates default admin user if not exists
+1. Creates default admin user if not exists (with auto-generated secure password)
 2. Creates basic roles and permissions
 3. Assigns admin role to admin user
 
-The admin password is configurable via `ADMIN_PASSWORD` env var or can be reset using `npm run reset:admin`.
+The admin password is auto-generated on first startup and logged to the console. Use `npm run reset:admin` to regenerate a new secure password if needed.
 
 ## Common Tasks
 

@@ -24,8 +24,8 @@ import { UserModule } from "../modules/user/user.module";
     ThrottlerModule.forRoot({
       throttlers: [
         {
-          ttl: 60000, // 60 seconds in milliseconds
-          limit: 10,
+          ttl: Number(process.env.THROTTLE_TTL_SECONDS || "60") * 1000,
+          limit: Number(process.env.THROTTLE_LIMIT || "10"),
         },
       ],
     }),

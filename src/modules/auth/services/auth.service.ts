@@ -12,7 +12,6 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { CookieOptions, Request, Response } from "express";
 
-import { UUID } from "../../../common/value-object/uuid.value-object";
 import { UserStatus } from "../../user/model/enum/user-status.enum";
 import { User } from "../../user/model/user.model";
 import { IUserRepository } from "../../user/repository/user.repository.interface";
@@ -112,8 +111,12 @@ export class AuthService {
       .filter((value) => value.length > 0);
   }
 
-  public async validateUser(username: string, password: string): Promise<User> {
-    this.logger.log("AuthService::validateUser", { username });
+  public async validateUser(
+    username: string,
+    password: string,
+    correlationId?: string | null,
+  ): Promise<User> {
+    this.logger.log("AuthService::validateUser", { username, correlationId });
 
     const user = await this.userRepository.findByUsername(username);
     if (!user) {
@@ -135,8 +138,12 @@ export class AuthService {
   public async login(
     loginUserDto: LoginUserDto,
     context?: SessionContext,
+    correlationId?: string | null,
   ): Promise<LoginResponse> {
-    this.logger.log("AuthService::login", { username: loginUserDto.username });
+    this.logger.log("AuthService::login", {
+      username: loginUserDto.username,
+      correlationId,
+    });
 
     const user = await this.userRepository.findByUsername(
       loginUserDto.username,
@@ -178,7 +185,10 @@ export class AuthService {
   public async renewSession(
     refreshTokenValue: string,
     context?: SessionContext,
+    correlationId?: string | null,
   ): Promise<RenewSessionResponse> {
+    this.logger.log("AuthService::renewSession", { correlationId });
+
     const storedToken = await this.findRefreshToken(refreshTokenValue);
 
     if (!storedToken) {
@@ -231,8 +241,7 @@ export class AuthService {
   }
 
   public async generateAccessToken(payload: TokenPayload): Promise<string> {
-    const expiration =
-      this.configService.get<string>("JWT_EXPIRATION") ?? "5m";
+    const expiration = this.configService.get<string>("JWT_EXPIRATION") ?? "5m";
     return this.jwtService.sign(payload, { expiresIn: expiration });
   }
 
@@ -267,7 +276,6 @@ export class AuthService {
   public async revokeToken(token: string): Promise<void> {
     await this.refreshTokenRepository.delete(token);
   }
-
 
   public attachSessionCookie(
     response: Response,

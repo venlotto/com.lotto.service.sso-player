@@ -94,7 +94,7 @@ export class AuthModule {
             authService: AuthService,
             logger: Logger,
             userService: UserService,
-          ) => {
+          ): BootstrapService => {
             return new BootstrapService(
               prisma,
               roleService,

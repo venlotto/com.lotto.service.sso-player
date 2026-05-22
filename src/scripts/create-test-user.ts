@@ -153,6 +153,10 @@ async function createTestUser(): Promise<void> {
         name: "com.lotto.service.sso-internal:permission:delete",
         description: "Delete permissions",
       },
+      {
+        name: "com.lotto.web.bingo-selfservice-reports:reports:view",
+        description: "View bingo self-service reports",
+      },
     ];
 
     logger.log("Creating permissions...");
@@ -191,7 +195,9 @@ async function createTestUser(): Promise<void> {
               permission_id: existing.id,
             },
           });
-          logger.log(`Assigned existing permission to admin role: ${perm.name}`);
+          logger.log(
+            `Assigned existing permission to admin role: ${perm.name}`,
+          );
         }
       }
     }

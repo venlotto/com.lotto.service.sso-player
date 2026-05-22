@@ -15,6 +15,21 @@ import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { AssignRoleDto } from "../dto/assign-role.dto";
 import { UserService } from "../services/user.service";
 
+interface AssignRoleResponse {
+  message: string;
+  status_code: number;
+  meta: {
+    correlation_id: string;
+  };
+  data: {
+    user_id: string;
+    roles: Array<{
+      role_id: string;
+      name: string;
+    }>;
+  };
+}
+
 @ApiTags("Users")
 @Controller("v1/users")
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -122,7 +137,7 @@ export class AssignRoleController {
   async assignRole(
     @Body() dto: AssignRoleDto,
     @CorrelationId() correlationId: string,
-  ) {
+  ): Promise<AssignRoleResponse> {
     try {
       const result = await this.userService.assignRole(
         dto.user_id,

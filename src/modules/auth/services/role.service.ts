@@ -4,9 +4,27 @@ import {
   Logger,
   ConflictException,
 } from "@nestjs/common";
+import { roles } from "@prisma/client";
 
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateRoleDto } from "../dto/create-role.dto";
+
+interface RolePermissionAssignmentResponse {
+  role_id: string;
+  permissions: string[];
+}
+
+interface RoleWithPermissionsResponse {
+  id: string;
+  name: string;
+  description: string | null;
+  created_at: Date;
+  updated_at: Date;
+  permissions: Array<{
+    permission_id: string;
+    name: string;
+  }>;
+}
 
 @Injectable()
 export class RoleService {
@@ -21,7 +39,7 @@ export class RoleService {
    * @param correlationId Correlation ID for request tracking
    * @returns The created or existing role
    */
-  async createRole(dto: CreateRoleDto, correlationId: string) {
+  async createRole(dto: CreateRoleDto, correlationId: string): Promise<roles> {
     this.logger.log("Creating role", { correlationId, name: dto.name });
 
     const existingRole = await this.prisma.roles.findUnique({
@@ -45,7 +63,7 @@ export class RoleService {
     roleId: string,
     permissionIds: string[],
     correlationId: string,
-  ): Promise<any> {
+  ): Promise<RolePermissionAssignmentResponse> {
     try {
       // Check if role exists
       const role = await this.prisma.roles.findUnique({
@@ -135,7 +153,7 @@ export class RoleService {
     roleId: string,
     permissionIds: string[],
     correlationId: string,
-  ): Promise<any> {
+  ): Promise<RolePermissionAssignmentResponse> {
     try {
       // Check if role exists
       const role = await this.prisma.roles.findUnique({
@@ -181,7 +199,9 @@ export class RoleService {
 
       return {
         role_id: roleId,
-        permissions: updatedRole.permissions.map((p) => p.permission.id),
+        permissions: updatedRole
+          ? updatedRole.permissions.map((p) => p.permission.id)
+          : [],
       };
     } catch (error) {
       this.logger.error("Error removing permissions from role", error.stack, {
@@ -191,7 +211,10 @@ export class RoleService {
     }
   }
 
-  async getRoleWithPermissions(roleId: string, correlationId: string) {
+  async getRoleWithPermissions(
+    roleId: string,
+    correlationId: string,
+  ): Promise<RoleWithPermissionsResponse> {
     this.logger.log("Getting role with permissions", { correlationId, roleId });
 
     const role = await this.prisma.roles.findUnique({
@@ -226,7 +249,9 @@ export class RoleService {
     };
   }
 
-  async getAllRoles(correlationId: string) {
+  async getAllRoles(
+    correlationId: string,
+  ): Promise<RoleWithPermissionsResponse[]> {
     this.logger.log("Getting all roles", { correlationId });
 
     const roles = await this.prisma.roles.findMany({

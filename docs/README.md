@@ -883,10 +883,6 @@ ALLOWED_ORIGINS=https://plus.bingo,https://auth.plus.bingo,https://*.plus.bingo
 # Rate Limiting
 THROTTLE_TTL_SECONDS=60
 THROTTLE_LIMIT=10                                # Max 10 requests per minute
-
-# Admin User
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=admin123!
 ```
 
 **Configuration Notes:**

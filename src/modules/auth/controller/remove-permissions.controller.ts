@@ -111,7 +111,7 @@ export class RemovePermissionsController {
     @Request() req: Request,
     @Body() dto: RemovePermissionsDto,
     @CorrelationId() correlationId: string | null,
-  ) {
+  ): Promise<{ role_id: string; permissions: string[] }> {
     this.logger.log("Removing permissions from role", {
       correlationId,
       roleId: dto.role_id,

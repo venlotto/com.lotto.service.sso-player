@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 
 import { IUserRepository } from "./user.repository.interface";
 import { PrismaService } from "../../prisma/prisma.service";
@@ -100,7 +101,9 @@ export class UserRepositoryPrisma implements IUserRepository {
     );
   }
 
-  public async findByCriteria(criteria: any): Promise<User[] | null> {
+  public async findByCriteria(
+    criteria: Prisma.usersWhereInput,
+  ): Promise<User[] | null> {
     this.logger.log("UserRepository::findByCriteria", { criteria });
 
     const users = await this.prismaService.users.findMany({
@@ -149,7 +152,7 @@ export class UserRepositoryPrisma implements IUserRepository {
     this.logger.log("UserRepository::save", { user });
 
     // First save/update the user
-    const savedUser = await this.prismaService.users.upsert({
+    await this.prismaService.users.upsert({
       where: { id: user.id },
       create: {
         id: user.id,

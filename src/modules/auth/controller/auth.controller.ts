@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Headers,
-  HttpStatus,
   Logger,
   Post,
   Request,
@@ -63,6 +62,7 @@ export class AuthController {
   public async login(
     @Body() loginUserDto: LoginUserDto,
     @CorrelationId() correlationId: string | null,
+    @Headers("x-client-type") clientType: string | undefined,
     @Request() req: ExpressRequest,
     @Res({ passthrough: true }) res: ExpressResponse,
   ): Promise<Record<string, unknown> | void> {
@@ -72,6 +72,7 @@ export class AuthController {
       const login = await this.authService.login(
         loginUserDto,
         this.buildSessionContext(req),
+        correlationId,
       );
 
       this.attachSessionCookie(res, {
@@ -96,6 +97,12 @@ export class AuthController {
         }
       }
 
+      // Native/desktop clients (e.g. Tauri) cannot read the HttpOnly cookie
+      // cross-origin, so they need the tokens in the response body to bootstrap
+      // the body-token refresh flow. Browser clients omit the header and keep
+      // relying on the cookie only (no behaviour change).
+      const isDesktopClient = clientType?.trim().toLowerCase() === "desktop";
+
       return {
         user_id: login.user_id,
         username: login.username,
@@ -103,6 +110,13 @@ export class AuthController {
         session_family_id: login.session_family_id,
         correlation_id: correlationId,
         redirect_uri: validatedRedirectUri, // Frontend will handle redirect
+        ...(isDesktopClient
+          ? {
+              access_token: login.access_token,
+              refresh_token: login.refresh_token,
+              refresh_token_expires_at: login.refresh_token_expires_at,
+            }
+          : {}),
       };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
@@ -113,7 +127,6 @@ export class AuthController {
       });
     }
   }
-
 
   @Public()
   @SkipThrottle()
@@ -141,6 +154,7 @@ export class AuthController {
       const renewed = await this.authService.renewSession(
         refreshToken,
         this.buildSessionContext(req),
+        correlationId,
       );
 
       this.attachSessionCookie(res, {
@@ -219,6 +233,7 @@ export class AuthController {
       username: renewed.user.username,
       access_token: renewed.access_token,
       refresh_token: renewed.refresh_token,
+      refresh_token_expires_at: renewed.refresh_token_expires_at,
       session_family_id: renewed.session_family_id,
       correlation_id: correlationId,
     };

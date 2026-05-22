@@ -63,7 +63,7 @@ export class PermissionController {
   async createPermission(
     @Body() dto: CreatePermissionDto,
     @CorrelationId() correlationId: string | null,
-  ) {
+  ): Promise<unknown> {
     this.logger.log("Creating new permission", { correlationId });
 
     try {
@@ -112,7 +112,9 @@ export class PermissionController {
       },
     },
   })
-  async getAllPermissions(@CorrelationId() correlationId: string | null) {
+  async getAllPermissions(
+    @CorrelationId() correlationId: string | null,
+  ): Promise<unknown> {
     this.logger.log("Getting all permissions", { correlationId });
 
     try {

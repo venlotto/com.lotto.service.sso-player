@@ -15,12 +15,31 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { Request as ExpressRequest } from "express";
 
+import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../../auth/guards/permission.guard";
 import { ChangePasswordDto } from "../dto/change-password.dto";
 import { UserService } from "../services/user.service";
+
+interface RequestUser {
+  sub: string;
+  permissions?: string[];
+}
+
+interface AuthenticatedRequest extends ExpressRequest {
+  user: RequestUser;
+}
+
+interface ChangePasswordResponse {
+  message: string;
+  status_code: number;
+  meta: {
+    correlation_id: string | null;
+  };
+}
 
 @ApiTags("User")
 @Controller("v1/users")
@@ -129,8 +148,11 @@ export class ChangePasswordController {
       },
     },
   })
-  async changePassword(@Request() req: any, @Body() dto: ChangePasswordDto) {
-    const correlationId = req["correlationId"];
+  async changePassword(
+    @Request() req: AuthenticatedRequest,
+    @Body() dto: ChangePasswordDto,
+    @CorrelationId() correlationId: string | null,
+  ): Promise<ChangePasswordResponse> {
     const userId = req.user.sub;
     const userPermissions = req.user.permissions || [];
 
@@ -152,6 +174,7 @@ export class ChangePasswordController {
           dto.user_id,
           null,
           dto.new_password,
+          correlationId,
         );
         return {
           message: "Password changed successfully",
@@ -192,6 +215,7 @@ export class ChangePasswordController {
         userId,
         dto.current_password,
         dto.new_password,
+        correlationId,
       );
 
       return {

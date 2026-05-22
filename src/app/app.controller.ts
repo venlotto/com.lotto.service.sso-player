@@ -9,6 +9,7 @@ import { ApiHeader, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
   HealthCheck,
   HealthCheckResult,
+  HealthIndicatorResult,
   HealthCheckService,
 } from "@nestjs/terminus";
 import { Request as ExpressRequest } from "express";
@@ -75,7 +76,7 @@ export class AppController {
 
     try {
       return await this.healthCheckService.check([
-        () => this.prismaService.isHealthy(),
+        (): Promise<HealthIndicatorResult> => this.prismaService.isHealthy(),
       ]);
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });

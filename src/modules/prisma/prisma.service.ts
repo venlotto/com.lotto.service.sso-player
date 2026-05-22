@@ -13,11 +13,11 @@ export class PrismaService
     });
   }
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     await this.$connect();
   }
 
-  async onModuleDestroy() {
+  async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
   }
 
@@ -29,11 +29,11 @@ export class PrismaService
           status: "up",
         },
       };
-    } catch (error) {
+    } catch (error: unknown) {
       throw new HealthCheckError("Prisma health check failed", {
         prisma: {
           status: "down",
-          error: error.message,
+          error: error instanceof Error ? error.message : "Unknown error",
         },
       });
     }

@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
+import { Observable } from "rxjs";
 
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
 
@@ -16,7 +17,9 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
     super();
   }
 
-  canActivate(context: ExecutionContext) {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     this.context = context;
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
@@ -30,7 +33,10 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
     return super.canActivate(context);
   }
 
-  handleRequest(err: any, user: any) {
+  handleRequest<TUser extends Record<string, unknown>>(
+    err: unknown,
+    user: TUser | false | null,
+  ): TUser {
     const correlationId = this.getCorrelationId();
 
     if (err || !user) {

@@ -51,7 +51,7 @@ export class CorsMiddleware implements NestMiddleware {
     );
     res.header(
       "Access-Control-Allow-Headers",
-      "Authorization, Content-Type, X-Game-Id, Game-Id, X-Correlation-Id, X-CSRF-Token",
+      "Authorization, Content-Type, X-Game-Id, Game-Id, X-Correlation-Id, X-CSRF-Token, X-Client-Type",
     );
     res.header(
       "Access-Control-Expose-Headers",

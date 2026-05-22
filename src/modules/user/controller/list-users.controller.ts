@@ -88,7 +88,11 @@ export class ListUsersController {
     this.logger.log("Listing users", { correlationId, query });
 
     try {
-      return await this.userService.listUsers(query.page, query.limit);
+      return await this.userService.listUsers(
+        query.page,
+        query.limit,
+        correlationId,
+      );
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
       throw new InternalServerErrorException({

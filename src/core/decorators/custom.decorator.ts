@@ -7,8 +7,8 @@ import {
 } from "class-validator";
 
 interface MatchValidationArguments extends ValidationArguments {
-  object: Record<string, any>;
-  constraints: any[];
+  object: Record<string, unknown>;
+  constraints: unknown[];
 }
 
 export function Match(
@@ -24,7 +24,7 @@ export function Match(
       constraints: [property],
       validator: {
         validate(value: unknown, args: MatchValidationArguments): boolean {
-          const [relatedPropertyName] = args.constraints;
+          const [relatedPropertyName] = args.constraints as string[];
           const relatedValue = args.object[relatedPropertyName];
           return value === relatedValue;
         },

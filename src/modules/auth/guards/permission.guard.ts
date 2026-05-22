@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Logger,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 
@@ -11,6 +12,8 @@ import { PERMISSIONS_KEY } from "../decorators/require-permissions.decorator";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
+  private readonly logger = new Logger(PermissionGuard.name);
+
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -37,6 +40,7 @@ export class PermissionGuard implements CanActivate {
     const correlationId = request.correlationId || "unknown";
 
     if (!user) {
+      this.logger.warn("User not found in request", { correlationId });
       throw new ForbiddenException({
         message: "User not found in request",
         error: "ForbiddenException",
@@ -46,6 +50,10 @@ export class PermissionGuard implements CanActivate {
     }
 
     if (!user.permissions || !Array.isArray(user.permissions)) {
+      this.logger.warn("User has no permissions", {
+        correlationId,
+        userId: user.sub,
+      });
       throw new ForbiddenException({
         message: "User has no permissions",
         error: "ForbiddenException",
@@ -59,6 +67,12 @@ export class PermissionGuard implements CanActivate {
     );
 
     if (!hasAllRequiredPermissions) {
+      this.logger.warn("Insufficient permissions", {
+        correlationId,
+        userId: user.sub,
+        required: requiredPermissions,
+        has: user.permissions,
+      });
       throw new ForbiddenException({
         message: "User does not have the required permissions",
         error: "ForbiddenException",
@@ -66,6 +80,12 @@ export class PermissionGuard implements CanActivate {
         correlationId,
       });
     }
+
+    this.logger.debug("Permission check passed", {
+      correlationId,
+      userId: user.sub,
+      permissions: requiredPermissions,
+    });
 
     return true;
   }

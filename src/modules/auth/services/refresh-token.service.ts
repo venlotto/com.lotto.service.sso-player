@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { Prisma, refresh_tokens } from "@prisma/client";
 
 import { PrismaService } from "../../prisma/prisma.service";
 
@@ -8,7 +9,11 @@ export class RefreshTokenService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(token: string, userId: string, expiresAt: Date) {
+  async create(
+    token: string,
+    userId: string,
+    expiresAt: Date,
+  ): Promise<refresh_tokens> {
     this.logger.log("Creating refresh token", { userId });
     return this.prisma.refresh_tokens.create({
       data: {
@@ -19,19 +24,19 @@ export class RefreshTokenService {
     });
   }
 
-  async findByToken(token: string) {
+  async findByToken(token: string): Promise<refresh_tokens | null> {
     return this.prisma.refresh_tokens.findUnique({
       where: { token },
     });
   }
 
-  async delete(token: string) {
+  async delete(token: string): Promise<refresh_tokens> {
     return this.prisma.refresh_tokens.delete({
       where: { token },
     });
   }
 
-  async deleteAllForUser(userId: string) {
+  async deleteAllForUser(userId: string): Promise<Prisma.BatchPayload> {
     return this.prisma.refresh_tokens.deleteMany({
       where: { user_id: userId },
     });

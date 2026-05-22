@@ -5,11 +5,18 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { Request as ExpressRequest } from "express";
 
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { MeResponseDto } from "../dto/me-response.dto";
 import { UserService } from "../services/user.service";
+
+interface MeRequest extends ExpressRequest {
+  user: {
+    sub: string;
+  };
+}
 
 @ApiTags("User")
 @Controller("v1/users")
@@ -34,9 +41,9 @@ export class MeController {
     description: "User not found",
   })
   async getMe(
-    @Request() req,
+    @Request() req: MeRequest,
     @CorrelationId() correlationId: string | null,
   ): Promise<MeResponseDto> {
-    return this.userService.getUserDetails(req.user.sub);
+    return this.userService.getUserDetails(req.user.sub, correlationId);
   }
 }
