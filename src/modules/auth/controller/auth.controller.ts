@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Headers,
   Logger,
@@ -20,6 +21,7 @@ import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { Public } from "../decorators/public.decorator";
 import { LoginUserDto } from "../dto/login-user.dto";
 import { LogoutDto } from "../dto/logout.dto";
+import { RegisterUserDto } from "../dto/register-user.dto";
 import { RefreshTokenDto } from "../dto/refresh-token.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthService, RenewSessionResponse } from "../services/auth.service";
@@ -120,6 +122,58 @@ export class AuthController {
       };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
+      throw new UnauthorizedException({
+        message: error.message,
+        error: "Unauthorized",
+        correlation_id: correlationId,
+      });
+    }
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post("register")
+  @ApiOperation({ summary: "Register a new player and start a session" })
+  @ApiResponse({
+    status: 201,
+    description: "Player registered and logged in",
+  })
+  @ApiResponse({
+    status: 409,
+    description: "Username already exists",
+  })
+  public async register(
+    @Body() registerUserDto: RegisterUserDto,
+    @CorrelationId() correlationId: string | null,
+    @Request() req: ExpressRequest,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ): Promise<Record<string, unknown> | void> {
+    this.logger.log("Register attempt", { correlationId });
+
+    try {
+      const result = await this.authService.register(
+        registerUserDto,
+        this.buildSessionContext(req),
+        correlationId,
+      );
+
+      this.attachSessionCookie(res, {
+        token: result.refresh_token,
+        expiresAt: new Date(result.refresh_token_expires_at),
+      });
+
+      return {
+        user_id: result.user_id,
+        username: result.username,
+        user: result.user,
+        session_family_id: result.session_family_id,
+        correlation_id: correlationId,
+      };
+    } catch (error) {
+      this.logger.error(error.message, error.stack, { correlationId });
+      if (error instanceof ConflictException) {
+        throw error;
+      }
       throw new UnauthorizedException({
         message: error.message,
         error: "Unauthorized",

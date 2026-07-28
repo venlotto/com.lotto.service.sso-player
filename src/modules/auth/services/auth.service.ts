@@ -2,6 +2,7 @@ import * as crypto from "crypto";
 
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   Logger,
@@ -16,6 +17,7 @@ import { UserStatus } from "../../user/model/enum/user-status.enum";
 import { User } from "../../user/model/user.model";
 import { IUserRepository } from "../../user/repository/user.repository.interface";
 import { LoginUserDto } from "../dto/login-user.dto";
+import { RegisterUserDto } from "../dto/register-user.dto";
 import { RefreshToken } from "../model/refresh-token.model";
 import { RefreshTokenRepository } from "../repository/refresh-token.repository";
 
@@ -88,7 +90,8 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {
     this.sessionCookieName = (
-      this.configService.get<string>("SESSION_COOKIE_NAME") ?? "plus_session"
+      this.configService.get<string>("SESSION_COOKIE_NAME") ??
+      "plus_player_session"
     ).trim();
     this.cookieDomain =
       this.configService.get<string>("COOKIE_DOMAIN") ?? undefined;
@@ -167,6 +170,47 @@ export class AuthService {
     }
 
     user.updateLastLogin();
+    await this.userRepository.save(user);
+
+    const { accessToken, refresh } = await this.issueTokens(user, context);
+
+    return {
+      user_id: user.id,
+      username: user.username,
+      user: this.buildUserSummary(user),
+      access_token: accessToken,
+      refresh_token: refresh.token,
+      refresh_token_expires_at: refresh.expiresAt.toISOString(),
+      session_family_id: refresh.familyId,
+    };
+  }
+
+  public async register(
+    registerUserDto: RegisterUserDto,
+    context?: SessionContext,
+    correlationId?: string | null,
+  ): Promise<LoginResponse> {
+    this.logger.log("AuthService::register", {
+      username: registerUserDto.username,
+      correlationId,
+    });
+
+    const existing = await this.userRepository.findByUsername(
+      registerUserDto.username,
+    );
+    if (existing) {
+      throw new ConflictException({
+        message: "Username already exists",
+        error: "ConflictException",
+        status_code: 409,
+        meta: { correlation_id: correlationId ?? null },
+      });
+    }
+
+    const user = await User.newUser(
+      registerUserDto.password,
+      registerUserDto.username,
+    );
     await this.userRepository.save(user);
 
     const { accessToken, refresh } = await this.issueTokens(user, context);
