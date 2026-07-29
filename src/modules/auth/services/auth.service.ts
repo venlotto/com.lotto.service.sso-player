@@ -144,12 +144,12 @@ export class AuthService {
     correlationId?: string | null,
   ): Promise<LoginResponse> {
     this.logger.log("AuthService::login", {
-      username: loginUserDto.username,
+      phone: loginUserDto.phone,
       correlationId,
     });
 
     const user = await this.userRepository.findByUsername(
-      loginUserDto.username,
+      loginUserDto.phone,
     );
 
     if (!user) {
@@ -191,16 +191,16 @@ export class AuthService {
     correlationId?: string | null,
   ): Promise<LoginResponse> {
     this.logger.log("AuthService::register", {
-      username: registerUserDto.username,
+      phone: registerUserDto.phone,
       correlationId,
     });
 
     const existing = await this.userRepository.findByUsername(
-      registerUserDto.username,
+      registerUserDto.phone,
     );
     if (existing) {
       throw new ConflictException({
-        message: "Username already exists",
+        message: "Phone already exists",
         error: "ConflictException",
         status_code: 409,
         meta: { correlation_id: correlationId ?? null },
@@ -209,7 +209,7 @@ export class AuthService {
 
     const user = await User.newUser(
       registerUserDto.password,
-      registerUserDto.username,
+      registerUserDto.phone,
     );
     await this.userRepository.save(user);
 

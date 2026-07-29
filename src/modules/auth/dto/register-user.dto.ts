@@ -1,21 +1,24 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsNotEmpty, IsString, Matches, MinLength } from "class-validator";
 
 export class RegisterUserDto {
   @ApiProperty({
-    description: "Username for the new player",
+    description: "Phone number for the new player",
     required: true,
   })
-  @IsNotEmpty({ message: "username must be a string" })
+  @IsNotEmpty({ message: "phone is required" })
   @IsString()
-  readonly username: string;
+  @Matches(/^\+?[0-9\s\-]{6,19}$/, {
+    message: "phone must be a valid phone number",
+  })
+  readonly phone: string;
 
   @ApiProperty({
-    description: "Password for the new player",
+    description: "Password for the new player (min 4 characters)",
     required: true,
   })
-  @IsNotEmpty({ message: "password must be a string" })
+  @IsNotEmpty({ message: "password is required" })
   @IsString()
-  @MinLength(8, { message: "password must be at least 8 characters" })
+  @MinLength(4, { message: "password must be at least 4 characters" })
   readonly password: string;
 }

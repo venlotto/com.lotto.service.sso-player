@@ -4,17 +4,21 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Matches,
   MaxLength,
 } from "class-validator";
 
 export class LoginUserDto {
   @ApiProperty({
-    description: "Username for login",
+    description: "Phone number for login",
     required: true,
   })
-  @IsNotEmpty({ message: "Username is required" })
+  @IsNotEmpty({ message: "Phone is required" })
   @IsString()
-  readonly username: string;
+  @Matches(/^\+?[0-9\s\-]{6,19}$/, {
+    message: "phone must be a valid phone number",
+  })
+  readonly phone: string;
 
   @ApiProperty({
     description: "Password for login",
