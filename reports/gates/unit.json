@@ -1,0 +1,8 @@
+{
+  "gate": "unit",
+  "status": "passed",
+  "exitCode": 0,
+  "durationMs": 7164,
+  "log": "logs/unit.log",
+  "command": "npx --no-install jest --selectProjects unit --coverage --coverageDirectory=reports/raw/coverage --coverageReporters=json --coverageReporters=json-summary --coverageReporters=text-summary --json --outputFile=reports/raw/jest-unit.json"
+}

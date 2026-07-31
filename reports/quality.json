@@ -1,0 +1,100 @@
+{
+  "repo": "com.lotto.service.sso-player",
+  "sha": "0c1230d8850a340a25d1277df87083e660e5014f",
+  "branch": "feature/adopt-sdlc",
+  "stage": "local",
+  "pipelineRunId": null,
+  "timestamp": "2026-07-31T03:58:04.835Z",
+  "status": "passed",
+  "adopted": {
+    "sdlcVersion": 1,
+    "adoptedAt": "2026-07-31T03:02:36Z"
+  },
+  "gates": {
+    "arch": {
+      "gate": "arch",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 175,
+      "log": "logs/arch.log",
+      "command": "node /home/ubuntu/repos/koperca-sdlc/gates/arch/repo-invariants.mjs"
+    },
+    "lint": {
+      "gate": "lint",
+      "status": "ratcheted",
+      "exitCode": 1,
+      "durationMs": 16621,
+      "log": "logs/lint.log",
+      "command": "env ESLINT_JSON_OUT=reports/raw/eslint.json /home/ubuntu/repos/koperca-sdlc/node_modules/.bin/eslint . --format /home/ubuntu/repos/koperca-sdlc/configs/eslint/formatter-dual.cjs",
+      "errors": 306,
+      "warnings": 47
+    },
+    "typecheck": {
+      "gate": "typecheck",
+      "status": "ratcheted",
+      "exitCode": 1,
+      "durationMs": 2968,
+      "log": "logs/typecheck.log",
+      "command": "/home/ubuntu/repos/koperca-sdlc/gates/tee-raw.sh reports/raw/tsc.txt /home/ubuntu/repos/koperca-sdlc/gates/tsc-noemit.sh",
+      "errors": 165
+    },
+    "unit": {
+      "gate": "unit",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 7164,
+      "log": "logs/unit.log",
+      "command": "npx --no-install jest --selectProjects unit --coverage --coverageDirectory=reports/raw/coverage --coverageReporters=json --coverageReporters=json-summary --coverageReporters=text-summary --json --outputFile=reports/raw/jest-unit.json",
+      "total": 25,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "failedSuites": 0,
+      "ok": true,
+      "coverage": 9.82,
+      "patchCoverage": null
+    }
+  },
+  "metrics": {
+    "lintErrors": 306,
+    "lintWarnings": 47,
+    "typeErrors": 165,
+    "coverage": 9.82,
+    "patchCoverage": null,
+    "mutationScore": null,
+    "telemetryViolations": null,
+    "archViolations": 0
+  },
+  "ratchet": {
+    "baseline": {
+      "lintErrors": 306,
+      "typeErrors": 165,
+      "coverage": 0.34,
+      "sdlcVersion": 1,
+      "sha": "0c1230d8850a340a25d1277df87083e660e5014f",
+      "updated": "2026-07-31",
+      "archViolations": 0
+    },
+    "current": {
+      "lintErrors": 306,
+      "lintWarnings": 47,
+      "typeErrors": 165,
+      "coverage": 9.82,
+      "patchCoverage": null,
+      "mutationScore": null,
+      "telemetryViolations": null,
+      "archViolations": 0
+    }
+  },
+  "agent": {
+    "model": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "costUsd": null,
+    "wallClockS": null
+  },
+  "delivery": {
+    "leadTimeS": null,
+    "rolledBack": false
+  }
+}
