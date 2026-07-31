@@ -1,0 +1,9 @@
+{
+  "lintErrors": 306,
+  "typeErrors": 165,
+  "coverage": 0.34,
+  "sdlcVersion": 1,
+  "sha": "0c1230d8850a340a25d1277df87083e660e5014f",
+  "updated": "2026-07-31",
+  "archViolations": 0
+}

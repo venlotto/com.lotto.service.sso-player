@@ -1,0 +1,15 @@
+# SLO for com.lotto.service.sso-player — read by gates/bake.sh after every deploy.
+# A breach during the bake window triggers automatic rollback, so these numbers
+# are an operational contract, not documentation. Start loose, tighten with
+# evidence from SigNoz.
+service: com.lotto.service.sso-player
+objectives:
+  availability:
+    target: 99.0          # % of requests not 5xx, over the bake window
+  latency:
+    p95_ms: 1000
+  error_rate:
+    max_percent: 5.0
+bake:
+  window_minutes: 5       # dev stages; promote.sh uses 30 for sta
+  min_requests: 10        # below this the window is not statistically meaningful
