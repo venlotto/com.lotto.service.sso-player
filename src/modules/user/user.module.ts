@@ -1,5 +1,5 @@
-import { Logger, Module, forwardRef } from "@nestjs/common";
-
+import { Logger, Module } from "@nestjs/common";
+import { PrismaModule } from "../prisma/prisma.module";
 import { AssignRoleController } from "./controller/assign-role.controller";
 import { ChangePasswordController } from "./controller/change-password.controller";
 import { ChangeStatusController } from "./controller/change-status.controller";
@@ -9,11 +9,13 @@ import { NewUserController } from "./controller/new-user.controller";
 import { RemoveRolesController } from "./controller/remove-roles.controller";
 import { UserRepositoryPrisma } from "./repository/user.repository.prisma";
 import { UserService } from "./services/user.service";
-import { AuthModule } from "../auth/auth.module";
-import { PrismaModule } from "../prisma/prisma.module";
 
+// NOTE: AuthModule.forRoot() is registered as global in AppModule, so its
+// exports (RoleService, JwtAuthGuard, PermissionGuard) resolve here without
+// an explicit import. Importing AuthModule would re-create the auth<->user
+// module cycle.
 @Module({
-  imports: [forwardRef(() => AuthModule.forRoot()), PrismaModule],
+  imports: [PrismaModule],
   controllers: [
     NewUserController,
     ChangePasswordController,
