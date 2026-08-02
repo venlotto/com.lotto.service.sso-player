@@ -1,11 +1,41 @@
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import * as bcrypt from "bcrypt";
-
 import { AppModule } from "../app/app.module";
 import { PrismaService } from "../modules/prisma/prisma.service";
 
 const logger = new Logger("CreateTestUser");
+
+// Dev-only fixture credential for the seeded test user.
+const TEST_USER_PIN = "Test1234!";
+
+interface RoleSummary {
+  role: {
+    name: string;
+    permissions: { permission: { name: string } }[];
+  };
+}
+
+function logUserSummary(roles: RoleSummary[]): void {
+  logger.warn("==================================================");
+  logger.warn("SUCCESS: Test user created with full permissions");
+  logger.warn("==================================================");
+  logger.warn("Username: testuser");
+  logger.warn(`Password: ${TEST_USER_PIN}`);
+  logger.warn("");
+  logger.warn("Roles:");
+  for (const ur of roles) {
+    logger.warn(`  - ${ur.role.name}`);
+  }
+  logger.warn("");
+  logger.warn("Permissions:");
+  for (const ur of roles) {
+    for (const rp of ur.role.permissions) {
+      logger.warn(`  - ${rp.permission.name}`);
+    }
+  }
+  logger.warn("==================================================");
+}
 
 async function createTestUser(): Promise<void> {
   try {
@@ -15,7 +45,6 @@ async function createTestUser(): Promise<void> {
 
     // Test user credentials
     const username = "testuser";
-    const password = "Test1234!";
 
     // Check if user already exists
     const existingUser = await prisma.users.findFirst({
@@ -26,7 +55,7 @@ async function createTestUser(): Promise<void> {
       logger.warn(`User '${username}' already exists. Updating password...`);
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(TEST_USER_PIN, 10);
 
       // Update user
       await prisma.users.update({
@@ -42,7 +71,7 @@ async function createTestUser(): Promise<void> {
       logger.log("Creating new test user...");
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(TEST_USER_PIN, 10);
 
       // Create user
       const user = await prisma.users.create({
@@ -222,24 +251,7 @@ async function createTestUser(): Promise<void> {
       },
     });
 
-    logger.warn("==================================================");
-    logger.warn("SUCCESS: Test user created with full permissions");
-    logger.warn("==================================================");
-    logger.warn("Username: testuser");
-    logger.warn("Password: Test1234!");
-    logger.warn("");
-    logger.warn("Roles:");
-    finalUser?.roles.forEach((ur) => {
-      logger.warn(`  - ${ur.role.name}`);
-    });
-    logger.warn("");
-    logger.warn("Permissions:");
-    finalUser?.roles.forEach((ur) => {
-      ur.role.permissions.forEach((rp) => {
-        logger.warn(`  - ${rp.permission.name}`);
-      });
-    });
-    logger.warn("==================================================");
+    logUserSummary(finalUser?.roles ?? []);
 
     await app.close();
     process.exit(0);
@@ -249,4 +261,4 @@ async function createTestUser(): Promise<void> {
   }
 }
 
-createTestUser();
+void createTestUser();

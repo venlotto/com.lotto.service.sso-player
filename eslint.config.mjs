@@ -13,4 +13,15 @@ const { nestConfig } = await import(
 export default [
   ...nestConfig({ tsconfig: 'tsconfig.json' }),
   // ── repo-specific exceptions (justify each one) ──
+  {
+    // cjs config files are not in tsconfig, so the typed parser cannot lint
+    // them (they currently fail with PARSE errors).
+    ignores: ['commitlint.config.cjs', 'jest.config.cjs', 'prettier.config.cjs'],
+  },
+  {
+    // PrismaService IS the repository boundary the no-restricted-imports rule
+    // protects — it must import @prisma/client to extend PrismaClient.
+    files: ['src/modules/prisma/**/*.ts'],
+    rules: { 'no-restricted-imports': 'off' },
+  },
 ];

@@ -6,7 +6,6 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { Request as ExpressRequest } from "express";
-
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { MeResponseDto } from "../dto/me-response.dto";

@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-
 import { UserStatus } from "../model/enum/user-status.enum";
 
 export class UserDetailsDto {

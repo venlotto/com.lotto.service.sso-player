@@ -1,7 +1,6 @@
 import * as bcrypt from "bcrypt";
-
-import { UserStatus } from "./enum/user-status.enum";
 import { UUID } from "../../../common/value-object/uuid.value-object";
+import { UserStatus } from "./enum/user-status.enum";
 
 interface TokenPayload {
   sub: string;
@@ -11,11 +10,13 @@ interface TokenPayload {
   [key: string]: unknown;
 }
 
+type LastLoginValue = Date | null;
+
 export class User {
   private readonly _id: UUID;
   private _password: string;
   private _username: string | null;
-  private _lastLogin: Date | string | null;
+  private _lastLogin: LastLoginValue;
   private _roleNames: string[];
   private _status: UserStatus;
   private _createdAt: Date;
@@ -28,14 +29,14 @@ export class User {
     username: string,
     roleNames: string[],
     status: UserStatus,
-    lastLogin: Date | string | null = null,
+    lastLogin: LastLoginValue = null,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
     permissions: string[] = [],
   ) {
     this._id = id;
     this._password = password;
-    this._username = username || null;
+    this._username = username === "" ? null : username;
     this._roleNames = roleNames;
     this._status = status;
     this._lastLogin = lastLogin;
@@ -48,7 +49,7 @@ export class User {
     password: string,
     username: string,
     roleNames: string[] = [],
-    lastLogin: Date | string | null = null,
+    lastLogin: LastLoginValue = null,
     permissions: string[] = [],
   ): Promise<User> {
     const encryptedPassword = await bcrypt.hash(password, 10);
@@ -71,7 +72,7 @@ export class User {
     username: string,
     roleNames: string[],
     status: UserStatus,
-    lastLogin: Date | string | null = null,
+    lastLogin: LastLoginValue = null,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
     permissions: string[] = [],
@@ -92,7 +93,7 @@ export class User {
   public static toPayload(user: User): TokenPayload {
     return {
       sub: user.id,
-      username: user.username || "",
+      username: user.username ?? "",
       roles: user.roleNames,
       permissions: user.permissions,
     };
@@ -137,7 +138,7 @@ export class User {
     return this._username;
   }
 
-  get lastLogin(): Date | string | null {
+  get lastLogin(): LastLoginValue {
     return this._lastLogin;
   }
 

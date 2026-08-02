@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsEnum, IsUUID } from "class-validator";
-
 import { UserStatus } from "../model/enum/user-status.enum";
 
 export class ChangeStatusDto {
@@ -17,7 +16,7 @@ export class ChangeStatusDto {
     enum: UserStatus,
     example: UserStatus.ACTIVE,
   })
-  @Transform(({ value }) => {
+  @Transform(({ value }: { value: unknown }): unknown => {
     if (typeof value === "string") {
       return value.toUpperCase();
     }

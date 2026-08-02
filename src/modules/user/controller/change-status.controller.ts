@@ -15,7 +15,6 @@ import {
   ApiHeader,
 } from "@nestjs/swagger";
 import { Request as ExpressRequest } from "express";
-
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";

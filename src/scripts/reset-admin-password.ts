@@ -1,9 +1,7 @@
 import * as crypto from "crypto";
-
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import * as bcrypt from "bcrypt";
-
 import { AppModule } from "../app/app.module";
 import { PrismaService } from "../modules/prisma/prisma.service";
 
@@ -78,4 +76,4 @@ async function resetAdminPassword(): Promise<void> {
   }
 }
 
-resetAdminPassword();
+void resetAdminPassword();
