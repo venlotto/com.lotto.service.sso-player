@@ -5,7 +5,7 @@ import { IUserRepository } from "./user.repository.interface";
 import { PrismaService } from "../../prisma/prisma.service";
 import { UserStatus } from "../model/enum/user-status.enum";
 import { User } from "../model/user.model";
-import { phoneLookupCandidates } from "../../../utils/phone";
+import { phoneLookupKey } from "../../../utils/phone";
 
 @Injectable()
 export class UserRepositoryPrisma implements IUserRepository {
@@ -59,19 +59,13 @@ export class UserRepositoryPrisma implements IUserRepository {
   }
 
   /**
-   * Resolves a player by phone, tolerating every spelling the column has
-   * accumulated.
-   *
-   * Rows predate normalization, so trying only the canonical form would lock
-   * out every already-registered player. Candidates are ordered
-   * canonical-first, so a normalized row always wins over a legacy duplicate.
+   * Resolves a player by phone. Canonical form only — usernames are phone
+   * numbers in the 0-prefixed local form and nothing else.
    */
   public async findByPhone(phone: string): Promise<User | null> {
-    for (const candidate of phoneLookupCandidates(phone)) {
-      const user = await this.findByUsername(candidate);
-      if (user) return user;
-    }
-    return null;
+    const key = phoneLookupKey(phone);
+    if (!key) return null;
+    return this.findByUsername(key);
   }
 
   public async findByUsername(username: string): Promise<User | null> {

@@ -49,27 +49,16 @@ export function isCanonicalVePhone(value: string | null | undefined): boolean {
 }
 
 /**
- * Every historical spelling of a phone, most-canonical first.
+ * The single lookup key for a phone: its canonical form, or nothing.
  *
- * Existing rows predate normalization, so a lookup that only tried the
- * canonical form would lock out every player already registered. Callers try
- * these in order and, on a legacy hit, should upgrade the stored value.
+ * There is deliberately no fallback to legacy spellings. The service is not in
+ * production, the v3 migration rewrites every existing row to canonical form,
+ * and accepting several spellings for one person is precisely the ambiguity
+ * that made a player impossible to join against POS purchase records.
+ *
+ * Returns null when the input is not a Venezuelan mobile, so a caller cannot
+ * accidentally look up an arbitrary string as if it were a phone.
  */
-export function phoneLookupCandidates(raw: string | null | undefined): string[] {
-  const canonical = normalizeVePhone(raw);
-  const candidates: string[] = [];
-
-  if (canonical) {
-    candidates.push(canonical); // 04120000001
-    candidates.push(canonical.slice(1)); // 4120000001  (legacy, no leading zero)
-    candidates.push(`58${canonical.slice(1)}`); // 584120000001
-    candidates.push(`+58${canonical.slice(1)}`); // +584120000001
-  }
-
-  // Always keep the raw input as a last resort: it covers non-mobile and
-  // non-phone usernames (staff logins such as "admin") unchanged.
-  const trimmed = (raw ?? "").trim();
-  if (trimmed && !candidates.includes(trimmed)) candidates.push(trimmed);
-
-  return candidates;
+export function phoneLookupKey(raw: string | null | undefined): string | null {
+  return normalizeVePhone(raw);
 }

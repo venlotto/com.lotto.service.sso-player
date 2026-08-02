@@ -1,8 +1,4 @@
-import {
-  isCanonicalVePhone,
-  normalizeVePhone,
-  phoneLookupCandidates,
-} from "./phone";
+import { isCanonicalVePhone, normalizeVePhone, phoneLookupKey } from "./phone";
 
 describe("normalizeVePhone", () => {
   it("canonicalizes every accepted spelling to the 0-prefixed form", () => {
@@ -54,24 +50,18 @@ describe("isCanonicalVePhone", () => {
   });
 });
 
-describe("phoneLookupCandidates", () => {
-  it("puts the canonical form first so it wins over a legacy duplicate", () => {
-    const candidates = phoneLookupCandidates("4120000001");
-    expect(candidates[0]).toBe("04120000001");
-    expect(candidates).toContain("4120000001");
-    expect(candidates).toContain("584120000001");
+describe("phoneLookupKey", () => {
+  it("resolves any accepted spelling to the one canonical key", () => {
+    for (const input of ["4120000001", "04120000001", "+584120000001"]) {
+      expect(phoneLookupKey(input)).toBe("04120000001");
+    }
   });
 
-  it("keeps non-phone usernames usable", () => {
-    expect(phoneLookupCandidates("admin")).toEqual(["admin"]);
-  });
-
-  it("never yields duplicates", () => {
-    const candidates = phoneLookupCandidates("04120000001");
-    expect(new Set(candidates).size).toBe(candidates.length);
-  });
-
-  it("returns nothing useful for empty input", () => {
-    expect(phoneLookupCandidates("")).toEqual([]);
+  // There is deliberately no legacy fallback: accepting several spellings for
+  // one person is the ambiguity this whole change exists to remove.
+  it("refuses to treat a non-phone as a lookup key", () => {
+    expect(phoneLookupKey("admin")).toBeNull();
+    expect(phoneLookupKey("414293393")).toBeNull();
+    expect(phoneLookupKey("")).toBeNull();
   });
 });

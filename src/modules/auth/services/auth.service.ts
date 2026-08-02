@@ -209,11 +209,19 @@ export class AuthService {
       });
     }
 
-    // Store the canonical 0-prefixed form so the username is joinable against
-    // POS purchase records. A non-mobile value is stored as typed rather than
-    // rejected, keeping non-phone logins working.
-    const canonicalPhone =
-      normalizeVePhone(registerUserDto.phone) ?? registerUserDto.phone;
+    // A player's username IS their phone in canonical 0-prefixed form — that
+    // is the only key that joins to POS purchase records. Anything else is
+    // refused outright rather than stored as typed, which is what previously
+    // let one person exist under several spellings.
+    const canonicalPhone = normalizeVePhone(registerUserDto.phone);
+    if (!canonicalPhone) {
+      throw new BadRequestException({
+        message: "phone must be a valid Venezuelan mobile number",
+        error: "BadRequestException",
+        status_code: 400,
+        meta: { correlation_id: correlationId ?? null },
+      });
+    }
 
     const user = await User.newUser(registerUserDto.password, canonicalPhone);
     await this.userRepository.save(user);
