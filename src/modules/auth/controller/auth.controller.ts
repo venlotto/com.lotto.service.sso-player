@@ -1,4 +1,5 @@
 import {
+  HttpException,
   Body,
   ConflictException,
   Controller,
@@ -171,7 +172,10 @@ export class AuthController {
       };
     } catch (error) {
       this.logger.error(error.message, error.stack, { correlationId });
-      if (error instanceof ConflictException) {
+      // Preserve the status the domain chose. Previously only Conflict was
+      // re-thrown, so a validation failure — and anything else, including a
+      // database outage — was reported to the caller as 401 Unauthorized.
+      if (error instanceof HttpException) {
         throw error;
       }
       throw new UnauthorizedException({
