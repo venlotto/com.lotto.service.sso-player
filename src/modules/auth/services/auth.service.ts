@@ -20,6 +20,7 @@ import { LoginUserDto } from "../dto/login-user.dto";
 import { RegisterUserDto } from "../dto/register-user.dto";
 import { RefreshToken } from "../model/refresh-token.model";
 import { RefreshTokenRepository } from "../repository/refresh-token.repository";
+import { normalizeVePhone } from "../../../utils/phone";
 
 interface TokenPayload {
   sub: string;
@@ -121,7 +122,7 @@ export class AuthService {
   ): Promise<User> {
     this.logger.log("AuthService::validateUser", { username, correlationId });
 
-    const user = await this.userRepository.findByUsername(username);
+    const user = await this.userRepository.findByPhone(username);
     if (!user) {
       throw new UnauthorizedException("Invalid credentials");
     }
@@ -148,9 +149,8 @@ export class AuthService {
       correlationId,
     });
 
-    const user = await this.userRepository.findByUsername(
-      loginUserDto.phone,
-    );
+    // Accepts any spelling the player types; resolves the canonical row.
+    const user = await this.userRepository.findByPhone(loginUserDto.phone);
 
     if (!user) {
       throw new UnauthorizedException("Invalid login credentials");
@@ -195,7 +195,9 @@ export class AuthService {
       correlationId,
     });
 
-    const existing = await this.userRepository.findByUsername(
+    // Check every spelling, or the same person could register twice under
+    // 4120000001 and 04120000001.
+    const existing = await this.userRepository.findByPhone(
       registerUserDto.phone,
     );
     if (existing) {
@@ -207,10 +209,13 @@ export class AuthService {
       });
     }
 
-    const user = await User.newUser(
-      registerUserDto.password,
-      registerUserDto.phone,
-    );
+    // Store the canonical 0-prefixed form so the username is joinable against
+    // POS purchase records. A non-mobile value is stored as typed rather than
+    // rejected, keeping non-phone logins working.
+    const canonicalPhone =
+      normalizeVePhone(registerUserDto.phone) ?? registerUserDto.phone;
+
+    const user = await User.newUser(registerUserDto.password, canonicalPhone);
     await this.userRepository.save(user);
 
     const { accessToken, refresh } = await this.issueTokens(user, context);
