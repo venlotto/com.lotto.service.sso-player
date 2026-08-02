@@ -1,13 +1,14 @@
 import type { Logger } from "@nestjs/common";
-import { UserStatus } from "../model/enum/user-status.enum";
 import type { PrismaService } from "../../prisma/prisma.service";
+import { UserStatus } from "../model/enum/user-status.enum";
 import { UserRepositoryPrisma } from "./user.repository.prisma";
 
 const USER_ID = "550e8400-e29b-41d4-a716-446655440001";
+const STORED_HASH = "hashed";
 
 const prismaRow = (username: string | null): Record<string, unknown> => ({
   id: USER_ID,
-  password: "hashed",
+  password: STORED_HASH,
   username,
   status: "ACTIVE",
   last_login: null,

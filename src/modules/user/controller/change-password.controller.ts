@@ -16,7 +16,6 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { Request as ExpressRequest } from "express";
-
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { RequirePermissions } from "../../auth/decorators/require-permissions.decorator";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
@@ -154,7 +153,7 @@ export class ChangePasswordController {
     @CorrelationId() correlationId: string | null,
   ): Promise<ChangePasswordResponse> {
     const userId = req.user.sub;
-    const userPermissions = req.user.permissions || [];
+    const userPermissions = req.user.permissions ?? [];
 
     // First check if user has admin permission to change other users' passwords
     const hasAdminPermission = userPermissions.includes(
@@ -162,7 +161,7 @@ export class ChangePasswordController {
     );
 
     // If they have admin permission and provided a user_id, proceed with admin flow
-    if (hasAdminPermission && dto.user_id) {
+    if (hasAdminPermission && dto.user_id !== undefined && dto.user_id !== "") {
       this.logger.log("Admin changing user password", {
         correlationId,
         adminUserId: userId,
@@ -199,7 +198,7 @@ export class ChangePasswordController {
     // User changing their own password
     this.logger.log("User changing own password", { correlationId, userId });
 
-    if (!dto.current_password) {
+    if (dto.current_password === undefined || dto.current_password === "") {
       throw new BadRequestException({
         message: "Current password is required when changing own password",
         error: "BadRequestException",
