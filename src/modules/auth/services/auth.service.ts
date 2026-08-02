@@ -1,5 +1,4 @@
 import * as crypto from "crypto";
-
 import {
   BadRequestException,
   ConflictException,
@@ -12,7 +11,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { CookieOptions, Request, Response } from "express";
-
+import { normalizeVePhone } from "../../../utils/phone";
 import { UserStatus } from "../../user/model/enum/user-status.enum";
 import { User } from "../../user/model/user.model";
 import { IUserRepository } from "../../user/repository/user.repository.interface";
@@ -20,7 +19,6 @@ import { LoginUserDto } from "../dto/login-user.dto";
 import { RegisterUserDto } from "../dto/register-user.dto";
 import { RefreshToken } from "../model/refresh-token.model";
 import { RefreshTokenRepository } from "../repository/refresh-token.repository";
-import { normalizeVePhone } from "../../../utils/phone";
 
 interface TokenPayload {
   sub: string;
@@ -214,7 +212,7 @@ export class AuthService {
     // refused outright rather than stored as typed, which is what previously
     // let one person exist under several spellings.
     const canonicalPhone = normalizeVePhone(registerUserDto.phone);
-    if (!canonicalPhone) {
+    if (canonicalPhone === null) {
       throw new BadRequestException({
         message: "phone must be a valid Venezuelan mobile number",
         error: "BadRequestException",
@@ -297,9 +295,9 @@ export class AuthService {
     };
   }
 
-  public async generateAccessToken(payload: TokenPayload): Promise<string> {
+  public generateAccessToken(payload: TokenPayload): Promise<string> {
     const expiration = this.configService.get<string>("JWT_EXPIRATION") ?? "5m";
-    return this.jwtService.sign(payload, { expiresIn: expiration });
+    return this.jwtService.signAsync(payload, { expiresIn: expiration });
   }
 
   public async generateRefreshToken(
@@ -352,27 +350,34 @@ export class AuthService {
     request: Request,
     fallback?: string | null,
   ): string | null {
-    if (fallback && fallback.length > 0) {
+    if (fallback !== null && fallback !== undefined && fallback.length > 0) {
       return fallback;
     }
 
-    const requestWithCookies = request as Request & {
-      cookies?: Record<string, string>;
-      signedCookies?: Record<string, string>;
+    const requestWithCookies = request as unknown as {
+      cookies?: unknown;
+      signedCookies?: unknown;
     };
 
     return (
-      requestWithCookies.cookies?.[this.sessionCookieName] ??
-      requestWithCookies.signedCookies?.[this.sessionCookieName] ??
-      null
+      this.readCookieValue(requestWithCookies.cookies) ??
+      this.readCookieValue(requestWithCookies.signedCookies)
     );
+  }
+
+  private readCookieValue(source: unknown): string | null {
+    if (typeof source !== "object" || source === null) {
+      return null;
+    }
+    const value = (source as Record<string, unknown>)[this.sessionCookieName];
+    return typeof value === "string" ? value : null;
   }
 
   public resolveRedirectUri(
     redirectUri?: string,
     state?: string,
   ): string | null {
-    if (!redirectUri) {
+    if (redirectUri === undefined || redirectUri === "") {
       return null;
     }
 
@@ -382,6 +387,7 @@ export class AuthService {
     } catch (error) {
       throw new BadRequestException(
         "redirect_uri must be a valid absolute URL",
+        { cause: error },
       );
     }
 
@@ -389,7 +395,7 @@ export class AuthService {
       throw new UnauthorizedException("redirect_uri is not allowed");
     }
 
-    if (state) {
+    if (state !== undefined && state !== "") {
       parsed.searchParams.set("state", state);
     }
 
@@ -428,7 +434,7 @@ export class AuthService {
     const ttlSecondsValue = this.configService.get<string>(
       "REFRESH_TOKEN_TTL_SECONDS",
     );
-    if (ttlSecondsValue) {
+    if (ttlSecondsValue !== undefined && ttlSecondsValue !== "") {
       const seconds = Number(ttlSecondsValue);
       if (!Number.isNaN(seconds) && seconds > 0) {
         return new Date(Date.now() + seconds * 1000);

@@ -1,11 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
-
-import { IUserRepository } from "./user.repository.interface";
+import { phoneLookupKey } from "../../../utils/phone";
 import { PrismaService } from "../../prisma/prisma.service";
 import { UserStatus } from "../model/enum/user-status.enum";
 import { User } from "../model/user.model";
-import { phoneLookupKey } from "../../../utils/phone";
+import { IUserRepository } from "./user.repository.interface";
 
 @Injectable()
 export class UserRepositoryPrisma implements IUserRepository {
@@ -48,7 +46,7 @@ export class UserRepositoryPrisma implements IUserRepository {
     return User.fromRepository(
       user.id,
       user.password,
-      user.username || "",
+      user.username ?? "",
       user.roles.map((ur) => ur.role.name),
       user.status as UserStatus,
       user.last_login,
@@ -64,7 +62,9 @@ export class UserRepositoryPrisma implements IUserRepository {
    */
   public async findByPhone(phone: string): Promise<User | null> {
     const key = phoneLookupKey(phone);
-    if (!key) return null;
+    if (key === null) {
+      return null;
+    }
     return this.findByUsername(key);
   }
 
@@ -102,7 +102,7 @@ export class UserRepositoryPrisma implements IUserRepository {
     return User.fromRepository(
       user.id,
       user.password,
-      user.username || "",
+      user.username ?? "",
       user.roles.map((ur) => ur.role.name),
       user.status as UserStatus,
       user.last_login,
@@ -110,53 +110,6 @@ export class UserRepositoryPrisma implements IUserRepository {
       user.updated_at,
       allPermissions,
     );
-  }
-
-  public async findByCriteria(
-    criteria: Prisma.usersWhereInput,
-  ): Promise<User[] | null> {
-    this.logger.log("UserRepository::findByCriteria", { criteria });
-
-    const users = await this.prismaService.users.findMany({
-      where: criteria,
-      include: {
-        roles: {
-          include: {
-            role: {
-              include: {
-                permissions: {
-                  include: {
-                    permission: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!users.length) {
-      return null;
-    }
-
-    return users.map((user) => {
-      const allPermissions = user.roles.flatMap((ur) =>
-        ur.role.permissions.map((rp) => rp.permission.name),
-      );
-
-      return User.fromRepository(
-        user.id,
-        user.password,
-        user.username || "",
-        user.roles.map((ur) => ur.role.name),
-        user.status as UserStatus,
-        user.last_login,
-        user.created_at,
-        user.updated_at,
-        allPermissions,
-      );
-    });
   }
 
   public async save(user: User): Promise<User> {

@@ -1,11 +1,11 @@
 {
   "repo": "com.lotto.service.sso-player",
-  "sha": "6e94db0a63ef187b45540e67599ff4d21830bc58",
-  "branch": "dev1",
+  "sha": "72396f2c39e529d3a523921a1425994f6ef983aa",
+  "branch": "feature/ratchet-green",
   "stage": "local",
   "pipelineRunId": null,
-  "timestamp": "2026-08-02T20:35:18.816Z",
-  "status": "failed",
+  "timestamp": "2026-08-02T21:59:41.731Z",
+  "status": "passed",
   "adopted": {
     "sdlcVersion": 1,
     "adoptedAt": "2026-07-31T03:02:36Z"
@@ -15,7 +15,7 @@
       "gate": "arch",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 156,
+      "durationMs": 173,
       "log": "logs/arch.log",
       "command": "node /home/ubuntu/repos/koperca-sdlc/gates/arch/repo-invariants.mjs"
     },
@@ -23,44 +23,44 @@
       "gate": "lint",
       "status": "ratcheted",
       "exitCode": 1,
-      "durationMs": 13676,
+      "durationMs": 12003,
       "log": "logs/lint.log",
       "command": "env ESLINT_JSON_OUT=reports/raw/eslint.json /home/ubuntu/repos/koperca-sdlc/node_modules/.bin/eslint . --format /home/ubuntu/repos/koperca-sdlc/configs/eslint/formatter-dual.cjs",
-      "errors": 321,
-      "warnings": 47
+      "errors": 262,
+      "warnings": 50
     },
     "typecheck": {
       "gate": "typecheck",
       "status": "ratcheted",
       "exitCode": 1,
-      "durationMs": 2178,
+      "durationMs": 2907,
       "log": "logs/typecheck.log",
       "command": "/home/ubuntu/repos/koperca-sdlc/gates/tee-raw.sh reports/raw/tsc.txt /home/ubuntu/repos/koperca-sdlc/gates/tsc-noemit.sh",
-      "errors": 165
+      "errors": 156
     },
     "unit": {
       "gate": "unit",
-      "status": "failed",
-      "exitCode": 1,
-      "durationMs": 9319,
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 5268,
       "log": "logs/unit.log",
       "command": "npx --no-install jest --selectProjects unit --coverage --coverageDirectory=reports/raw/coverage --coverageReporters=json --coverageReporters=json-summary --coverageReporters=text-summary --json --outputFile=reports/raw/jest-unit.json",
-      "total": 13,
-      "passed": 13,
+      "total": 60,
+      "passed": 60,
       "failed": 0,
       "skipped": 0,
-      "failedSuites": 3,
-      "ok": false,
-      "coverage": 1.41,
-      "patchCoverage": null
+      "failedSuites": 0,
+      "ok": true,
+      "coverage": 20.8,
+      "patchCoverage": 100
     }
   },
   "metrics": {
-    "lintErrors": 321,
-    "lintWarnings": 47,
-    "typeErrors": 165,
-    "coverage": 1.41,
-    "patchCoverage": null,
+    "lintErrors": 262,
+    "lintWarnings": 50,
+    "typeErrors": 156,
+    "coverage": 20.8,
+    "patchCoverage": 100,
     "mutationScore": null,
     "telemetryViolations": null,
     "archViolations": 0
@@ -76,11 +76,11 @@
       "archViolations": 0
     },
     "current": {
-      "lintErrors": 321,
-      "lintWarnings": 47,
-      "typeErrors": 165,
-      "coverage": 1.41,
-      "patchCoverage": null,
+      "lintErrors": 262,
+      "lintWarnings": 50,
+      "typeErrors": 156,
+      "coverage": 20.8,
+      "patchCoverage": 100,
       "mutationScore": null,
       "telemetryViolations": null,
       "archViolations": 0
