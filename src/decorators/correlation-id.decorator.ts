@@ -1,8 +1,15 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
+
+interface CorrelatedRequest {
+  correlationId?: string;
+}
 
 export const CorrelationId = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
-    return request["correlationId"] || null;
+  (_data: unknown, ctx: ExecutionContext): string | null => {
+    const request = ctx.switchToHttp().getRequest<CorrelatedRequest>();
+    const correlationId = request.correlationId;
+    return correlationId !== undefined && correlationId !== ""
+      ? correlationId
+      : null;
   },
 );

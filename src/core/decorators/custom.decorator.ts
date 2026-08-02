@@ -1,9 +1,9 @@
 import { SetMetadata } from "@nestjs/common";
 import {
   registerDecorator,
-  ValidationArguments,
-  ValidationOptions,
-  ValidatorConstraintInterface,
+  type ValidationArguments,
+  type ValidationOptions,
+  type ValidatorConstraintInterface,
 } from "class-validator";
 
 interface MatchValidationArguments extends ValidationArguments {
@@ -15,22 +15,28 @@ export function Match(
   property: string,
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return (object: object, propertyName: string): void => {
+  return (object: object, propertyName: string | symbol): void => {
+    const propertyKey = String(propertyName);
     registerDecorator({
       name: "match",
       target: object.constructor,
-      propertyName,
-      options: validationOptions,
+      propertyName: propertyKey,
+      ...(validationOptions !== undefined
+        ? { options: validationOptions }
+        : {}),
       constraints: [property],
       validator: {
         validate(value: unknown, args: MatchValidationArguments): boolean {
-          const [relatedPropertyName] = args.constraints as string[];
+          const relatedPropertyName = args.constraints[0];
+          if (typeof relatedPropertyName !== "string") {
+            return false;
+          }
           const relatedValue = args.object[relatedPropertyName];
           return value === relatedValue;
         },
-        defaultMessage(args: ValidationArguments): string {
-          const [relatedPropertyName] = args.constraints;
-          return `${propertyName} must match ${relatedPropertyName}`;
+        defaultMessage(args: MatchValidationArguments): string {
+          const relatedPropertyName = args.constraints[0];
+          return `${propertyKey} must match ${String(relatedPropertyName)}`;
         },
       } as ValidatorConstraintInterface,
     });

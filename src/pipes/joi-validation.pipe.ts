@@ -9,8 +9,12 @@ import {
 import { REQUEST } from "@nestjs/core";
 import { Request } from "express";
 
+interface CorrelatedRequest extends Request {
+  correlationId?: string;
+}
+
 interface ValidationSchemaTarget {
-  validate(value: unknown): { error?: unknown };
+  validate(value: unknown): { error?: Error };
 }
 
 interface ValidationSchema {
@@ -22,11 +26,11 @@ interface ValidationSchema {
 export class JoiValidationPipe implements PipeTransform {
   constructor(
     private readonly schema: ValidationSchema,
-    @Inject(REQUEST) private readonly request: Request,
+    @Inject(REQUEST) private readonly request: CorrelatedRequest,
   ) {}
 
   transform(value: unknown, metadata: ArgumentMetadata): unknown {
-    const correlationId = this.request["correlationId"];
+    const correlationId = this.request.correlationId;
     try {
       if (metadata.type === "query" && this.schema.query) {
         const { error } = this.schema.query.validate(value);

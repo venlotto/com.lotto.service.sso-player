@@ -1,13 +1,20 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { ExpressAdapter } from "@nestjs/platform-express";
+import {
+  ExpressAdapter,
+  type NestExpressApplication,
+} from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import * as cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
-import * as express from "express";
+import express, {
+  type NextFunction,
+  type Request,
+  type Response,
+} from "express";
 import helmet from "helmet";
-
 import { AppModule } from "./app/app.module";
+import { getAppName, getAppPort, getCookieSecret } from "./config/env.config";
 import { HttpExceptionFilter } from "./core/filters/http.exception.filters";
 import { TransformInterceptor } from "./core/interceptors/transform.interceptor";
 import { CorsMiddleware } from "./middleware/cors.middleware";
@@ -18,17 +25,21 @@ dotenv.config();
 
 async function bootstrap(): Promise<void> {
   const expressApp = express();
-  const app = await NestFactory.create(
+  const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
     new ExpressAdapter(expressApp),
   );
 
+  app.disable("x-powered-by");
+  expressApp.disable("x-powered-by");
   expressApp.set("trust proxy", 1);
 
-  app.use(cookieParser(process.env.COOKIE_SECRET));
+  app.use(cookieParser(getCookieSecret()));
 
   const corsMiddleware = new CorsMiddleware();
-  app.use((req, res, next) => corsMiddleware.use(req, res, next));
+  app.use((req: Request, res: Response, next: NextFunction) =>
+    corsMiddleware.use(req, res, next),
+  );
 
   app.use(
     helmet({
@@ -60,11 +71,11 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("docs", app, document);
 
-  const port = process.env.APP_PORT || 3000;
+  const port = getAppPort();
   await app.listen(port);
 
   logger.log(
-    `🚀 ${process.env.APP_NAME} service started successfully on port ${port}`,
+    `🚀 ${getAppName()} service started successfully on port ${port}`,
   );
 }
 

@@ -9,13 +9,13 @@ import { ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { TerminusModule } from "@nestjs/terminus";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
-
-import { AppController } from "./app.controller";
+import { getThrottleLimit, getThrottleTtlSeconds } from "../config/env.config";
 import { CoreModule } from "../core/core.module";
 import { CorrelationIdMiddleware } from "../middleware/correlation-id.middleware";
 import { AuthModule } from "../modules/auth/auth.module";
 import { PrismaModule } from "../modules/prisma/prisma.module";
 import { UserModule } from "../modules/user/user.module";
+import { AppController } from "./app.controller";
 
 @Module({
   imports: [
@@ -24,8 +24,8 @@ import { UserModule } from "../modules/user/user.module";
     ThrottlerModule.forRoot({
       throttlers: [
         {
-          ttl: Number(process.env.THROTTLE_TTL_SECONDS || "60") * 1000,
-          limit: Number(process.env.THROTTLE_LIMIT || "10"),
+          ttl: Number(getThrottleTtlSeconds()) * 1000,
+          limit: Number(getThrottleLimit()),
         },
       ],
     }),

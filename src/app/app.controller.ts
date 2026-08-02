@@ -13,9 +13,12 @@ import {
   HealthCheckService,
 } from "@nestjs/terminus";
 import { Request as ExpressRequest } from "express";
-
 import { Public } from "../modules/auth/decorators/public.decorator";
 import { PrismaService } from "../modules/prisma/prisma.service";
+
+interface CorrelatedRequest extends ExpressRequest {
+  correlationId?: string;
+}
 
 @ApiTags("Health")
 @Controller()
@@ -69,17 +72,20 @@ export class AppController {
     },
   })
   public async getHealth(
-    @Request() req: ExpressRequest,
+    @Request() req: CorrelatedRequest,
   ): Promise<HealthCheckResult> {
-    const correlationId = req["correlationId"];
+    const correlationId = req.correlationId;
     this.logger.log("Performing health check", { correlationId });
 
     try {
       return await this.healthCheckService.check([
         (): Promise<HealthIndicatorResult> => this.prismaService.isHealthy(),
       ]);
-    } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(errorMessage, errorStack, { correlationId });
       throw new InternalServerErrorException({
         message: "Error performing health check",
         error: "InternalServerError",
