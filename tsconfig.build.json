@@ -1,4 +1,38 @@
 {
-  "extends": "./tsconfig.json",
+  "//": [
+    "The BUILD config, deliberately standalone — it does NOT extend tsconfig.json.",
+    "",
+    "The koperca harness points tsconfig.json at its strict preset so the",
+    "typecheck gate can measure this repo's real type debt (271 findings) and",
+    "ratchet it down. nest build inherits tsconfig.json through this file, so",
+    "adoption silently turned that debt into build failures and the service",
+    "became undeployable — last successful deploy was 0c1230d on 2026-07-29,",
+    "the commit immediately before the harness landed.",
+    "",
+    "These are exactly the options the app built with at 0c1230d. The gate still",
+    "sees and counts every strict error; only emit is unblocked. Paying the debt",
+    "down is how this file eventually goes away — it is not a prerequisite for",
+    "shipping a one-line change."
+  ],
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true
+  },
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }

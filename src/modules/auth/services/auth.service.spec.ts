@@ -1,4 +1,9 @@
-import { Logger, ConflictException, UnauthorizedException } from "@nestjs/common";
+import {
+  Logger,
+  BadRequestException,
+  ConflictException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -18,6 +23,7 @@ describe("AuthService - register & login", () => {
 
   const mockUserRepository = {
     findByUsername: jest.fn(),
+    findByPhone: jest.fn(),
     save: jest.fn(),
   };
 
@@ -84,53 +90,76 @@ describe("AuthService - register & login", () => {
 
   describe("register", () => {
     it("creates a player, persists it and issues tokens (auto-login)", async (): Promise<void> => {
-      mockUserRepository.findByUsername.mockResolvedValue(null);
+      mockUserRepository.findByPhone.mockResolvedValue(null);
       mockUserRepository.save.mockResolvedValue(undefined);
 
+      // Typed without the leading zero; stored canonical, because that is the
+      // only form that joins to POS purchase records.
       const dto: RegisterUserDto = { phone: "4141234567", password: "1234" };
       const result = await service.register(dto, undefined, "corr-1");
 
-      expect(mockUserRepository.findByUsername).toHaveBeenCalledWith("4141234567");
+      expect(mockUserRepository.findByPhone).toHaveBeenCalledWith("4141234567");
       expect(mockUserRepository.save).toHaveBeenCalledTimes(1);
       expect(result).toHaveProperty("user_id");
-      expect(result.username).toBe("4141234567");
+      expect(result.username).toBe("04141234567");
       expect(result.access_token).toBe("mock-access-token");
       expect(result.refresh_token).toBeTruthy();
       expect(result.session_family_id).toBeTruthy();
     });
 
     it("rejects a duplicate phone with ConflictException (409)", async (): Promise<void> => {
-      mockUserRepository.findByUsername.mockResolvedValue(activeUser());
+      mockUserRepository.findByPhone.mockResolvedValue(activeUser());
 
       await expect(
         service.register({ phone: "4141234567", password: "1234" }, undefined, "corr-2"),
       ).rejects.toBeInstanceOf(ConflictException);
       expect(mockUserRepository.save).not.toHaveBeenCalled();
     });
+
+    it("refuses a value that is not a Venezuelan mobile", async (): Promise<void> => {
+      mockUserRepository.findByPhone.mockResolvedValue(null);
+
+      // Previously this was stored as typed, which is how one person could end
+      // up under several usernames.
+      await expect(
+        service.register({ phone: "0000000000", password: "1234" }, undefined, "corr-3"),
+      ).rejects.toBeInstanceOf(BadRequestException);
+      expect(mockUserRepository.save).not.toHaveBeenCalled();
+    });
+
+    it("treats every spelling of one phone as the same account", async (): Promise<void> => {
+      mockUserRepository.findByPhone.mockResolvedValue(activeUser());
+
+      for (const spelling of ["4141234567", "04141234567", "+584141234567"]) {
+        await expect(
+          service.register({ phone: spelling, password: "1234" }, undefined, "corr-4"),
+        ).rejects.toBeInstanceOf(ConflictException);
+      }
+    });
   });
 
   describe("login", () => {
     it("authenticates a player with valid phone + password", async (): Promise<void> => {
-      mockUserRepository.findByUsername.mockResolvedValue(activeUser());
+      mockUserRepository.findByPhone.mockResolvedValue(activeUser());
       mockUserRepository.save.mockResolvedValue(undefined);
 
       const dto: LoginUserDto = { phone: "4141234567", password: "1234" };
       const result = await service.login(dto, undefined, "corr-3");
 
-      expect(mockUserRepository.findByUsername).toHaveBeenCalledWith("4141234567");
+      expect(mockUserRepository.findByPhone).toHaveBeenCalledWith("4141234567");
       expect(result.access_token).toBe("mock-access-token");
       expect(result.username).toBe("4141234567");
     });
 
     it("rejects an unknown phone", async (): Promise<void> => {
-      mockUserRepository.findByUsername.mockResolvedValue(null);
+      mockUserRepository.findByPhone.mockResolvedValue(null);
       await expect(
         service.login({ phone: "0000000000", password: "1234" }, undefined, "corr-4"),
       ).rejects.toBeInstanceOf(UnauthorizedException);
     });
 
     it("rejects a wrong password", async (): Promise<void> => {
-      mockUserRepository.findByUsername.mockResolvedValue(activeUser());
+      mockUserRepository.findByPhone.mockResolvedValue(activeUser());
       await expect(
         service.login({ phone: "4141234567", password: "wrong" }, undefined, "corr-5"),
       ).rejects.toBeInstanceOf(UnauthorizedException);
@@ -148,7 +177,7 @@ describe("AuthService - register & login", () => {
         new Date(),
         [],
       );
-      mockUserRepository.findByUsername.mockResolvedValue(blocked);
+      mockUserRepository.findByPhone.mockResolvedValue(blocked);
       await expect(
         service.login({ phone: "4141234567", password: "1234" }, undefined, "corr-6"),
       ).rejects.toBeInstanceOf(UnauthorizedException);

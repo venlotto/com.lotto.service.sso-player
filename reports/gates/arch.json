@@ -2,7 +2,7 @@
   "gate": "arch",
   "status": "passed",
   "exitCode": 0,
-  "durationMs": 175,
+  "durationMs": 156,
   "log": "logs/arch.log",
   "command": "node /home/ubuntu/repos/koperca-sdlc/gates/arch/repo-invariants.mjs"
 }

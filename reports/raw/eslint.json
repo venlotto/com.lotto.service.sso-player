@@ -1,6 +1,6 @@
 [
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/.eslintrc.js",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/.eslintrc.js",
     "messages": [
       {
         "ruleId": null,
@@ -19,7 +19,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/commitlint.config.cjs",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/commitlint.config.cjs",
     "messages": [
       {
         "ruleId": null,
@@ -38,7 +38,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/jest.config.cjs",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/jest.config.cjs",
     "messages": [
       {
         "ruleId": null,
@@ -57,7 +57,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/prettier.config.cjs",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/prettier.config.cjs",
     "messages": [
       {
         "ruleId": null,
@@ -76,7 +76,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/app/app.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/app/app.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -150,7 +150,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/app/app.module.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/app/app.module.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -366,7 +366,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/common/common.module.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/common/common.module.ts",
     "messages": [
       {
         "ruleId": "no-restricted-properties",
@@ -389,7 +389,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/common/enum/utils.enum.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/common/enum/utils.enum.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -400,7 +400,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/common/value-object/uuid.value-object.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/common/value-object/uuid.value-object.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
@@ -458,7 +458,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/core/core.module.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/core/core.module.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -488,7 +488,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/core/decorators/custom.decorator.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/core/decorators/custom.decorator.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -540,7 +540,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/core/decorators/roles.decorator.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/core/decorators/roles.decorator.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -588,7 +588,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/core/filters/http.exception.filters.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/core/filters/http.exception.filters.ts",
     "messages": [
       {
         "ruleId": "sonarjs/cognitive-complexity",
@@ -940,7 +940,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/core/guards/roles.guard.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/core/guards/roles.guard.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -1095,7 +1095,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/core/interceptors/transform.interceptor.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/core/interceptors/transform.interceptor.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/no-unsafe-assignment",
@@ -1239,7 +1239,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/decorators/correlation-id.decorator.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/decorators/correlation-id.decorator.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -1353,7 +1353,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/main.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/main.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -1577,7 +1577,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/middleware/correlation-id.middleware.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/middleware/correlation-id.middleware.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
@@ -1662,7 +1662,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/middleware/cors.middleware.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/middleware/cors.middleware.ts",
     "messages": [
       {
         "ruleId": "no-restricted-properties",
@@ -1742,7 +1742,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/middleware/logging.middleware.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/middleware/logging.middleware.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -1848,7 +1848,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/auth.module.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/auth.module.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2104,7 +2104,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/controller/assign-permissions.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/controller/assign-permissions.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2134,7 +2134,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/controller/auth.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/controller/auth.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2397,7 +2397,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/controller/delete-permissions.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/controller/delete-permissions.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2427,7 +2427,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/controller/delete-role.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/controller/delete-role.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2457,7 +2457,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/controller/permission.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/controller/permission.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2509,7 +2509,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/controller/remove-permissions.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/controller/remove-permissions.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2539,7 +2539,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/controller/role.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/controller/role.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2569,7 +2569,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/decorators/public.decorator.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/decorators/public.decorator.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -2599,7 +2599,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/decorators/require-permissions.decorator.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/decorators/require-permissions.decorator.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -2629,7 +2629,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/assign-permissions.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/assign-permissions.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2640,7 +2640,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/create-permission.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/create-permission.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2651,7 +2651,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/create-role.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/create-role.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2662,7 +2662,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/delete-permissions.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/delete-permissions.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2673,7 +2673,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/delete-role.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/delete-role.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2684,7 +2684,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/login-user.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/login-user.dto.ts",
     "messages": [
       {
         "ruleId": "no-useless-escape",
@@ -2731,7 +2731,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/login.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/login.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2742,7 +2742,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/logout.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/logout.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2753,7 +2753,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/refresh-token.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/refresh-token.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2764,7 +2764,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/register-user.dto.spec.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/register-user.dto.spec.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -2860,7 +2860,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/register-user.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/register-user.dto.ts",
     "messages": [
       {
         "ruleId": "no-useless-escape",
@@ -2907,7 +2907,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/remove-permissions.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/remove-permissions.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2918,7 +2918,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/dto/update-user.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/dto/update-user.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2929,7 +2929,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/entity/role.entity.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/entity/role.entity.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -2940,7 +2940,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/guards/jwt-auth.guard.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/guards/jwt-auth.guard.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -3133,7 +3133,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/guards/local-auth.guard.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/guards/local-auth.guard.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -3163,7 +3163,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/guards/permission.guard.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/guards/permission.guard.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -3613,7 +3613,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/guards/roles.guard.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/guards/roles.guard.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -3698,7 +3698,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/guards/session-cookie.guard.spec.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/guards/session-cookie.guard.spec.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -3782,7 +3782,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/guards/session-cookie.guard.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/guards/session-cookie.guard.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -3858,12 +3858,12 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/guards/status.guard.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/guards/status.guard.ts",
     "messages": [
       {
         "ruleId": "import-x/no-duplicates",
         "severity": 2,
-        "message": "'/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/node_modules/@nestjs/common/index.d.ts' imported multiple times.",
+        "message": "'/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/@nestjs/common/index.d.ts' imported multiple times.",
         "line": 6,
         "column": 8,
         "nodeType": "Literal",
@@ -3899,7 +3899,7 @@
       {
         "ruleId": "import-x/no-duplicates",
         "severity": 2,
-        "message": "'/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/node_modules/@nestjs/common/index.d.ts' imported multiple times.",
+        "message": "'/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/@nestjs/common/index.d.ts' imported multiple times.",
         "line": 7,
         "column": 25,
         "nodeType": "Literal",
@@ -3972,7 +3972,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/model/refresh-token.model.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/model/refresh-token.model.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -4064,7 +4064,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/repository/refresh-token.repository.interface.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/repository/refresh-token.repository.interface.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -4094,7 +4094,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/repository/refresh-token.repository.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/repository/refresh-token.repository.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -4164,7 +4164,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/services/auth.service.rotation.spec.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/services/auth.service.rotation.spec.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -4599,7 +4599,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/services/auth.service.spec.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/services/auth.service.spec.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -4811,7 +4811,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/services/auth.service.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/services/auth.service.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -4850,22 +4850,86 @@
         }
       },
       {
+        "ruleId": "import-x/order",
+        "severity": 2,
+        "message": "`../../../utils/phone` import should occur before import of `../../user/model/enum/user-status.enum`",
+        "line": 23,
+        "column": 1,
+        "nodeType": "ImportDeclaration",
+        "messageId": "order",
+        "endLine": 23,
+        "endColumn": 57,
+        "fix": {
+          "range": [
+            357,
+            874
+          ],
+          "text": "import { normalizeVePhone } from \"../../../utils/phone\";\nimport { UserStatus } from \"../../user/model/enum/user-status.enum\";\nimport { User } from \"../../user/model/user.model\";\nimport { IUserRepository } from \"../../user/repository/user.repository.interface\";\nimport { LoginUserDto } from \"../dto/login-user.dto\";\nimport { RegisterUserDto } from \"../dto/register-user.dto\";\nimport { RefreshToken } from \"../model/refresh-token.model\";\nimport { RefreshTokenRepository } from \"../repository/refresh-token.repository\";\n"
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/strict-boolean-expressions",
+        "severity": 2,
+        "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
+        "line": 217,
+        "column": 10,
+        "nodeType": "Identifier",
+        "messageId": "conditionErrorNullableString",
+        "endLine": 217,
+        "endColumn": 24,
+        "suggestions": [
+          {
+            "messageId": "conditionFixCompareNullish",
+            "fix": {
+              "range": [
+                6414,
+                6429
+              ],
+              "text": "canonicalPhone == null"
+            },
+            "desc": "Change condition to check for null/undefined (`value != null`)"
+          },
+          {
+            "messageId": "conditionFixDefaultEmptyString",
+            "fix": {
+              "range": [
+                6415,
+                6429
+              ],
+              "text": "(canonicalPhone ?? \"\")"
+            },
+            "desc": "Explicitly treat nullish value the same as an empty string (`value ?? \"\"`)"
+          },
+          {
+            "messageId": "conditionFixCastBoolean",
+            "fix": {
+              "range": [
+                6414,
+                6429
+              ],
+              "text": "!Boolean(canonicalPhone)"
+            },
+            "desc": "Explicitly convert value to a boolean (`Boolean(value)`)"
+          }
+        ]
+      },
+      {
         "ruleId": "@typescript-eslint/require-await",
         "severity": 2,
         "message": "Async method 'generateAccessToken' has no 'await' expression.",
-        "line": 287,
+        "line": 300,
         "column": 3,
         "nodeType": "FunctionExpression",
         "messageId": "missingAwait",
-        "endLine": 287,
+        "endLine": 300,
         "endColumn": 35,
         "suggestions": [
           {
             "messageId": "removeAsync",
             "fix": {
               "range": [
-                8116,
-                8181
+                8932,
+                8997
               ],
               "text": "generateAccessToken(payload: TokenPayload): string"
             },
@@ -4877,30 +4941,30 @@
         "ruleId": "no-restricted-syntax",
         "severity": 1,
         "message": "Avoid inline new Date(); precompute it or use a clock abstraction.",
-        "line": 333,
+        "line": 346,
         "column": 45,
         "nodeType": "NewExpression",
         "messageId": "restrictedSyntax",
-        "endLine": 333,
+        "endLine": 346,
         "endColumn": 56
       },
       {
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
         "severity": 2,
         "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
-        "line": 342,
+        "line": 355,
         "column": 9,
         "nodeType": "Identifier",
         "messageId": "conditionErrorNullableString",
-        "endLine": 342,
+        "endLine": 355,
         "endColumn": 17,
         "suggestions": [
           {
             "messageId": "conditionFixCompareNullish",
             "fix": {
               "range": [
-                9909,
-                9917
+                10725,
+                10733
               ],
               "text": "(fallback != null)"
             },
@@ -4910,8 +4974,8 @@
             "messageId": "conditionFixDefaultEmptyString",
             "fix": {
               "range": [
-                9909,
-                9917
+                10725,
+                10733
               ],
               "text": "(fallback ?? \"\")"
             },
@@ -4921,8 +4985,8 @@
             "messageId": "conditionFixCastBoolean",
             "fix": {
               "range": [
-                9909,
-                9917
+                10725,
+                10733
               ],
               "text": "(Boolean(fallback))"
             },
@@ -4934,52 +4998,52 @@
         "ruleId": "@typescript-eslint/no-unsafe-return",
         "severity": 2,
         "message": "Unsafe return of a value of type `any`.",
-        "line": 351,
+        "line": 364,
         "column": 5,
         "nodeType": "ReturnStatement",
         "messageId": "unsafeReturn",
-        "endLine": 355,
+        "endLine": 368,
         "endColumn": 7
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 2,
         "message": "Unsafe member access [this.sessionCookieName] on an `any` value.",
-        "line": 352,
+        "line": 365,
         "column": 36,
         "nodeType": "MemberExpression",
         "messageId": "unsafeMemberExpression",
-        "endLine": 352,
+        "endLine": 365,
         "endColumn": 58
       },
       {
         "ruleId": "@typescript-eslint/no-unsafe-member-access",
         "severity": 2,
         "message": "Unsafe member access [this.sessionCookieName] on an `any` value.",
-        "line": 353,
+        "line": 366,
         "column": 42,
         "nodeType": "MemberExpression",
         "messageId": "unsafeMemberExpression",
-        "endLine": 353,
+        "endLine": 366,
         "endColumn": 64
       },
       {
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
         "severity": 2,
         "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
-        "line": 362,
+        "line": 375,
         "column": 10,
         "nodeType": "Identifier",
         "messageId": "conditionErrorNullableString",
-        "endLine": 362,
+        "endLine": 375,
         "endColumn": 21,
         "suggestions": [
           {
             "messageId": "conditionFixCompareNullish",
             "fix": {
               "range": [
-                10392,
-                10404
+                11208,
+                11220
               ],
               "text": "redirectUri == null"
             },
@@ -4989,8 +5053,8 @@
             "messageId": "conditionFixDefaultEmptyString",
             "fix": {
               "range": [
-                10393,
-                10404
+                11209,
+                11220
               ],
               "text": "(redirectUri ?? \"\")"
             },
@@ -5000,8 +5064,8 @@
             "messageId": "conditionFixCastBoolean",
             "fix": {
               "range": [
-                10392,
-                10404
+                11208,
+                11220
               ],
               "text": "!Boolean(redirectUri)"
             },
@@ -5013,41 +5077,41 @@
         "ruleId": "sonarjs/no-ignored-exceptions",
         "severity": 2,
         "message": "Handle this exception or don't catch it at all.",
-        "line": 369,
+        "line": 382,
         "column": 7,
         "nodeType": "CatchClause",
         "messageId": "handleException",
-        "endLine": 373,
+        "endLine": 386,
         "endColumn": 6
       },
       {
         "ruleId": "@typescript-eslint/no-unused-vars",
         "severity": 2,
         "message": "'error' is defined but never used.",
-        "line": 369,
+        "line": 382,
         "column": 14,
         "nodeType": "Identifier",
         "messageId": "unusedVar",
-        "endLine": 369,
+        "endLine": 382,
         "endColumn": 19
       },
       {
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
         "severity": 2,
         "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
-        "line": 379,
+        "line": 392,
         "column": 9,
         "nodeType": "Identifier",
         "messageId": "conditionErrorNullableString",
-        "endLine": 379,
+        "endLine": 392,
         "endColumn": 14,
         "suggestions": [
           {
             "messageId": "conditionFixCompareNullish",
             "fix": {
               "range": [
-                10758,
-                10763
+                11574,
+                11579
               ],
               "text": "state != null"
             },
@@ -5057,8 +5121,8 @@
             "messageId": "conditionFixDefaultEmptyString",
             "fix": {
               "range": [
-                10758,
-                10763
+                11574,
+                11579
               ],
               "text": "state ?? \"\""
             },
@@ -5068,8 +5132,8 @@
             "messageId": "conditionFixCastBoolean",
             "fix": {
               "range": [
-                10758,
-                10763
+                11574,
+                11579
               ],
               "text": "Boolean(state)"
             },
@@ -5081,19 +5145,19 @@
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
         "severity": 2,
         "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
-        "line": 418,
+        "line": 431,
         "column": 9,
         "nodeType": "Identifier",
         "messageId": "conditionErrorNullableString",
-        "endLine": 418,
+        "endLine": 431,
         "endColumn": 24,
         "suggestions": [
           {
             "messageId": "conditionFixCompareNullish",
             "fix": {
               "range": [
-                11746,
-                11761
+                12562,
+                12577
               ],
               "text": "ttlSecondsValue != null"
             },
@@ -5103,8 +5167,8 @@
             "messageId": "conditionFixDefaultEmptyString",
             "fix": {
               "range": [
-                11746,
-                11761
+                12562,
+                12577
               ],
               "text": "ttlSecondsValue ?? \"\""
             },
@@ -5114,8 +5178,8 @@
             "messageId": "conditionFixCastBoolean",
             "fix": {
               "range": [
-                11746,
-                11761
+                12562,
+                12577
               ],
               "text": "Boolean(ttlSecondsValue)"
             },
@@ -5127,35 +5191,35 @@
         "ruleId": "no-restricted-syntax",
         "severity": 1,
         "message": "Avoid inline new Date(); precompute it or use a clock abstraction.",
-        "line": 421,
+        "line": 434,
         "column": 16,
         "nodeType": "NewExpression",
         "messageId": "restrictedSyntax",
-        "endLine": 421,
+        "endLine": 434,
         "endColumn": 53
       },
       {
         "ruleId": "no-restricted-syntax",
         "severity": 1,
         "message": "Avoid inline new Date(); precompute it or use a clock abstraction.",
-        "line": 430,
+        "line": 443,
         "column": 12,
         "nodeType": "NewExpression",
         "messageId": "restrictedSyntax",
-        "endLine": 430,
+        "endLine": 443,
         "endColumn": 65
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 12,
+    "errorCount": 14,
     "fatalErrorCount": 0,
     "warningCount": 3,
-    "fixableErrorCount": 2,
+    "fixableErrorCount": 3,
     "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/services/bootstrap.service.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/services/bootstrap.service.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5239,7 +5303,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/services/permission.service.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/services/permission.service.ts",
     "messages": [
       {
         "ruleId": "no-restricted-imports",
@@ -5280,7 +5344,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/services/refresh-token.service.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/services/refresh-token.service.ts",
     "messages": [
       {
         "ruleId": "no-restricted-imports",
@@ -5321,7 +5385,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/services/role.service.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/services/role.service.ts",
     "messages": [
       {
         "ruleId": "no-restricted-imports",
@@ -5362,7 +5426,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/strategy/jwt.strategy.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/strategy/jwt.strategy.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
@@ -5611,7 +5675,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/auth/strategy/local.strategy.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/auth/strategy/local.strategy.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5674,7 +5738,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/prisma/prisma.module.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/prisma/prisma.module.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5704,7 +5768,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/prisma/prisma.service.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/prisma/prisma.service.ts",
     "messages": [
       {
         "ruleId": "no-restricted-imports",
@@ -5727,7 +5791,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/controller/assign-role.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/controller/assign-role.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5757,7 +5821,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/controller/change-password.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/controller/change-password.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5906,7 +5970,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/controller/change-status.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/controller/change-status.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5936,7 +6000,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/controller/list-users.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/controller/list-users.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5966,7 +6030,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/controller/me.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/controller/me.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -5996,7 +6060,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/controller/new-user.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/controller/new-user.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -6026,7 +6090,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/controller/remove-roles.controller.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/controller/remove-roles.controller.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -6056,7 +6120,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/assign-role-response.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/assign-role-response.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6067,7 +6131,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/assign-role.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/assign-role.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6078,7 +6142,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/change-password.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/change-password.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6089,7 +6153,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/change-status.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/change-status.dto.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -6130,7 +6194,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/list-users-query.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/list-users-query.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6141,7 +6205,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/list-users-response.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/list-users-response.dto.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -6171,7 +6235,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/me-response.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/me-response.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6182,7 +6246,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/new-user.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/new-user.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6193,7 +6257,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/remove-roles.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/remove-roles.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6204,7 +6268,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/dto/update-user.dto.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/dto/update-user.dto.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6215,7 +6279,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/model/enum/user-roles.enum.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/model/enum/user-roles.enum.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6226,7 +6290,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/model/enum/user-status.enum.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/model/enum/user-status.enum.ts",
     "messages": [],
     "suppressedMessages": [],
     "errorCount": 0,
@@ -6237,7 +6301,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/model/user.model.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/model/user.model.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -6488,7 +6552,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/repository/user.repository.interface.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/repository/user.repository.interface.ts",
     "messages": [
       {
         "ruleId": "no-restricted-imports",
@@ -6565,7 +6629,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/repository/user.repository.prisma.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/repository/user.repository.prisma.ts",
     "messages": [
       {
         "ruleId": "no-restricted-imports",
@@ -6599,38 +6663,92 @@
       {
         "ruleId": "import-x/order",
         "severity": 2,
-        "message": "`./user.repository.interface` import should occur after import of `../model/user.model`",
-        "line": 4,
+        "message": "`../../prisma/prisma.service` import should occur before import of `./user.repository.interface`",
+        "line": 5,
         "column": 1,
         "nodeType": "ImportDeclaration",
         "messageId": "order",
-        "endLine": 4,
-        "endColumn": 63,
+        "endLine": 5,
+        "endColumn": 61,
+        "fix": {
+          "range": [
+            95,
+            219
+          ],
+          "text": "import { PrismaService } from \"../../prisma/prisma.service\";\nimport { IUserRepository } from \"./user.repository.interface\";\n"
+        }
+      },
+      {
+        "ruleId": "import-x/order",
+        "severity": 2,
+        "message": "`../model/enum/user-status.enum` import should occur before import of `./user.repository.interface`",
+        "line": 6,
+        "column": 1,
+        "nodeType": "ImportDeclaration",
+        "messageId": "order",
+        "endLine": 6,
+        "endColumn": 61,
+        "fix": {
+          "range": [
+            95,
+            280
+          ],
+          "text": "import { UserStatus } from \"../model/enum/user-status.enum\";\nimport { IUserRepository } from \"./user.repository.interface\";\nimport { PrismaService } from \"../../prisma/prisma.service\";\n"
+        }
+      },
+      {
+        "ruleId": "import-x/order",
+        "severity": 2,
+        "message": "`../model/user.model` import should occur before import of `./user.repository.interface`",
+        "line": 7,
+        "column": 1,
+        "nodeType": "ImportDeclaration",
+        "messageId": "order",
+        "endLine": 7,
+        "endColumn": 44,
         "fix": {
           "range": [
             95,
             324
           ],
-          "text": "import { PrismaService } from \"../../prisma/prisma.service\";\nimport { UserStatus } from \"../model/enum/user-status.enum\";\nimport { User } from \"../model/user.model\";\nimport { IUserRepository } from \"./user.repository.interface\";\n"
+          "text": "import { User } from \"../model/user.model\";\nimport { IUserRepository } from \"./user.repository.interface\";\nimport { PrismaService } from \"../../prisma/prisma.service\";\nimport { UserStatus } from \"../model/enum/user-status.enum\";\n"
+        }
+      },
+      {
+        "ruleId": "import-x/order",
+        "severity": 2,
+        "message": "`../../../utils/phone` import should occur before import of `./user.repository.interface`",
+        "line": 8,
+        "column": 1,
+        "nodeType": "ImportDeclaration",
+        "messageId": "order",
+        "endLine": 8,
+        "endColumn": 55,
+        "fix": {
+          "range": [
+            95,
+            379
+          ],
+          "text": "import { phoneLookupKey } from \"../../../utils/phone\";\nimport { IUserRepository } from \"./user.repository.interface\";\nimport { PrismaService } from \"../../prisma/prisma.service\";\nimport { UserStatus } from \"../model/enum/user-status.enum\";\nimport { User } from \"../model/user.model\";\n"
         }
       },
       {
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
         "severity": 2,
         "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
-        "line": 50,
+        "line": 51,
         "column": 7,
         "nodeType": "MemberExpression",
         "messageId": "conditionErrorNullableString",
-        "endLine": 50,
+        "endLine": 51,
         "endColumn": 20,
         "suggestions": [
           {
             "messageId": "conditionFixCompareNullish",
             "fix": {
               "range": [
-                1356,
-                1369
+                1411,
+                1424
               ],
               "text": "(user.username != null)"
             },
@@ -6640,8 +6758,8 @@
             "messageId": "conditionFixDefaultEmptyString",
             "fix": {
               "range": [
-                1356,
-                1369
+                1411,
+                1424
               ],
               "text": "(user.username ?? \"\")"
             },
@@ -6651,8 +6769,8 @@
             "messageId": "conditionFixCastBoolean",
             "fix": {
               "range": [
-                1356,
-                1369
+                1411,
+                1424
               ],
               "text": "(Boolean(user.username))"
             },
@@ -6664,11 +6782,11 @@
         "ruleId": "@typescript-eslint/prefer-nullish-coalescing",
         "severity": 2,
         "message": "Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.",
-        "line": 50,
+        "line": 51,
         "column": 21,
         "nodeType": "Punctuator",
         "messageId": "preferNullishOverOr",
-        "endLine": 50,
+        "endLine": 51,
         "endColumn": 23,
         "suggestions": [
           {
@@ -6678,8 +6796,8 @@
             },
             "fix": {
               "range": [
-                1370,
-                1372
+                1425,
+                1427
               ],
               "text": "??"
             },
@@ -6691,19 +6809,83 @@
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
         "severity": 2,
         "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
-        "line": 94,
+        "line": 67,
+        "column": 10,
+        "nodeType": "Identifier",
+        "messageId": "conditionErrorNullableString",
+        "endLine": 67,
+        "endColumn": 13,
+        "suggestions": [
+          {
+            "messageId": "conditionFixCompareNullish",
+            "fix": {
+              "range": [
+                1872,
+                1876
+              ],
+              "text": "key == null"
+            },
+            "desc": "Change condition to check for null/undefined (`value != null`)"
+          },
+          {
+            "messageId": "conditionFixDefaultEmptyString",
+            "fix": {
+              "range": [
+                1873,
+                1876
+              ],
+              "text": "(key ?? \"\")"
+            },
+            "desc": "Explicitly treat nullish value the same as an empty string (`value ?? \"\"`)"
+          },
+          {
+            "messageId": "conditionFixCastBoolean",
+            "fix": {
+              "range": [
+                1872,
+                1876
+              ],
+              "text": "!Boolean(key)"
+            },
+            "desc": "Explicitly convert value to a boolean (`Boolean(value)`)"
+          }
+        ]
+      },
+      {
+        "ruleId": "curly",
+        "severity": 2,
+        "message": "Expected { after 'if' condition.",
+        "line": 67,
+        "column": 15,
+        "nodeType": "IfStatement",
+        "messageId": "missingCurlyAfterCondition",
+        "endLine": 67,
+        "endColumn": 27,
+        "fix": {
+          "range": [
+            1878,
+            1890
+          ],
+          "text": "{return null;}"
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/strict-boolean-expressions",
+        "severity": 2,
+        "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
+        "line": 105,
         "column": 7,
         "nodeType": "MemberExpression",
         "messageId": "conditionErrorNullableString",
-        "endLine": 94,
+        "endLine": 105,
         "endColumn": 20,
         "suggestions": [
           {
             "messageId": "conditionFixCompareNullish",
             "fix": {
               "range": [
-                2383,
-                2396
+                2759,
+                2772
               ],
               "text": "(user.username != null)"
             },
@@ -6713,8 +6895,8 @@
             "messageId": "conditionFixDefaultEmptyString",
             "fix": {
               "range": [
-                2383,
-                2396
+                2759,
+                2772
               ],
               "text": "(user.username ?? \"\")"
             },
@@ -6724,8 +6906,8 @@
             "messageId": "conditionFixCastBoolean",
             "fix": {
               "range": [
-                2383,
-                2396
+                2759,
+                2772
               ],
               "text": "(Boolean(user.username))"
             },
@@ -6737,11 +6919,11 @@
         "ruleId": "@typescript-eslint/prefer-nullish-coalescing",
         "severity": 2,
         "message": "Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.",
-        "line": 94,
+        "line": 105,
         "column": 21,
         "nodeType": "Punctuator",
         "messageId": "preferNullishOverOr",
-        "endLine": 94,
+        "endLine": 105,
         "endColumn": 23,
         "suggestions": [
           {
@@ -6751,8 +6933,8 @@
             },
             "fix": {
               "range": [
-                2397,
-                2399
+                2773,
+                2775
               ],
               "text": "??"
             },
@@ -6764,19 +6946,19 @@
         "ruleId": "@typescript-eslint/strict-boolean-expressions",
         "severity": 2,
         "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
-        "line": 140,
+        "line": 151,
         "column": 9,
         "nodeType": "MemberExpression",
         "messageId": "conditionErrorNullableString",
-        "endLine": 140,
+        "endLine": 151,
         "endColumn": 22,
         "suggestions": [
           {
             "messageId": "conditionFixCompareNullish",
             "fix": {
               "range": [
-                3441,
-                3454
+                3817,
+                3830
               ],
               "text": "(user.username != null)"
             },
@@ -6786,8 +6968,8 @@
             "messageId": "conditionFixDefaultEmptyString",
             "fix": {
               "range": [
-                3441,
-                3454
+                3817,
+                3830
               ],
               "text": "(user.username ?? \"\")"
             },
@@ -6797,8 +6979,8 @@
             "messageId": "conditionFixCastBoolean",
             "fix": {
               "range": [
-                3441,
-                3454
+                3817,
+                3830
               ],
               "text": "(Boolean(user.username))"
             },
@@ -6810,11 +6992,11 @@
         "ruleId": "@typescript-eslint/prefer-nullish-coalescing",
         "severity": 2,
         "message": "Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.",
-        "line": 140,
+        "line": 151,
         "column": 23,
         "nodeType": "Punctuator",
         "messageId": "preferNullishOverOr",
-        "endLine": 140,
+        "endLine": 151,
         "endColumn": 25,
         "suggestions": [
           {
@@ -6824,8 +7006,8 @@
             },
             "fix": {
               "range": [
-                3455,
-                3457
+                3831,
+                3833
               ],
               "text": "??"
             },
@@ -6835,15 +7017,15 @@
       }
     ],
     "suppressedMessages": [],
-    "errorCount": 9,
+    "errorCount": 14,
     "fatalErrorCount": 0,
     "warningCount": 0,
-    "fixableErrorCount": 2,
+    "fixableErrorCount": 6,
     "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/repository/user.repository.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/repository/user.repository.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/consistent-type-imports",
@@ -6891,7 +7073,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/services/user.service.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/services/user.service.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -6932,7 +7114,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/modules/user/user.module.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/modules/user/user.module.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -7009,7 +7191,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/pipes/joi-validation.pipe.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/pipes/joi-validation.pipe.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/no-unsafe-assignment",
@@ -7102,7 +7284,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/scripts/create-test-user.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/scripts/create-test-user.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -7232,7 +7414,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/scripts/reset-admin-password.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/scripts/reset-admin-password.ts",
     "messages": [
       {
         "ruleId": "import-x/order",
@@ -7315,7 +7497,7 @@
     "usedDeprecatedRules": []
   },
   {
-    "filePath": "/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/src/utils/case-converter.ts",
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/utils/case-converter.ts",
     "messages": [
       {
         "ruleId": "@typescript-eslint/no-unsafe-return",
@@ -7356,6 +7538,229 @@
     "fatalErrorCount": 0,
     "warningCount": 0,
     "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/utils/phone.spec.ts",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/home/ubuntu/repos/com.lotto.service.sso-player/src/utils/phone.ts",
+    "messages": [
+      {
+        "ruleId": "@typescript-eslint/strict-boolean-expressions",
+        "severity": 2,
+        "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
+        "line": 27,
+        "column": 8,
+        "nodeType": "Identifier",
+        "messageId": "conditionErrorNullableString",
+        "endLine": 27,
+        "endColumn": 11,
+        "suggestions": [
+          {
+            "messageId": "conditionFixCompareNullish",
+            "fix": {
+              "range": [
+                1088,
+                1092
+              ],
+              "text": "raw == null"
+            },
+            "desc": "Change condition to check for null/undefined (`value != null`)"
+          },
+          {
+            "messageId": "conditionFixDefaultEmptyString",
+            "fix": {
+              "range": [
+                1089,
+                1092
+              ],
+              "text": "(raw ?? \"\")"
+            },
+            "desc": "Explicitly treat nullish value the same as an empty string (`value ?? \"\"`)"
+          },
+          {
+            "messageId": "conditionFixCastBoolean",
+            "fix": {
+              "range": [
+                1088,
+                1092
+              ],
+              "text": "!Boolean(raw)"
+            },
+            "desc": "Explicitly convert value to a boolean (`Boolean(value)`)"
+          }
+        ]
+      },
+      {
+        "ruleId": "curly",
+        "severity": 2,
+        "message": "Expected { after 'if' condition.",
+        "line": 27,
+        "column": 13,
+        "nodeType": "IfStatement",
+        "messageId": "missingCurlyAfterCondition",
+        "endLine": 27,
+        "endColumn": 25,
+        "fix": {
+          "range": [
+            1094,
+            1106
+          ],
+          "text": "{return null;}"
+        }
+      },
+      {
+        "ruleId": "curly",
+        "severity": 2,
+        "message": "Expected { after 'if' condition.",
+        "line": 30,
+        "column": 16,
+        "nodeType": "IfStatement",
+        "messageId": "missingCurlyAfterCondition",
+        "endLine": 30,
+        "endColumn": 28,
+        "fix": {
+          "range": [
+            1162,
+            1174
+          ],
+          "text": "{return null;}"
+        }
+      },
+      {
+        "ruleId": "curly",
+        "severity": 2,
+        "message": "Expected { after 'if' condition.",
+        "line": 33,
+        "column": 34,
+        "nodeType": "IfStatement",
+        "messageId": "missingCurlyAfterCondition",
+        "endLine": 33,
+        "endColumn": 59,
+        "fix": {
+          "range": [
+            1287,
+            1312
+          ],
+          "text": "{digits = digits.slice(4);}"
+        }
+      },
+      {
+        "ruleId": "curly",
+        "severity": 2,
+        "message": "Expected { after 'if' condition.",
+        "line": 34,
+        "column": 59,
+        "nodeType": "IfStatement",
+        "messageId": "missingCurlyAfterCondition",
+        "endLine": 34,
+        "endColumn": 84,
+        "fix": {
+          "range": [
+            1371,
+            1396
+          ],
+          "text": "{digits = digits.slice(2);}"
+        }
+      },
+      {
+        "ruleId": "curly",
+        "severity": 2,
+        "message": "Expected { after 'if' condition.",
+        "line": 38,
+        "column": 31,
+        "nodeType": "IfStatement",
+        "messageId": "missingCurlyAfterCondition",
+        "endLine": 38,
+        "endColumn": 43,
+        "fix": {
+          "range": [
+            1573,
+            1585
+          ],
+          "text": "{return null;}"
+        }
+      },
+      {
+        "ruleId": "curly",
+        "severity": 2,
+        "message": "Expected { after 'if' condition.",
+        "line": 39,
+        "column": 61,
+        "nodeType": "IfStatement",
+        "messageId": "missingCurlyAfterCondition",
+        "endLine": 39,
+        "endColumn": 73,
+        "fix": {
+          "range": [
+            1646,
+            1658
+          ],
+          "text": "{return null;}"
+        }
+      },
+      {
+        "ruleId": "@typescript-eslint/strict-boolean-expressions",
+        "severity": 2,
+        "message": "Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.",
+        "line": 48,
+        "column": 12,
+        "nodeType": "Identifier",
+        "messageId": "conditionErrorNullableString",
+        "endLine": 48,
+        "endColumn": 17,
+        "suggestions": [
+          {
+            "messageId": "conditionFixCompareNullish",
+            "fix": {
+              "range": [
+                1847,
+                1853
+              ],
+              "text": "(value == null)"
+            },
+            "desc": "Change condition to check for null/undefined (`value != null`)"
+          },
+          {
+            "messageId": "conditionFixDefaultEmptyString",
+            "fix": {
+              "range": [
+                1848,
+                1853
+              ],
+              "text": "(value ?? \"\")"
+            },
+            "desc": "Explicitly treat nullish value the same as an empty string (`value ?? \"\"`)"
+          },
+          {
+            "messageId": "conditionFixCastBoolean",
+            "fix": {
+              "range": [
+                1847,
+                1853
+              ],
+              "text": "(!Boolean(value))"
+            },
+            "desc": "Explicitly convert value to a boolean (`Boolean(value)`)"
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 8,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 6,
     "fixableWarningCount": 0,
     "usedDeprecatedRules": []
   }

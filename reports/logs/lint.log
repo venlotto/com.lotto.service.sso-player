@@ -271,9 +271,9 @@ src/modules/auth/guards/session-cookie.guard.ts
   19:10    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
 
 src/modules/auth/guards/status.guard.ts
-  6:8      [31merror[0m  '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/node_modules/@nestjs/common/index.d.ts' imported multiple times.  [2mimport-x/no-duplicates[0m
+  6:8      [31merror[0m  '/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/@nestjs/common/index.d.ts' imported multiple times.  [2mimport-x/no-duplicates[0m
   7:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  7:25     [31merror[0m  '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/node_modules/@nestjs/common/index.d.ts' imported multiple times.  [2mimport-x/no-duplicates[0m
+  7:25     [31merror[0m  '/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/@nestjs/common/index.d.ts' imported multiple times.  [2mimport-x/no-duplicates[0m
   22:11    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
   24:9     [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
   24:10    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
@@ -335,19 +335,21 @@ src/modules/auth/services/auth.service.spec.ts
 src/modules/auth/services/auth.service.ts
   1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
   14:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  287:3    [31merror[0m  Async method 'generateAccessToken' has no 'await' expression.  [2m@typescript-eslint/require-await[0m
-  333:45   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  342:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  351:5    [31merror[0m  Unsafe return of a value of type `any`.  [2m@typescript-eslint/no-unsafe-return[0m
-  352:36   [31merror[0m  Unsafe member access [this.sessionCookieName] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  353:42   [31merror[0m  Unsafe member access [this.sessionCookieName] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  362:10   [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  369:7    [31merror[0m  Handle this exception or don't catch it at all.  [2msonarjs/no-ignored-exceptions[0m
-  369:14   [31merror[0m  'error' is defined but never used.  [2m@typescript-eslint/no-unused-vars[0m
-  379:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  418:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  421:16   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  430:12   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  23:1     [31merror[0m  `../../../utils/phone` import should occur before import of `../../user/model/enum/user-status.enum`  [2mimport-x/order[0m
+  217:10   [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  300:3    [31merror[0m  Async method 'generateAccessToken' has no 'await' expression.  [2m@typescript-eslint/require-await[0m
+  346:45   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  355:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  364:5    [31merror[0m  Unsafe return of a value of type `any`.  [2m@typescript-eslint/no-unsafe-return[0m
+  365:36   [31merror[0m  Unsafe member access [this.sessionCookieName] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
+  366:42   [31merror[0m  Unsafe member access [this.sessionCookieName] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
+  375:10   [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  382:7    [31merror[0m  Handle this exception or don't catch it at all.  [2msonarjs/no-ignored-exceptions[0m
+  382:14   [31merror[0m  'error' is defined but never used.  [2m@typescript-eslint/no-unused-vars[0m
+  392:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  431:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  434:16   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  443:12   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/services/bootstrap.service.ts
   1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
@@ -453,13 +455,18 @@ src/modules/user/repository/user.repository.interface.ts
 src/modules/user/repository/user.repository.prisma.ts
   2:1      [31merror[0m  '@prisma/client' import is restricted from being used. Only repositories may import Prisma. See STANDARDS.md §layering.  [2mno-restricted-imports[0m
   2:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  4:1      [31merror[0m  `./user.repository.interface` import should occur after import of `../model/user.model`  [2mimport-x/order[0m
-  50:7     [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  50:21    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  94:7     [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  94:21    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  140:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  140:23   [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
+  5:1      [31merror[0m  `../../prisma/prisma.service` import should occur before import of `./user.repository.interface`  [2mimport-x/order[0m
+  6:1      [31merror[0m  `../model/enum/user-status.enum` import should occur before import of `./user.repository.interface`  [2mimport-x/order[0m
+  7:1      [31merror[0m  `../model/user.model` import should occur before import of `./user.repository.interface`  [2mimport-x/order[0m
+  8:1      [31merror[0m  `../../../utils/phone` import should occur before import of `./user.repository.interface`  [2mimport-x/order[0m
+  51:7     [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  51:21    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
+  67:10    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  67:15    [31merror[0m  Expected { after 'if' condition.  [2mcurly[0m
+  105:7    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  105:21   [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
+  151:9    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  151:23   [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
 
 src/modules/user/repository/user.repository.ts
   1:1      [31merror[0m  All imports in the declaration are only used as types. Use `import type`.  [2m@typescript-eslint/consistent-type-imports[0m
@@ -500,5 +507,15 @@ src/utils/case-converter.ts
   6:50     [31merror[0m  Unsafe call of an `any` typed value.  [2m@typescript-eslint/no-unsafe-call[0m
   6:57     [31merror[0m  Unsafe member access .toUpperCase on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
 
-306 error(s), 47 warning(s) — 98 auto-fixable with `make fmt` / `eslint --fix`
+src/utils/phone.ts
+  27:8     [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+  27:13    [31merror[0m  Expected { after 'if' condition.  [2mcurly[0m
+  30:16    [31merror[0m  Expected { after 'if' condition.  [2mcurly[0m
+  33:34    [31merror[0m  Expected { after 'if' condition.  [2mcurly[0m
+  34:59    [31merror[0m  Expected { after 'if' condition.  [2mcurly[0m
+  38:31    [31merror[0m  Expected { after 'if' condition.  [2mcurly[0m
+  39:61    [31merror[0m  Expected { after 'if' condition.  [2mcurly[0m
+  48:12    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
+
+321 error(s), 47 warning(s) — 109 auto-fixable with `make fmt` / `eslint --fix`
 
