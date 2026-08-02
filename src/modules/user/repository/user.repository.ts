@@ -1,5 +1,5 @@
-import { UserStatus } from "../model/enum/user-status.enum";
-import { User } from "../model/user.model";
+import type { UserStatus } from "../model/enum/user-status.enum";
+import type { User } from "../model/user.model";
 
 export interface UserRepository {
   findById(id: string): Promise<User | null>;

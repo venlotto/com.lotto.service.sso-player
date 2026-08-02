@@ -10,7 +10,7 @@ describe("AuthService - Token Rotation", () => {
   let service: AuthService;
 
   const mockJwtService = {
-    sign: jest.fn(),
+    signAsync: jest.fn().mockResolvedValue("mock-access-token"),
     verify: jest.fn(),
   };
 

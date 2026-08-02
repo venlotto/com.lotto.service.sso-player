@@ -1,21 +1,24 @@
 npm notice run com.lotto.service.sso-player@0.0.1 npx
 npm notice run 'jest' --selectProjects unit --coverage --coverageDirectory=reports/raw/coverage --coverageReporters=json --coverageReporters=json-summary --coverageReporters=text-summary --json --outputFile=reports/raw/jest-unit.json
 Running one project: unit
-PASS unit src/modules/auth/dto/register-user.dto.spec.ts
+PASS unit src/modules/user/repository/user.repository.prisma.spec.ts
 PASS unit src/modules/auth/guards/session-cookie.guard.spec.ts
+PASS unit src/modules/auth/dto/register-user.dto.spec.ts
+PASS unit src/utils/phone.spec.ts
 PASS unit src/modules/auth/services/auth.service.rotation.spec.ts
 PASS unit src/modules/auth/services/auth.service.spec.ts
+PASS unit src/modules/auth/controller/auth.controller.spec.ts
 
 =============================== Coverage summary ===============================
-Statements   : 9.72% ( 151/1552 )
-Branches     : 9.33% ( 77/825 )
-Functions    : 12.84% ( 33/257 )
-Lines        : 9.82% ( 143/1455 )
+Statements   : 20.67% ( 327/1582 )
+Branches     : 22.94% ( 198/863 )
+Functions    : 23.84% ( 62/260 )
+Lines        : 20.8% ( 309/1485 )
 ================================================================================
 
-Test Suites: 4 passed, 4 total
-Tests:       25 passed, 25 total
+Test Suites: 7 passed, 7 total
+Tests:       60 passed, 60 total
 Snapshots:   0 total
-Time:        6.054 s
+Time:        4.104 s
 Ran all test suites.
 Test results written to: reports/raw/jest-unit.json

@@ -24,19 +24,30 @@ const CANONICAL_LENGTH = 11;
  * callers must decide explicitly what to do rather than silently storing junk.
  */
 export function normalizeVePhone(raw: string | null | undefined): string | null {
-  if (!raw) return null;
+  if (raw === null || raw === undefined || raw === "") {
+    return null;
+  }
 
   let digits = raw.replace(/\D/g, "");
-  if (!digits) return null;
+  if (digits === "") {
+    return null;
+  }
 
   // Strip the country code in either of its written forms (+58 / 0058 / 58).
-  if (digits.startsWith("0058")) digits = digits.slice(4);
-  else if (digits.startsWith("58") && digits.length > 10) digits = digits.slice(2);
+  if (digits.startsWith("0058")) {
+    digits = digits.slice(4);
+  } else if (digits.startsWith("58") && digits.length > 10) {
+    digits = digits.slice(2);
+  }
 
   // Work from the national 10-digit core, then re-add the canonical zero.
   const national = digits.startsWith("0") ? digits.slice(1) : digits;
-  if (national.length !== 10) return null;
-  if (!MOBILE_PREFIXES.some((p) => national.startsWith(p))) return null;
+  if (national.length !== 10) {
+    return null;
+  }
+  if (!MOBILE_PREFIXES.some((p) => national.startsWith(p))) {
+    return null;
+  }
 
   return `0${national}`;
 }
@@ -45,7 +56,10 @@ export function normalizeVePhone(raw: string | null | undefined): string | null 
  * Returns true when the value is already in canonical form.
  */
 export function isCanonicalVePhone(value: string | null | undefined): boolean {
-  return !!value && value.length === CANONICAL_LENGTH && normalizeVePhone(value) === value;
+  if (value === null || value === undefined || value === "") {
+    return false;
+  }
+  return value.length === CANONICAL_LENGTH && normalizeVePhone(value) === value;
 }
 
 /**

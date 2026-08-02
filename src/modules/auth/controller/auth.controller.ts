@@ -1,6 +1,6 @@
 import {
+  HttpException,
   Body,
-  ConflictException,
   Controller,
   Headers,
   Logger,
@@ -16,19 +16,26 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from "express";
-
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { Public } from "../decorators/public.decorator";
 import { LoginUserDto } from "../dto/login-user.dto";
 import { LogoutDto } from "../dto/logout.dto";
-import { RegisterUserDto } from "../dto/register-user.dto";
 import { RefreshTokenDto } from "../dto/refresh-token.dto";
+import { RegisterUserDto } from "../dto/register-user.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { AuthService, RenewSessionResponse } from "../services/auth.service";
 
 interface SessionMetadata {
   token: string;
   expiresAt: Date;
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unexpected error";
+}
+
+function errorStack(error: unknown): string | undefined {
+  return error instanceof Error ? error.stack : undefined;
 }
 
 @ApiTags("Auth")
@@ -84,7 +91,10 @@ export class AuthController {
 
       // Validate redirect_uri if provided (for security), but don't perform redirect
       let validatedRedirectUri: string | undefined;
-      if (loginUserDto.redirect_uri) {
+      if (
+        loginUserDto.redirect_uri !== undefined &&
+        loginUserDto.redirect_uri !== ""
+      ) {
         try {
           validatedRedirectUri = this.authService.resolveRedirectUri(
             loginUserDto.redirect_uri,
@@ -93,7 +103,7 @@ export class AuthController {
         } catch (error) {
           // If redirect validation fails, log but don't fail the login
           this.logger.warn(
-            `Invalid redirect_uri: ${loginUserDto.redirect_uri}`,
+            `Invalid redirect_uri: ${loginUserDto.redirect_uri} (${errorMessage(error)})`,
             { correlationId },
           );
         }
@@ -121,9 +131,11 @@ export class AuthController {
           : {}),
       };
     } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
+      this.logger.error(errorMessage(error), errorStack(error), {
+        correlationId,
+      });
       throw new UnauthorizedException({
-        message: error.message,
+        message: errorMessage(error),
         error: "Unauthorized",
         correlation_id: correlationId,
       });
@@ -170,12 +182,17 @@ export class AuthController {
         correlation_id: correlationId,
       };
     } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
-      if (error instanceof ConflictException) {
+      this.logger.error(errorMessage(error), errorStack(error), {
+        correlationId,
+      });
+      // Preserve the status the domain chose. Previously only Conflict was
+      // re-thrown, so a validation failure — and anything else, including a
+      // database outage — was reported to the caller as 401 Unauthorized.
+      if (error instanceof HttpException) {
         throw error;
       }
       throw new UnauthorizedException({
-        message: error.message,
+        message: errorMessage(error),
         error: "Unauthorized",
         correlation_id: correlationId,
       });
@@ -196,7 +213,7 @@ export class AuthController {
       req,
       dto.refresh_token,
     );
-    if (!refreshToken) {
+    if (refreshToken === null) {
       throw new UnauthorizedException({
         message: "Refresh token missing",
         error: "Unauthorized",
@@ -218,7 +235,9 @@ export class AuthController {
 
       return this.buildRenewResponse(renewed, correlationId);
     } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
+      this.logger.error(errorMessage(error), errorStack(error), {
+        correlationId,
+      });
       throw error instanceof UnauthorizedException
         ? error
         : new UnauthorizedException({
@@ -244,11 +263,13 @@ export class AuthController {
         req,
         body.refresh_token,
       );
-      if (refreshToken) {
+      if (refreshToken !== null) {
         await this.authService.revokeToken(refreshToken);
       }
     } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
+      this.logger.error(errorMessage(error), errorStack(error), {
+        correlationId,
+      });
       throw error;
     } finally {
       this.authService.clearSessionCookie(res);

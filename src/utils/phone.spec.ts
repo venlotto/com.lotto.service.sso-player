@@ -48,6 +48,12 @@ describe("isCanonicalVePhone", () => {
     expect(isCanonicalVePhone("+584120000001")).toBe(false);
     expect(isCanonicalVePhone("admin")).toBe(false);
   });
+
+  it("rejects null, undefined and empty input", () => {
+    expect(isCanonicalVePhone(null)).toBe(false);
+    expect(isCanonicalVePhone(undefined)).toBe(false);
+    expect(isCanonicalVePhone("")).toBe(false);
+  });
 });
 
 describe("phoneLookupKey", () => {

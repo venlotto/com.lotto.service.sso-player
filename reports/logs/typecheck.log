@@ -39,7 +39,7 @@ src/core/interceptors/transform.interceptor.ts(54,51): error TS4111: Property 'd
 src/core/interceptors/transform.interceptor.ts(58,28): error TS4111: Property 'message' comes from an index signature, so it must be accessed with ['message'].
 src/core/interceptors/transform.interceptor.ts(60,30): error TS4111: Property 'data' comes from an index signature, so it must be accessed with ['data'].
 src/decorators/correlation-id.decorator.ts(4,4): error TS6133: 'data' is declared but its value is never read.
-src/main.ts(5,31): error TS7016: Could not find a declaration file for module 'cookie-parser'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/node_modules/cookie-parser/index.js' implicitly has an 'any' type.
+src/main.ts(5,31): error TS7016: Could not find a declaration file for module 'cookie-parser'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/ratchet-green/node_modules/cookie-parser/index.js' implicitly has an 'any' type.
   Try `npm i --save-dev @types/cookie-parser` if it exists or add a new declaration (.d.ts) file containing `declare module 'cookie-parser';`
 src/main.ts(20,22): error TS2349: This expression is not callable.
   Type 'typeof e' has no call signatures.
@@ -60,18 +60,9 @@ src/modules/auth/controller/assign-permissions.controller.ts(158,9): error TS234
   Type 'null' is not assignable to type 'string'.
 src/modules/auth/controller/assign-permissions.controller.ts(161,25): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/controller/assign-permissions.controller.ts(161,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(89,11): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+src/modules/auth/controller/auth.controller.spec.ts(159,21): error TS4111: Property 'redirect_uri' comes from an index signature, so it must be accessed with ['redirect_uri'].
+src/modules/auth/controller/auth.controller.ts(99,11): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
   Type 'null' is not assignable to type 'string | undefined'.
-src/modules/auth/controller/auth.controller.ts(124,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(124,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(126,18): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(173,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(173,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(178,18): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(221,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(221,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(251,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.ts(251,40): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/controller/delete-permissions.controller.ts(35,22): error TS6138: Property 'logger' is declared but its value is never read.
 src/modules/auth/controller/delete-role.controller.ts(63,25): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/controller/delete-role.controller.ts(63,40): error TS18046: 'error' is of type 'unknown'.
@@ -145,17 +136,17 @@ src/modules/auth/repository/refresh-token.repository.ts(18,7): error TS2375: Typ
       Types of property 'created_by_ip' are incompatible.
         Type 'string | undefined' is not assignable to type 'string | null'.
           Type 'undefined' is not assignable to type 'string | null'.
-src/modules/auth/services/auth.service.ts(297,43): error TS2379: Argument of type '{ token: `${string}-${string}-${string}-${string}-${string}`; userId: string; expiresAt: Date; familyId: string | undefined; createdByIp: string | null; createdByUserAgent: string | null; }' is not assignable to parameter of type 'RefreshTokenProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/services/auth.service.ts(308,43): error TS2379: Argument of type '{ token: `${string}-${string}-${string}-${string}-${string}`; userId: string; expiresAt: Date; familyId: string | undefined; createdByIp: string | null; createdByUserAgent: string | null; }' is not assignable to parameter of type 'RefreshTokenProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'familyId' are incompatible.
     Type 'string | undefined' is not assignable to type 'string'.
       Type 'undefined' is not assignable to type 'string'.
-src/modules/auth/services/auth.service.ts(397,62): error TS2379: Argument of type '{ context: SessionContext | undefined; familyId: string | undefined; }' is not assignable to parameter of type 'RefreshTokenOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/services/auth.service.ts(416,62): error TS2379: Argument of type '{ context: SessionContext | undefined; familyId: string | undefined; }' is not assignable to parameter of type 'RefreshTokenOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'familyId' are incompatible.
     Type 'string | undefined' is not assignable to type 'string'.
       Type 'undefined' is not assignable to type 'string'.
 src/modules/auth/services/role.service.ts(145,64): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/services/role.service.ts(207,65): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/strategy/jwt.strategy.ts(5,38): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/adopt-sdlc/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
+src/modules/auth/strategy/jwt.strategy.ts(5,38): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/ratchet-green/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
   Try `npm i --save-dev @types/passport-jwt` if it exists or add a new declaration (.d.ts) file containing `declare module 'passport-jwt';`
 src/modules/auth/strategy/jwt.strategy.ts(18,32): error TS6138: Property 'configService' is declared but its value is never read.
 src/modules/auth/strategy/jwt.strategy.ts(61,5): error TS2375: Type '{ sub: string; username: string | null; role: string | undefined; permissions: string[]; }' is not assignable to type '{ sub: string; username: string | null; role?: string; permissions: string[]; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
@@ -209,7 +200,7 @@ src/modules/user/dto/new-user.dto.ts(7,3): error TS2564: Property 'username' has
 src/modules/user/dto/new-user.dto.ts(18,3): error TS2564: Property 'password' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/remove-roles.dto.ts(11,3): error TS2564: Property 'user_id' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/remove-roles.dto.ts(23,3): error TS2564: Property 'role_ids' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/repository/user.repository.prisma.ts(204,5): error TS2322: Type 'User | null' is not assignable to type 'User'.
+src/modules/user/repository/user.repository.prisma.ts(168,5): error TS2322: Type 'User | null' is not assignable to type 'User'.
   Type 'null' is not assignable to type 'User'.
 src/modules/user/services/user.service.ts(31,22): error TS6138: Property 'roleService' is declared but its value is never read.
 src/modules/user/services/user.service.ts(268,14): error TS18047: 'updatedUser' is possibly 'null'.
