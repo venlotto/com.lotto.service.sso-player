@@ -1,8 +1,7 @@
-import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-
-import { SessionCookieGuard } from "./session-cookie.guard";
+import { type ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { Test, type TestingModule } from "@nestjs/testing";
 import { AuthService } from "../services/auth.service";
+import { SessionCookieGuard } from "./session-cookie.guard";
 
 describe("SessionCookieGuard", () => {
   let guard: SessionCookieGuard;
