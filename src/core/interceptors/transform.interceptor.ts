@@ -5,8 +5,19 @@ import {
   CallHandler,
   Logger,
 } from "@nestjs/common";
+import { Request, Response } from "express";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+
+interface CorrelatedRequest extends Request {
+  correlationId?: string;
+}
+
+interface RawResponseBody {
+  message?: unknown;
+  meta?: unknown;
+  data?: unknown;
+}
 
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
@@ -16,10 +27,10 @@ export class TransformInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<Record<string, unknown>> {
-    const response = context.switchToHttp().getResponse();
-    const request = context.switchToHttp().getRequest();
+    const response = context.switchToHttp().getResponse<Response>();
+    const request = context.switchToHttp().getRequest<CorrelatedRequest>();
     const status = response.statusCode;
-    const correlationId = request["correlationId"];
+    const correlationId = request.correlationId;
 
     return next.handle().pipe(
       map((rawData: unknown) => {
@@ -29,7 +40,7 @@ export class TransformInterceptor implements NestInterceptor {
 
         const rawDataObject =
           typeof rawData === "object" && rawData !== null
-            ? (rawData as Record<string, unknown>)
+            ? (rawData as RawResponseBody)
             : undefined;
 
         // For successful responses
@@ -51,13 +62,12 @@ export class TransformInterceptor implements NestInterceptor {
         // Handle data field
         if (rawData !== undefined && rawData !== null) {
           if (rawDataObject?.data !== undefined) {
-            standardResponse.data = rawDataObject.data;
+            standardResponse["data"] = rawDataObject.data;
           } else if (
             typeof rawData === "object" &&
-            rawData !== null &&
             rawDataObject?.message === undefined
           ) {
-            standardResponse.data = rawData;
+            standardResponse["data"] = rawData;
           }
         }
 

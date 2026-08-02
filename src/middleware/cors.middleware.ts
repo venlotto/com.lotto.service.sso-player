@@ -1,5 +1,6 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
 import { Request, Response, NextFunction } from "express";
+import { getAllowedOrigins, getCorsFallbackOrigin } from "../config/env.config";
 
 interface AllowedOrigin {
   raw: string;
@@ -13,11 +14,7 @@ export class CorsMiddleware implements NestMiddleware {
   private readonly fallbackOrigin: string;
 
   public constructor() {
-    const envValue = process.env.ALLOWED_ORIGINS ?? "";
-    const origins = envValue
-      .split(",")
-      .map((value) => value.trim())
-      .filter((value) => value.length > 0);
+    const origins = getAllowedOrigins();
 
     this.allowAnyOrigin = origins.includes("*");
     this.allowedOrigins = origins
@@ -27,13 +24,17 @@ export class CorsMiddleware implements NestMiddleware {
         regex: this.buildOriginRegex(origin),
       }));
 
-    this.fallbackOrigin = process.env.CORS_FALLBACK_ORIGIN ?? "";
+    this.fallbackOrigin = getCorsFallbackOrigin();
   }
 
   public use(req: Request, res: Response, next: NextFunction): void {
-    const origin = req.headers.origin as string | undefined;
+    const origin = req.headers.origin;
 
-    if (origin && this.isOriginAllowed(origin)) {
+    if (
+      origin !== undefined &&
+      origin !== "" &&
+      this.isOriginAllowed(origin)
+    ) {
       res.header("Access-Control-Allow-Origin", origin);
       res.header("Access-Control-Allow-Credentials", "true");
       res.header("Vary", "Origin");

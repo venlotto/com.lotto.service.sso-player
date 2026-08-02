@@ -6,15 +6,24 @@ import {
   ForbiddenException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-
 import { ROLES_KEY } from "../decorators/roles.decorator";
+
+interface RequestUser {
+  role?: {
+    name?: string;
+  };
+}
+
+interface AuthenticatedRequest {
+  user?: RequestUser;
+}
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+    const requiredRoles = this.reflector.getAllAndOverride<string[] | null>(
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
@@ -23,7 +32,7 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const user = request.user;
 
     if (!user) {
@@ -42,7 +51,8 @@ export class RolesGuard implements CanActivate {
       });
     }
 
-    const hasRole = requiredRoles.some((role) => user.role.name === role);
+    const userRole = user.role;
+    const hasRole = requiredRoles.some((role) => userRole.name === role);
 
     if (!hasRole) {
       throw new ForbiddenException({
