@@ -9,6 +9,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import type { TestingModule } from "@nestjs/testing";
 import * as bcrypt from "bcrypt";
+import type { Response } from "express";
 import { UserStatus } from "../../user/model/enum/user-status.enum";
 import { User } from "../../user/model/user.model";
 import type { LoginUserDto } from "../dto/login-user.dto";
@@ -26,6 +27,7 @@ describe("AuthService - register & login", () => {
 
   const mockJwtService = {
     signAsync: jest.fn().mockResolvedValue("mock-access-token"),
+    decode: jest.fn().mockReturnValue({ exp: 1_800_000_000 }),
   };
 
   const mockUserRepository = {
@@ -46,6 +48,7 @@ describe("AuthService - register & login", () => {
     get: jest.fn((key: string) => {
       const config: Record<string, string> = {
         SESSION_COOKIE_NAME: "plus_player_session",
+        ACCESS_TOKEN_COOKIE_NAME: "access_token",
         COOKIE_DOMAIN: ".player.example.com",
         COOKIE_SECURE: "true",
         COOKIE_SAMESITE: "lax",
@@ -216,6 +219,50 @@ describe("AuthService - register & login", () => {
           cookies: { plus_player_session: 42 },
         } as never),
       ).toBeNull();
+    });
+  });
+
+  describe("browser access token cookie", () => {
+    const response = (): Response =>
+      ({ cookie: jest.fn() }) as unknown as Response;
+
+    it("sets a short-lived HttpOnly cookie using the JWT expiry", (): void => {
+      const target = response();
+
+      service.attachAccessTokenCookie(target, "signed-access-token");
+
+      expect(mockJwtService.decode).toHaveBeenCalledWith("signed-access-token");
+      expect(target.cookie).toHaveBeenCalledWith(
+        "access_token",
+        "signed-access-token",
+        expect.objectContaining({
+          httpOnly: true,
+          secure: true,
+          domain: ".player.example.com",
+          expires: new Date(1_800_000_000 * 1000),
+        }),
+      );
+    });
+
+    it("falls back to a bounded expiry and clears the access cookie", (): void => {
+      mockJwtService.decode.mockReturnValueOnce(null);
+      const target = response();
+      const before = Date.now();
+
+      service.attachAccessTokenCookie(target, "opaque-test-token");
+      service.clearAccessTokenCookie(target);
+
+      const firstOptions = (target.cookie as jest.Mock).mock.calls[0][2] as {
+        expires: Date;
+      };
+      expect(firstOptions.expires.getTime()).toBeGreaterThanOrEqual(
+        before + 14 * 60 * 1000,
+      );
+      expect(target.cookie).toHaveBeenLastCalledWith(
+        "access_token",
+        "",
+        expect.objectContaining({ maxAge: 0, expires: new Date(0) }),
+      );
     });
   });
 
