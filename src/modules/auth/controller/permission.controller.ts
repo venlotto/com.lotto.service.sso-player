@@ -8,7 +8,6 @@ import {
   InternalServerErrorException,
 } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from "@nestjs/swagger";
-
 import { CorrelationId } from "../../../decorators/correlation-id.decorator";
 import { RequirePermissions } from "../decorators/require-permissions.decorator";
 import { CreatePermissionDto } from "../dto/create-permission.dto";
@@ -69,9 +68,10 @@ export class PermissionController {
     try {
       return await this.permissionService.createPermission(dto, correlationId);
     } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
+      const err = error as Error;
+      this.logger.error(err.message, err.stack, { correlationId });
       throw new InternalServerErrorException({
-        message: error.message,
+        message: err.message,
         error: "InternalServerError",
         correlation_id: correlationId,
       });
@@ -120,9 +120,10 @@ export class PermissionController {
     try {
       return await this.permissionService.getAllPermissions(correlationId);
     } catch (error) {
-      this.logger.error(error.message, error.stack, { correlationId });
+      const err = error as Error;
+      this.logger.error(err.message, err.stack, { correlationId });
       throw new InternalServerErrorException({
-        message: error.message,
+        message: err.message,
         error: "InternalServerError",
         correlation_id: correlationId,
       });

@@ -4,10 +4,18 @@ import {
   NotFoundException,
   ConflictException,
 } from "@nestjs/common";
-import { permissions } from "@prisma/client";
-
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreatePermissionDto } from "../dto/create-permission.dto";
+
+// Domain mirror of the permissions table row; services must not import
+// Prisma-generated types (repositories own Prisma).
+export interface PermissionRecord {
+  id: string;
+  name: string;
+  description: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
 
 @Injectable()
 export class PermissionService {
@@ -25,7 +33,7 @@ export class PermissionService {
   async createPermission(
     dto: CreatePermissionDto,
     correlationId: string,
-  ): Promise<permissions> {
+  ): Promise<PermissionRecord> {
     this.logger.log("Creating permission", { correlationId, name: dto.name });
 
     const existingPermission = await this.prisma.permissions.findUnique({
@@ -45,7 +53,7 @@ export class PermissionService {
     });
   }
 
-  async getAllPermissions(correlationId: string): Promise<permissions[]> {
+  async getAllPermissions(correlationId: string): Promise<PermissionRecord[]> {
     this.logger.log("Getting all permissions", { correlationId });
 
     return this.prisma.permissions.findMany({});
@@ -54,7 +62,7 @@ export class PermissionService {
   async createOrUpdatePermission(
     dto: CreatePermissionDto,
     correlationId: string,
-  ): Promise<permissions> {
+  ): Promise<PermissionRecord> {
     this.logger.log("Creating or updating permission", {
       correlationId,
       name: dto.name,

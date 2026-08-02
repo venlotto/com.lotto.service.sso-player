@@ -4,10 +4,18 @@ import {
   Logger,
   ConflictException,
 } from "@nestjs/common";
-import { roles } from "@prisma/client";
-
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateRoleDto } from "../dto/create-role.dto";
+
+// Domain mirror of the roles table row; services must not import
+// Prisma-generated types (repositories own Prisma).
+export interface RoleRecord {
+  id: string;
+  name: string;
+  description: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
 
 interface RolePermissionAssignmentResponse {
   role_id: string;
@@ -39,7 +47,7 @@ export class RoleService {
    * @param correlationId Correlation ID for request tracking
    * @returns The created or existing role
    */
-  async createRole(dto: CreateRoleDto, correlationId: string): Promise<roles> {
+  async createRole(dto: CreateRoleDto, correlationId: string): Promise<RoleRecord> {
     this.logger.log("Creating role", { correlationId, name: dto.name });
 
     const existingRole = await this.prisma.roles.findUnique({

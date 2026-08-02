@@ -1,4 +1,4 @@
-import { CustomDecorator, SetMetadata } from "@nestjs/common";
+import { type CustomDecorator, SetMetadata } from "@nestjs/common";
 
 export const PERMISSIONS_KEY = "permissions";
 export const RequirePermissions = (
