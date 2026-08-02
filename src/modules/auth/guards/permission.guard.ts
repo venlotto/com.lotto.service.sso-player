@@ -6,9 +6,9 @@ import {
   Logger,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
 import { PERMISSIONS_KEY } from "../decorators/require-permissions.decorator";
+import { type AuthenticatedRequest } from "../model/auth-user.model";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -17,29 +17,28 @@ export class PermissionGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-
-    if (isPublic) {
-      return true;
-    }
-
-    const requiredPermissions = this.reflector.getAllAndOverride<string[]>(
-      PERMISSIONS_KEY,
+    const isPublic = this.reflector.getAllAndOverride<boolean | undefined>(
+      IS_PUBLIC_KEY,
       [context.getHandler(), context.getClass()],
     );
 
-    if (!requiredPermissions) {
+    if (isPublic === true) {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    const correlationId = request.correlationId || "unknown";
+    const requiredPermissions = this.reflector.getAllAndOverride<
+      string[] | undefined
+    >(PERMISSIONS_KEY, [context.getHandler(), context.getClass()]);
 
-    if (!user) {
+    if (requiredPermissions === undefined) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+    const correlationId = request.correlationId ?? "unknown";
+
+    if (user === undefined || user === null) {
       this.logger.warn("User not found in request", { correlationId });
       throw new ForbiddenException({
         message: "User not found in request",
@@ -49,7 +48,13 @@ export class PermissionGuard implements CanActivate {
       });
     }
 
-    if (!user.permissions || !Array.isArray(user.permissions)) {
+    const userPermissions = user.permissions;
+
+    if (
+      userPermissions === undefined ||
+      userPermissions === null ||
+      !Array.isArray(userPermissions)
+    ) {
       this.logger.warn("User has no permissions", {
         correlationId,
         userId: user.sub,
@@ -63,7 +68,7 @@ export class PermissionGuard implements CanActivate {
     }
 
     const hasAllRequiredPermissions = requiredPermissions.every((permission) =>
-      user.permissions.includes(permission),
+      userPermissions.includes(permission),
     );
 
     if (!hasAllRequiredPermissions) {
@@ -71,7 +76,7 @@ export class PermissionGuard implements CanActivate {
         correlationId,
         userId: user.sub,
         required: requiredPermissions,
-        has: user.permissions,
+        has: userPermissions,
       });
       throw new ForbiddenException({
         message: "User does not have the required permissions",
