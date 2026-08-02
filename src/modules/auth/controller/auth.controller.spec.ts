@@ -25,7 +25,9 @@ const mockAuthService = {
   resolveRedirectUri: jest.fn(),
   extractRefreshToken: jest.fn(),
   attachSessionCookie: jest.fn(),
+  attachAccessTokenCookie: jest.fn(),
   clearSessionCookie: jest.fn(),
+  clearAccessTokenCookie: jest.fn(),
 };
 
 const mockLogger = {
@@ -74,6 +76,10 @@ describe("AuthController", () => {
           token: "refresh-token",
           expiresAt: new Date("2026-08-09T00:00:00.000Z"),
         },
+      );
+      expect(mockAuthService.attachAccessTokenCookie).toHaveBeenCalledWith(
+        expect.anything(),
+        "access-token",
       );
       expect(result).toMatchObject({
         user_id: "user-1",
@@ -126,6 +132,10 @@ describe("AuthController", () => {
         res(),
       )) as Record<string, unknown>;
       expect(browser).not.toHaveProperty("access_token");
+      expect(mockAuthService.attachAccessTokenCookie).toHaveBeenCalledWith(
+        expect.anything(),
+        "access-token",
+      );
 
       const desktop = (await controller().login(
         dto,
@@ -204,6 +214,10 @@ describe("AuthController", () => {
         refresh_token: "new-refresh-token",
         correlation_id: "corr-2",
       });
+      expect(mockAuthService.attachAccessTokenCookie).toHaveBeenCalledWith(
+        expect.anything(),
+        "new-access-token",
+      );
     });
 
     it("wraps an unexpected renewal failure as 401", async (): Promise<void> => {
@@ -230,6 +244,7 @@ describe("AuthController", () => {
 
       expect(mockAuthService.revokeToken).toHaveBeenCalledWith("refresh-token");
       expect(mockAuthService.clearSessionCookie).toHaveBeenCalled();
+      expect(mockAuthService.clearAccessTokenCookie).toHaveBeenCalled();
     });
 
     it("clears the cookie even when revocation fails", async (): Promise<void> => {
@@ -240,6 +255,7 @@ describe("AuthController", () => {
         controller().logout("Bearer token", {} as LogoutDto, "corr-2", req(), res()),
       ).rejects.toBeInstanceOf(Error);
       expect(mockAuthService.clearSessionCookie).toHaveBeenCalled();
+      expect(mockAuthService.clearAccessTokenCookie).toHaveBeenCalled();
     });
   });
 });

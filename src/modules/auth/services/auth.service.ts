@@ -74,6 +74,7 @@ export interface RenewSessionResponse {
 @Injectable()
 export class AuthService {
   private readonly sessionCookieName: string;
+  private readonly accessTokenCookieName: string | null;
   private readonly cookieDomain: string | undefined;
   private readonly cookieSecure: boolean;
   private readonly cookieSameSite: "lax" | "strict" | "none";
@@ -92,6 +93,11 @@ export class AuthService {
       this.configService.get<string>("SESSION_COOKIE_NAME") ??
       "plus_player_session"
     ).trim();
+    const accessTokenCookieName = (
+      this.configService.get<string>("ACCESS_TOKEN_COOKIE_NAME") ?? ""
+    ).trim();
+    this.accessTokenCookieName =
+      accessTokenCookieName.length > 0 ? accessTokenCookieName : null;
     this.cookieDomain =
       this.configService.get<string>("COOKIE_DOMAIN") ?? undefined;
     this.cookieSecure = this.toBoolean(
@@ -340,10 +346,30 @@ export class AuthService {
     response.cookie(this.sessionCookieName, refresh.token, options);
   }
 
+  public attachAccessTokenCookie(response: Response, accessToken: string): void {
+    if (this.accessTokenCookieName === null) {
+      return;
+    }
+    response.cookie(
+      this.accessTokenCookieName,
+      accessToken,
+      this.buildCookieOptions(this.accessTokenExpiration(accessToken)),
+    );
+  }
+
   public clearSessionCookie(response: Response): void {
     const options = this.buildCookieOptions(new Date(0));
     options.maxAge = 0;
     response.cookie(this.sessionCookieName, "", options);
+  }
+
+  public clearAccessTokenCookie(response: Response): void {
+    if (this.accessTokenCookieName === null) {
+      return;
+    }
+    const options = this.buildCookieOptions(new Date(0));
+    options.maxAge = 0;
+    response.cookie(this.accessTokenCookieName, "", options);
   }
 
   public extractRefreshToken(
@@ -458,6 +484,19 @@ export class AuthService {
       path: this.cookiePath,
       expires,
     };
+  }
+
+  private accessTokenExpiration(accessToken: string): Date {
+    const decoded: unknown = this.jwtService.decode(accessToken);
+    if (
+      typeof decoded === "object" &&
+      decoded !== null &&
+      "exp" in decoded &&
+      typeof decoded.exp === "number"
+    ) {
+      return new Date(decoded.exp * 1000);
+    }
+    return new Date(Date.now() + 15 * 60 * 1000);
   }
 
   private toBoolean(value: string): boolean {
