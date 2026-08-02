@@ -88,6 +88,7 @@ export class AuthController {
         token: login.refresh_token,
         expiresAt: new Date(login.refresh_token_expires_at),
       });
+      this.authService.attachAccessTokenCookie(res, login.access_token);
 
       // Validate redirect_uri if provided (for security), but don't perform redirect
       let validatedRedirectUri: string | undefined;
@@ -173,6 +174,7 @@ export class AuthController {
         token: result.refresh_token,
         expiresAt: new Date(result.refresh_token_expires_at),
       });
+      this.authService.attachAccessTokenCookie(res, result.access_token);
 
       return {
         user_id: result.user_id,
@@ -232,6 +234,7 @@ export class AuthController {
         token: renewed.refresh_token,
         expiresAt: new Date(renewed.refresh_token_expires_at),
       });
+      this.authService.attachAccessTokenCookie(res, renewed.access_token);
 
       return this.buildRenewResponse(renewed, correlationId);
     } catch (error) {
@@ -273,6 +276,7 @@ export class AuthController {
       throw error;
     } finally {
       this.authService.clearSessionCookie(res);
+      this.authService.clearAccessTokenCookie(res);
     }
   }
 
