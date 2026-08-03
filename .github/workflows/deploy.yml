@@ -20,6 +20,12 @@ concurrency:
 # from the host, through the koperhost alias.
 env:
   KOPERCA_SDLC: /opt/koperca-sdlc
+  # Shared with verify.yml. Concurrent access is safe now that every writer
+  # takes the same flock (see gates/ship-metrics.mjs); a per-job clone avoided
+  # that race but introduced a worse one, because pushing the baked-clean mark
+  # then had to rebase against whatever the other nine jobs had just pushed,
+  # and it lost.
+  KOPERCA_FLEET_METRICS: /opt/fleet-metrics
   KOPERCA_SKILL_DIR: /home/runner/repos/infra-handbook/skills/koperca-deploy-service/scripts
   KOP_SSH: koperhost
   # Coolify queues builds, so a deploy dispatched alongside others can wait well
@@ -36,20 +42,18 @@ jobs:
           fetch-depth: 0
           ref: ${{ inputs.sha || github.sha }}
 
-      # A per-job clone, NOT the shared /opt/fleet-metrics: this one is written
-      # to and pushed, and concurrent deploys pulling the same working copy
-      # raced into "fatal: Cannot fast-forward to multiple branches". The
-      # harness above stays shared because it is only ever read.
-      #
-      # Set here rather than in the workflow-level env block: the runner
-      # context does not exist there, and referencing it makes GitHub reject
-      # the whole file, which silently swallows every workflow_dispatch.
-      # github-fleet is an ssh alias on the runner, so this needs no secret.
-      - name: Fetch quality records
+      # Under the same lock every other writer uses, so a refresh cannot land in
+      # the middle of another job's push and leave the checkout mid-rebase.
+      # The gate reads the quality record from here, and a stale checkout
+      # reports "no quality record" for a SHA whose record is already on
+      # GitHub.
+      - name: Refresh quality records
         run: |
-          echo "KOPERCA_FLEET_METRICS=$RUNNER_TEMP/fleet-metrics" >> "$GITHUB_ENV"
-          rm -rf "$RUNNER_TEMP/fleet-metrics"
-          git clone --depth 50 --quiet github-fleet:venlotto/fleet-metrics "$RUNNER_TEMP/fleet-metrics"
+          flock "$KOPERCA_FLEET_METRICS/.git/koperca-ship.lock" bash -c '
+            git -C "$KOPERCA_FLEET_METRICS" rebase --quit 2>/dev/null || true
+            git -C "$KOPERCA_FLEET_METRICS" symbolic-ref -q HEAD >/dev/null \
+              || git -C "$KOPERCA_FLEET_METRICS" checkout -q -B main
+            git -C "$KOPERCA_FLEET_METRICS" pull --ff-only --quiet'
 
       # deploy.sh refuses without a green quality record, so this step is also
       # the gate — there is no separate "check if allowed" step to forget.
