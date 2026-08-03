@@ -13,7 +13,7 @@ src/common/enum/utils.enum.ts(2,36): error TS2769: No overload matches this call
 src/core/decorators/custom.decorator.spec.ts(26,12): error TS2564: Property 'pin' has no initializer and is not definitely assigned in the constructor.
 src/core/decorators/custom.decorator.spec.ts(27,12): error TS2564: Property 'confirmPin' has no initializer and is not definitely assigned in the constructor.
 src/decorators/correlation-id.decorator.spec.ts(24,23): error TS2538: Type 'undefined' cannot be used as an index type.
-src/modules/auth/auth.module.ts(93,13): error TS6133: 'authService' is declared but its value is never read.
+src/modules/auth/auth.module.ts(103,13): error TS6133: 'authService' is declared but its value is never read.
 src/modules/auth/controller/assign-permissions.controller.ts(157,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
 src/modules/auth/controller/assign-permissions.controller.ts(160,25): error TS18046: 'error' is of type 'unknown'.
@@ -89,14 +89,14 @@ src/modules/auth/services/auth.service.ts(442,62): error TS2379: Argument of typ
       Type 'undefined' is not assignable to type 'string'.
 src/modules/auth/services/role.service.ts(153,64): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/services/role.service.ts(215,65): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/strategy/jwt.strategy.spec.ts(2,50): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
+src/modules/auth/strategy/jwt.strategy.spec.ts(2,50): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/sso-jwt-issuer-audience/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
   Try `npm i --save-dev @types/passport-jwt` if it exists or add a new declaration (.d.ts) file containing `declare module 'passport-jwt';`
 src/modules/auth/strategy/jwt.strategy.spec.ts(73,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
 src/modules/auth/strategy/jwt.strategy.spec.ts(86,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
 src/modules/auth/strategy/jwt.strategy.spec.ts(97,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
 src/modules/auth/strategy/jwt.strategy.spec.ts(98,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
 src/modules/auth/strategy/jwt.strategy.spec.ts(99,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
-src/modules/auth/strategy/jwt.strategy.ts(5,38): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
+src/modules/auth/strategy/jwt.strategy.ts(5,38): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/sso-jwt-issuer-audience/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
   Try `npm i --save-dev @types/passport-jwt` if it exists or add a new declaration (.d.ts) file containing `declare module 'passport-jwt';`
 src/modules/user/controller/assign-role.controller.ts(162,25): error TS18046: 'error' is of type 'unknown'.
 src/modules/user/controller/assign-role.controller.ts(162,40): error TS18046: 'error' is of type 'unknown'.
