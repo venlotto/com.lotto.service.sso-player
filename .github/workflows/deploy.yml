@@ -20,11 +20,6 @@ concurrency:
 # from the host, through the koperhost alias.
 env:
   KOPERCA_SDLC: /opt/koperca-sdlc
-  # Per-job clone, NOT the shared /opt/fleet-metrics: this one is written to and
-  # pushed, and concurrent deploys pulling the same working copy raced into
-  # "fatal: Cannot fast-forward to multiple branches". The harness above stays
-  # shared because it is only ever read.
-  KOPERCA_FLEET_METRICS: ${{ runner.temp }}/fleet-metrics
   KOPERCA_SKILL_DIR: /home/runner/repos/infra-handbook/skills/koperca-deploy-service/scripts
   KOP_SSH: koperhost
   # Coolify queues builds, so a deploy dispatched alongside others can wait well
@@ -41,9 +36,20 @@ jobs:
           fetch-depth: 0
           ref: ${{ inputs.sha || github.sha }}
 
-      # github-fleet is an ssh alias on the runner, so this needs no repo secret.
+      # A per-job clone, NOT the shared /opt/fleet-metrics: this one is written
+      # to and pushed, and concurrent deploys pulling the same working copy
+      # raced into "fatal: Cannot fast-forward to multiple branches". The
+      # harness above stays shared because it is only ever read.
+      #
+      # Set here rather than in the workflow-level env block: the runner
+      # context does not exist there, and referencing it makes GitHub reject
+      # the whole file, which silently swallows every workflow_dispatch.
+      # github-fleet is an ssh alias on the runner, so this needs no secret.
       - name: Fetch quality records
-        run: git clone --depth 50 --quiet github-fleet:venlotto/fleet-metrics "$KOPERCA_FLEET_METRICS"
+        run: |
+          echo "KOPERCA_FLEET_METRICS=$RUNNER_TEMP/fleet-metrics" >> "$GITHUB_ENV"
+          rm -rf "$RUNNER_TEMP/fleet-metrics"
+          git clone --depth 50 --quiet github-fleet:venlotto/fleet-metrics "$RUNNER_TEMP/fleet-metrics"
 
       # deploy.sh refuses without a green quality record, so this step is also
       # the gate — there is no separate "check if allowed" step to forget.
