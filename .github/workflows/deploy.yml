@@ -20,9 +20,17 @@ concurrency:
 # from the host, through the koperhost alias.
 env:
   KOPERCA_SDLC: /opt/koperca-sdlc
-  KOPERCA_FLEET_METRICS: /opt/fleet-metrics
+  # Per-job clone, NOT the shared /opt/fleet-metrics: this one is written to and
+  # pushed, and concurrent deploys pulling the same working copy raced into
+  # "fatal: Cannot fast-forward to multiple branches". The harness above stays
+  # shared because it is only ever read.
+  KOPERCA_FLEET_METRICS: ${{ runner.temp }}/fleet-metrics
   KOPERCA_SKILL_DIR: /home/runner/repos/infra-handbook/skills/koperca-deploy-service/scripts
   KOP_SSH: koperhost
+  # Coolify queues builds, so a deploy dispatched alongside others can wait well
+  # past the 600s default. Timing out does not stop the deploy — it just reports
+  # a successful one as failed and skips the bake.
+  KOPERCA_DEPLOY_TIMEOUT_S: '1800'
 
 jobs:
   deploy:
@@ -33,11 +41,9 @@ jobs:
           fetch-depth: 0
           ref: ${{ inputs.sha || github.sha }}
 
-      # The gate reads the quality record out of this clone. It is long-lived,
-      # so a stale one reports "no quality record" for a SHA whose record is
-      # already on GitHub.
-      - name: Refresh quality records
-        run: git -C "$KOPERCA_FLEET_METRICS" pull --ff-only --quiet
+      # github-fleet is an ssh alias on the runner, so this needs no repo secret.
+      - name: Fetch quality records
+        run: git clone --depth 50 --quiet github-fleet:venlotto/fleet-metrics "$KOPERCA_FLEET_METRICS"
 
       # deploy.sh refuses without a green quality record, so this step is also
       # the gate — there is no separate "check if allowed" step to forget.
