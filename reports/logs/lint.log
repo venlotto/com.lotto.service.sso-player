@@ -1,154 +1,4 @@
 
-.eslintrc.js
-  0:0      [31merror[0m  Parsing error: "parserOptions.project" has been provided for @typescript-eslint/parser.
-The file was not found in any of the provided project(s): .eslintrc.js  
-
-commitlint.config.cjs
-  0:0      [31merror[0m  Parsing error: "parserOptions.project" has been provided for @typescript-eslint/parser.
-The file was not found in any of the provided project(s): commitlint.config.cjs  
-
-jest.config.cjs
-  0:0      [31merror[0m  Parsing error: "parserOptions.project" has been provided for @typescript-eslint/parser.
-The file was not found in any of the provided project(s): jest.config.cjs  
-
-prettier.config.cjs
-  0:0      [31merror[0m  Parsing error: "parserOptions.project" has been provided for @typescript-eslint/parser.
-The file was not found in any of the provided project(s): prettier.config.cjs  
-
-src/app/app.controller.ts
-  15:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  74:11    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  75:50    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  82:55    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  87:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-
-src/app/app.module.ts
-  11:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  13:1     [31merror[0m  `./app.controller` import should occur after import of `../modules/user/user.module`  [2mimport-x/order[0m
-  27:23    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  27:23    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-  27:56    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  28:25    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  28:25    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-  28:52    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-
-src/common/common.module.ts
-  18:17    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-
-src/common/value-object/uuid.value-object.ts
-  7:9      [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-
-src/core/core.module.ts
-  2:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/core/decorators/custom.decorator.ts
-  2:1      [31merror[0m  Imports "ValidationArguments", "ValidationOptions" and "ValidatorConstraintInterface" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-  28:17    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  32:17    [31merror[0m  Unsafe array destructuring of an `any` array value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-
-src/core/decorators/roles.decorator.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  3:1      [31merror[0m  All imports in the declaration are only used as types. Use `import type`.  [2m@typescript-eslint/consistent-type-imports[0m
-
-src/core/filters/http.exception.filters.ts
-  21:3     [31merror[0m  Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allowed.  [2msonarjs/cognitive-complexity[0m
-  25:11    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  37:9     [33mwarn [0m  Unnecessary conditional, the types have no overlap.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  37:27    [31merror[0m  Remove this "!==" check; it will always be true. Did you mean to use "!="?  [2msonarjs/different-types-comparison[0m
-  46:20    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  46:40    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  49:15    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  57:15    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  64:13    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  67:20    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  67:40    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  70:15    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  71:38    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  78:15    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  96:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  103:9    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-
-src/core/guards/roles.guard.ts
-  8:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  22:9     [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  22:10    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  26:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  27:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  27:26    [31merror[0m  Unsafe member access .user on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  29:10    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  37:10    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  37:15    [31merror[0m  Unsafe member access .role on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  45:55    [31merror[0m  Unsafe member access .role on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-
-src/core/interceptors/transform.interceptor.ts
-  19:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  20:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  21:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  21:29    [31merror[0m  Unsafe member access .statusCode on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  22:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  22:35    [31merror[0m  Unsafe member access ["correlationId"] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  27:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  43:13    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  57:13    [33mwarn [0m  Unnecessary conditional, the types have no overlap.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  57:21    [31merror[0m  Remove this "!==" check; it will always be true. Did you mean to use "!="?  [2msonarjs/different-types-comparison[0m
-  66:13    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-
-src/decorators/correlation-id.decorator.ts
-  1:1      [31merror[0m  Imports "ExecutionContext" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-  5:11     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  6:5      [31merror[0m  Unsafe return of a value of type `any`.  [2m@typescript-eslint/no-unsafe-return[0m
-  6:12     [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  6:20     [31merror[0m  Unsafe member access ["correlationId"] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  6:37     [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-
-src/main.ts
-  8:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  20:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  20:9     [31merror[0m  This framework implicitly discloses version information by default. Make sure it is safe here.  [2msonarjs/x-powered-by[0m
-  26:3     [31merror[0m  Unsafe call of a type that could not be resolved.  [2m@typescript-eslint/no-unsafe-call[0m
-  26:14    [31merror[0m  Unsafe member access .set on a type that cannot be resolved.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  28:11    [31merror[0m  Unsafe call of a type that could not be resolved.  [2m@typescript-eslint/no-unsafe-call[0m
-  28:24    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-  31:50    [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  31:55    [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `Response<any, Record<string, any>>`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  31:60    [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `NextFunction`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  63:16    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  63:16    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-  63:37    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  67:11    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-
-src/middleware/correlation-id.middleware.ts
-  11:9     [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  11:31    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-
-src/middleware/cors.middleware.ts
-  16:22    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-  30:27    [31merror[0m  'process.env' is restricted from being used. Read env only in src/config, validated and typed. See STANDARDS.md §env.  [2mno-restricted-properties[0m
-  36:9     [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-
-src/middleware/logging.middleware.ts
-  1:1      [31merror[0m  Imports "NestMiddleware" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-  2:1      [31merror[0m  All imports in the declaration are only used as types. Use `import type`.  [2m@typescript-eslint/consistent-type-imports[0m
-  10:21    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  10:32    [31merror[0m  Prefer `Date.now()` over `Date#getTime()`.  [2municorn/prefer-date-now[0m
-  13:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  13:34    [31merror[0m  Prefer `Date.now()` over `Date#getTime()`.  [2municorn/prefer-date-now[0m
-
-src/modules/auth/auth.module.ts
-  4:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  25:1     [31merror[0m  `../prisma/prisma.module` import should occur before import of `../prisma/prisma.service`  [2mimport-x/order[0m
-  26:1     [31merror[0m  `../user/repository/user.repository.prisma` import should occur before import of `./controller/assign-permissions.controller`  [2mimport-x/order[0m
-  27:1     [31merror[0m  `../user/services/user.service` import should occur before import of `./controller/assign-permissions.controller`  [2mimport-x/order[0m
-  28:1     [31merror[0m  Dependency cycle detected  [2mimport-x/no-cycle[0m
-  28:1     [31merror[0m  `../user/user.module` import should occur before import of `./controller/assign-permissions.controller`  [2mimport-x/order[0m
-  54:11    [31merror[0m  Async method 'useFactory' has no 'await' expression.  [2m@typescript-eslint/require-await[0m
-  56:18    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  62:28    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  62:72    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-
-src/modules/auth/controller/assign-permissions.controller.ts
-  9:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
 src/modules/auth/controller/auth.controller.spec.ts
   75:22    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
@@ -157,305 +7,48 @@ src/modules/auth/controller/auth.controller.ts
   174:20   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   233:20   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
-src/modules/auth/controller/delete-permissions.controller.ts
-  10:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/auth/controller/delete-role.controller.ts
-  11:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/auth/controller/permission.controller.ts
-  10:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  74:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  125:9    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-
-src/modules/auth/controller/remove-permissions.controller.ts
-  10:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/auth/controller/role.controller.ts
-  12:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/auth/decorators/public.decorator.ts
-  1:1      [31merror[0m  Imports "CustomDecorator" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-
-src/modules/auth/decorators/require-permissions.decorator.ts
-  1:1      [31merror[0m  Imports "CustomDecorator" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-
-src/modules/auth/dto/login-user.dto.ts
-  18:23    [31merror[0m  Unnecessary escape character: \-.  [2mno-useless-escape[0m
-
-src/modules/auth/dto/register-user.dto.spec.ts
-  2:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  14:63    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  18:69    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  22:64    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  26:56    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  30:63    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  34:60    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-
-src/modules/auth/dto/register-user.dto.ts
-  11:23    [31merror[0m  Unnecessary escape character: \-.  [2mno-useless-escape[0m
-
-src/modules/auth/guards/jwt-auth.guard.ts
-  8:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  42:9     [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  42:17    [31merror[0m  Unexpected value in conditional. A boolean expression is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  54:11    [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  54:12    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  57:13    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  58:7     [31merror[0m  Unsafe return of a value of type `any`.  [2m@typescript-eslint/no-unsafe-return[0m
-  58:14    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  58:22    [31merror[0m  Unsafe member access .correlationId on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  58:36    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  59:7     [31merror[0m  Handle this exception or don't catch it at all.  [2msonarjs/no-ignored-exceptions[0m
-  59:14    [31merror[0m  'error' is defined but never used.  [2m@typescript-eslint/no-unused-vars[0m
-
-src/modules/auth/guards/local-auth.guard.ts
-  1:1      [31merror[0m  All imports in the declaration are only used as types. Use `import type`.  [2m@typescript-eslint/consistent-type-imports[0m
-
-src/modules/auth/guards/permission.guard.ts
-  8:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  34:9     [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  34:10    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  38:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  39:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  39:26    [31merror[0m  Unsafe member access .user on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  40:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  40:27    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  40:35    [31merror[0m  Unsafe member access .correlationId on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  40:49    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  42:10    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  43:55    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  48:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  52:10    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  52:15    [31merror[0m  Unsafe member access .permissions on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  52:50    [31merror[0m  Unsafe member access .permissions on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  54:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  55:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  55:22    [31merror[0m  Unsafe member access .sub on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  61:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  65:65    [31merror[0m  Unexpected any value in array predicate return type. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  66:7     [31merror[0m  Unsafe call of an `any` typed value.  [2m@typescript-eslint/no-unsafe-call[0m
-  66:12    [31merror[0m  Unsafe member access .permissions on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  71:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  72:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  72:22    [31merror[0m  Unsafe member access .sub on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  74:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  74:19    [31merror[0m  Unsafe member access .permissions on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  80:9     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  85:7     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  86:7     [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  86:20    [31merror[0m  Unsafe member access .sub on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-
-src/modules/auth/guards/roles.guard.ts
-  2:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  16:9     [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  16:10    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  19:11    [31merror[0m  Unsafe assignment of an `any` value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  20:35    [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `UserRoles`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  20:40    [31merror[0m  Unsafe member access .roleName on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-
-src/modules/auth/guards/session-cookie.guard.spec.ts
-  1:1      [31merror[0m  Imports "ExecutionContext" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-  2:1      [31merror[0m  Imports "TestingModule" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-  2:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  5:1      [31merror[0m  `../services/auth.service` import should occur before import of `./session-cookie.guard`  [2mimport-x/order[0m
-
-src/modules/auth/guards/session-cookie.guard.ts
-  7:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  19:10    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-
-src/modules/auth/guards/status.guard.ts
-  6:8      [31merror[0m  '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/ratchet-green/node_modules/@nestjs/common/index.d.ts' imported multiple times.  [2mimport-x/no-duplicates[0m
-  7:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  7:25     [31merror[0m  '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/ratchet-green/node_modules/@nestjs/common/index.d.ts' imported multiple times.  [2mimport-x/no-duplicates[0m
-  22:11    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  24:9     [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  24:10    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  28:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  36:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-
 src/modules/auth/model/refresh-token.model.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  3:1      [31merror[0m  '@prisma/client' import is restricted from being used. Only repositories may import Prisma. See STANDARDS.md §layering.  [2mno-restricted-imports[0m
-  3:1      [31merror[0m  All imports in the declaration are only used as types. Use `import type`.  [2m@typescript-eslint/consistent-type-imports[0m
-  59:42    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  64:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  69:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-
-src/modules/auth/repository/refresh-token.repository.interface.ts
-  1:1      [31merror[0m  All imports in the declaration are only used as types. Use `import type`.  [2m@typescript-eslint/consistent-type-imports[0m
+  74:42    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  79:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  84:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/repository/refresh-token.repository.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  3:1      [31merror[0m  `./refresh-token.repository.interface` import should occur after import of `../model/refresh-token.model`  [2mimport-x/order[0m
-  56:21    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  68:21    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  55:21    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  67:21    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/services/auth.service.rotation.spec.ts
-  4:1      [31merror[0m  Imports "TestingModule" are only used as type.  [2m@typescript-eslint/consistent-type-imports[0m
-  4:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  7:1      [31merror[0m  `../repository/refresh-token.repository` import should occur before import of `./auth.service`  [2mimport-x/order[0m
-  130:13   [31merror[0m  Make sure using a hardcoded IP address 192.168.1.1 is safe here.  [2msonarjs/no-hardcoded-ip[0m
-  150:19   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  151:34   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  164:7    [33mwarn [0m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').  
-  170:50   [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  176:7    [33mwarn [0m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').  
-  183:50   [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  189:7    [33mwarn [0m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').  
-  196:50   [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  202:7    [33mwarn [0m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').  
-  208:50   [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>`.  [2m@typescript-eslint/no-unsafe-argument[0m
-  214:7    [33mwarn [0m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').  
-  220:50   [31merror[0m  Unsafe argument of type `any` assigned to a parameter of type `Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>`.  [2m@typescript-eslint/no-unsafe-argument[0m
+  151:19   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  152:34   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/services/auth.service.spec.ts
   93:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   94:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   183:9    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   184:9    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  224:41   [31merror[0m  Remove this redundant "undefined".  [2msonarjs/no-undefined-argument[0m
 
 src/modules/auth/services/auth.service.ts
   344:45   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   440:16   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   449:12   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
-src/modules/auth/services/bootstrap.service.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  3:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  11:1     [31merror[0m  `./permission.service` import should occur after import of `../../user/services/user.service`  [2mimport-x/order[0m
-  12:1     [31merror[0m  `./role.service` import should occur after import of `../../user/services/user.service`  [2mimport-x/order[0m
-
-src/modules/auth/services/permission.service.ts
-  7:1      [31merror[0m  '@prisma/client' import is restricted from being used. Only repositories may import Prisma. See STANDARDS.md §layering.  [2mno-restricted-imports[0m
-  7:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/auth/services/refresh-token.service.ts
-  2:1      [31merror[0m  '@prisma/client' import is restricted from being used. Only repositories may import Prisma. See STANDARDS.md §layering.  [2mno-restricted-imports[0m
-  2:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/auth/services/role.service.ts
-  7:1      [31merror[0m  '@prisma/client' import is restricted from being used. Only repositories may import Prisma. See STANDARDS.md §layering.  [2mno-restricted-imports[0m
-  7:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/auth/strategy/jwt.strategy.ts
-  20:10    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  27:25    [31merror[0m  Unsafe call of a type that could not be resolved.  [2m@typescript-eslint/no-unsafe-call[0m
-  27:36    [31merror[0m  Unsafe member access .fromAuthHeaderAsBearerToken on a type that cannot be resolved.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  29:9     [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  31:13    [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  31:14    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  38:9     [31merror[0m  Unsafe return of a value of type `any`.  [2m@typescript-eslint/no-unsafe-return[0m
-  39:31    [31merror[0m  Unsafe member access [cookieName] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  40:37    [31merror[0m  Unsafe member access [cookieName] on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  46:5     [31merror[0m  Unsafe call of a type that could not be resolved.  [2m@typescript-eslint/no-unsafe-call[0m
-  47:7     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  47:23    [31merror[0m  Unsafe call of a type that could not be resolved.  [2m@typescript-eslint/no-unsafe-call[0m
-  47:34    [31merror[0m  Unsafe member access .fromExtractors on a type that cannot be resolved.  [2m@typescript-eslint/no-unsafe-member-access[0m
-  55:3     [31merror[0m  Async method 'validate' has no 'await' expression.  [2m@typescript-eslint/require-await[0m
-
-src/modules/auth/strategy/local.strategy.ts
-  3:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  13:22    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  19:9     [33mwarn [0m  Unnecessary conditional, value is always falsy.  [2m@typescript-eslint/no-unnecessary-condition[0m
-  19:10    [31merror[0m  Unexpected object value in conditional. The condition is always true.  [2m@typescript-eslint/strict-boolean-expressions[0m
-
-src/modules/prisma/prisma.module.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/prisma/prisma.service.ts
-  3:1      [31merror[0m  '@prisma/client' import is restricted from being used. Only repositories may import Prisma. See STANDARDS.md §layering.  [2mno-restricted-imports[0m
-
-src/modules/user/controller/assign-role.controller.ts
-  9:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/user/controller/change-password.controller.ts
-  18:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  157:50   [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  165:31   [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  202:10   [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-
-src/modules/user/controller/change-status.controller.ts
-  17:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/user/controller/list-users.controller.ts
-  10:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/user/controller/me.controller.ts
-  8:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/user/controller/new-user.controller.ts
-  10:1     [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/user/controller/remove-roles.controller.ts
-  9:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
-src/modules/user/dto/change-status.dto.ts
-  3:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  24:5     [31merror[0m  Unsafe return of a value of type `any`.  [2m@typescript-eslint/no-unsafe-return[0m
-
-src/modules/user/dto/list-users-response.dto.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-
 src/modules/user/model/user.model.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  4:1      [31merror[0m  `../../../common/value-object/uuid.value-object` import should occur before import of `./enum/user-status.enum`  [2mimport-x/order[0m
-  18:23    [31merror[0m  Replace this union type with a type alias.  [2msonarjs/use-type-alias[0m
-  32:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   33:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  62:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  34:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   63:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  75:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  64:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   76:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  95:17    [31merror[0m  Unexpected nullable string value in conditional. Please handle the nullish/empty cases explicitly.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  95:31    [31merror[0m  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator.  [2m@typescript-eslint/prefer-nullish-coalescing[0m
-  106:23   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  113:25   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  124:25   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  140:7    [31merror[0m  Refactor this function to always return the same type.  [2msonarjs/function-return-type[0m
-  175:25   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  77:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  107:23   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  114:25   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  125:25   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  176:25   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/user/repository/user.repository.prisma.spec.ts
-  3:1      [31merror[0m  `../../prisma/prisma.service` type import should occur before import of `../model/enum/user-status.enum`  [2mimport-x/order[0m
-  10:13    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  14:15    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
   15:15    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  16:15    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/user/services/user.service.ts
-  9:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  110:16   [33mwarn [0m  Unnecessary conditional, comparison is always true, since `UserStatus.ACTIVE === UserStatus.ACTIVE` is true.  [2m@typescript-eslint/no-unnecessary-condition[0m
+  109:16   [33mwarn [0m  Unnecessary conditional, comparison is always true, since `UserStatus.ACTIVE === UserStatus.ACTIVE` is true.  [2m@typescript-eslint/no-unnecessary-condition[0m
 
-src/modules/user/user.module.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  12:1     [31merror[0m  Dependency cycle detected  [2mimport-x/no-cycle[0m
-  12:1     [31merror[0m  `../auth/auth.module` import should occur before import of `./controller/assign-role.controller`  [2mimport-x/order[0m
-  13:1     [31merror[0m  `../prisma/prisma.module` import should occur before import of `./controller/assign-role.controller`  [2mimport-x/order[0m
-
-src/pipes/joi-validation.pipe.ts
-  29:11    [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  33:13    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  38:13    [31merror[0m  Unexpected any value in conditional. An explicit comparison or type conversion is required.  [2m@typescript-eslint/strict-boolean-expressions[0m
-  46:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-  52:9     [31merror[0m  Unsafe assignment of an error typed value.  [2m@typescript-eslint/no-unsafe-assignment[0m
-
-src/scripts/create-test-user.ts
-  3:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  18:22    [31merror[0m  Review this potentially hard-coded password.  [2msonarjs/no-hardcoded-passwords[0m
-  232:22   [33mwarn [0m  Use `for…of` instead of `.forEach(…)`.  [2municorn/no-array-for-each[0m
-  237:22   [33mwarn [0m  Use `for…of` instead of `.forEach(…)`.  [2municorn/no-array-for-each[0m
-  238:27   [33mwarn [0m  Use `for…of` instead of `.forEach(…)`.  [2municorn/no-array-for-each[0m
-  252:1    [31merror[0m  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.  [2m@typescript-eslint/no-floating-promises[0m
-
-src/scripts/reset-admin-password.ts
-  1:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  5:1      [31merror[0m  There should be no empty line between import groups  [2mimport-x/order[0m
-  81:1     [31merror[0m  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.  [2m@typescript-eslint/no-floating-promises[0m
-
-src/utils/case-converter.ts
-  6:50     [31merror[0m  Unsafe return of a value of type `any`.  [2m@typescript-eslint/no-unsafe-return[0m
-  6:50     [31merror[0m  Unsafe call of an `any` typed value.  [2m@typescript-eslint/no-unsafe-call[0m
-  6:57     [31merror[0m  Unsafe member access .toUpperCase on an `any` value.  [2m@typescript-eslint/no-unsafe-member-access[0m
-
-262 error(s), 50 warning(s) — 83 auto-fixable with `make fmt` / `eslint --fix`
+0 error(s), 31 warning(s)
 
