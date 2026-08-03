@@ -55,10 +55,20 @@ export class AuthModule {
             if (secret === undefined || secret === "") {
               throw new Error("JWT_SECRET is not defined in configuration");
             }
+            // jwt.strategy.ts already *validates* issuer and audience from
+            // these same variables, and every downstream service (streaker
+            // club, blackjack, bingo crush) enforces them. Signing without
+            // them made every token fail that validation.
+            const issuer = configService.get<string>("JWT_ISSUER");
+            const audience = configService.get<string>("JWT_AUDIENCE");
             return {
               secret,
               signOptions: {
                 expiresIn: configService.get<string>("JWT_EXPIRATION") ?? "5m",
+                ...(issuer !== undefined && issuer !== "" ? { issuer } : {}),
+                ...(audience !== undefined && audience !== ""
+                  ? { audience }
+                  : {}),
               },
             };
           },
