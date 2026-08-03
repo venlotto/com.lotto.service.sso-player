@@ -2,7 +2,7 @@
   "gate": "typecheck",
   "status": "ratcheted",
   "exitCode": 1,
-  "durationMs": 4302,
+  "durationMs": 3618,
   "log": "logs/typecheck.log",
   "command": "/home/ubuntu/repos/koperca-sdlc/gates/tee-raw.sh reports/raw/tsc.txt /home/ubuntu/repos/koperca-sdlc/gates/tsc-noemit.sh"
 }

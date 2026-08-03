@@ -1,48 +1,48 @@
 npm notice run com.lotto.service.sso-player@0.0.1 npx
 npm notice run 'jest' --selectProjects unit --coverage --coverageDirectory=reports/raw/coverage --coverageReporters=json --coverageReporters=json-summary --coverageReporters=text-summary --json --outputFile=reports/raw/jest-unit.json
 Running one project: unit
-PASS unit src/middleware/cors.middleware.spec.ts
-PASS unit src/modules/auth/strategy/jwt.strategy.spec.ts
 PASS unit src/modules/user/controller/change-password.controller.spec.ts
-PASS unit src/modules/auth/controller/permission.controller.spec.ts
-PASS unit src/config/env.config.spec.ts
+PASS unit src/modules/auth/services/auth.service.spec.ts
+PASS unit src/modules/auth/controller/auth.controller.spec.ts
 PASS unit src/modules/auth/guards/session-cookie.guard.spec.ts
-PASS unit src/modules/auth/controller/auth.controller.spec.ts (5.401 s)
-PASS unit src/app/app.controller.spec.ts
-[31m[Nest] 3115995  - [39m03/08/2026, 12:22:30 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
-[31m[Nest] 3115995  - [39m03/08/2026, 12:22:30 a. m. [31m  ERROR[39m [31mnull[39m
-[31m[Nest] 3115995  - [39m03/08/2026, 12:22:30 a. m. [31m  ERROR[39m [31mObject:[39m
+PASS unit src/modules/auth/controller/permission.controller.spec.ts
+PASS unit src/modules/auth/dto/register-user.dto.spec.ts
+PASS unit src/modules/user/repository/user.repository.prisma.spec.ts
+PASS unit src/modules/auth/guards/permission.guard.spec.ts
+PASS unit src/modules/auth/services/auth.service.rotation.spec.ts
+PASS unit src/middleware/cors.middleware.spec.ts
+PASS unit src/modules/auth/guards/jwt-auth.guard.spec.ts
+PASS unit src/modules/auth/strategy/local.strategy.spec.ts
+PASS unit src/core/filters/http.exception.filters.spec.ts
+PASS unit src/core/decorators/custom.decorator.spec.ts
+PASS unit src/decorators/correlation-id.decorator.spec.ts
+PASS unit src/modules/auth/guards/status.guard.spec.ts
+PASS unit src/core/guards/roles.guard.spec.ts
+[31m[Nest] 3134109  - [39m03/08/2026, 12:34:10 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
+[31m[Nest] 3134109  - [39m03/08/2026, 12:34:10 a. m. [31m  ERROR[39m [31mnull[39m
+[31m[Nest] 3134109  - [39m03/08/2026, 12:34:10 a. m. [31m  ERROR[39m [31mObject:[39m
 {
   "correlationId": "corr-2"
 }
 
-[31m[Nest] 3115995  - [39m03/08/2026, 12:22:30 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
-[31m[Nest] 3115995  - [39m03/08/2026, 12:22:30 a. m. [31m  ERROR[39m [31mnull[39m
-[31m[Nest] 3115995  - [39m03/08/2026, 12:22:30 a. m. [31m  ERROR[39m [31mObject:[39m
+[31m[Nest] 3134109  - [39m03/08/2026, 12:34:10 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
+[31m[Nest] 3134109  - [39m03/08/2026, 12:34:10 a. m. [31m  ERROR[39m [31mnull[39m
+[31m[Nest] 3134109  - [39m03/08/2026, 12:34:10 a. m. [31m  ERROR[39m [31mObject:[39m
 {
   "correlationId": "corr-4"
 }
 
 PASS unit src/pipes/joi-validation.pipe.spec.ts
-PASS unit src/modules/user/repository/user.repository.prisma.spec.ts
-PASS unit src/modules/user/module-graph.spec.ts (5.692 s)
-PASS unit src/modules/auth/dto/register-user.dto.spec.ts
-PASS unit src/modules/auth/services/auth.service.rotation.spec.ts
-PASS unit src/modules/auth/strategy/local.strategy.spec.ts
-PASS unit src/modules/auth/services/auth.service.spec.ts
-PASS unit src/modules/auth/guards/jwt-auth.guard.spec.ts
-PASS unit src/core/decorators/custom.decorator.spec.ts
-PASS unit src/modules/auth/guards/permission.guard.spec.ts
 PASS unit src/middleware/logging.middleware.spec.ts
-PASS unit src/core/guards/roles.guard.spec.ts
-PASS unit src/middleware/correlation-id.middleware.spec.ts
-PASS unit src/core/filters/http.exception.filters.spec.ts
 PASS unit src/modules/auth/guards/roles.guard.spec.ts
-PASS unit src/decorators/correlation-id.decorator.spec.ts
-PASS unit src/core/interceptors/transform.interceptor.spec.ts
-PASS unit src/modules/auth/guards/status.guard.spec.ts
-PASS unit src/utils/case-converter.spec.ts
+PASS unit src/modules/auth/strategy/jwt.strategy.spec.ts
+PASS unit src/config/env.config.spec.ts
+PASS unit src/modules/user/module-graph.spec.ts (6.317 s)
 PASS unit src/utils/phone.spec.ts
+PASS unit src/middleware/correlation-id.middleware.spec.ts
+PASS unit src/app/app.controller.spec.ts
+PASS unit src/utils/case-converter.spec.ts
+PASS unit src/core/interceptors/transform.interceptor.spec.ts
 
 =============================== Coverage summary ===============================
 Statements   : 68.54% ( 1048/1529 )
@@ -54,6 +54,6 @@ Lines        : 67.36% ( 966/1434 )
 Test Suites: 28 passed, 28 total
 Tests:       176 passed, 176 total
 Snapshots:   0 total
-Time:        9.118 s
+Time:        8.435 s
 Ran all test suites.
 Test results written to: reports/raw/jest-unit.json
