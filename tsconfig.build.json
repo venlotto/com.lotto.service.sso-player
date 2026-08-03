@@ -9,10 +9,16 @@
     "became undeployable — last successful deploy was 0c1230d on 2026-07-29,",
     "the commit immediately before the harness landed.",
     "",
-    "These are exactly the options the app built with at 0c1230d. The gate still",
-    "sees and counts every strict error; only emit is unblocked. Paying the debt",
-    "down is how this file eventually goes away — it is not a prerequisite for",
-    "shipping a one-line change."
+    "These are exactly the options the app built with at 0c1230d, plus",
+    "esModuleInterop. The gate still sees and counts every strict error; only",
+    "emit is unblocked. Paying the debt down is how this file eventually goes",
+    "away — it is not a prerequisite for shipping a one-line change.",
+    "",
+    "KEEP IN SYNC with tsconfig.json for anything that affects EMIT.",
+    "allowSyntheticDefaultImports without esModuleInterop is the trap: a default",
+    "import of a CommonJS package (express, cookie-parser) type-checks here and",
+    "in the gate, passes lint and every unit test, then emits require(...).default",
+    "— undefined at runtime. The service builds green and crash-loops on boot."
   ],
   "compilerOptions": {
     "module": "commonjs",
@@ -21,6 +27,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",

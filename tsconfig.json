@@ -7,6 +7,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    // Must accompany allowSyntheticDefaultImports. Without it, a default
+    // import of a CommonJS package type-checks but emits `require(...).default`
+    // — undefined at runtime. tsc, eslint and the unit tests all pass; the
+    // service only fails when it boots. See src/main.ts.
+    "esModuleInterop": true,
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
