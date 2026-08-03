@@ -18,8 +18,8 @@ src/modules/auth/controller/assign-permissions.controller.ts(157,9): error TS234
   Type 'null' is not assignable to type 'string'.
 src/modules/auth/controller/assign-permissions.controller.ts(160,25): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/controller/assign-permissions.controller.ts(160,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.spec.ts(159,21): error TS4111: Property 'redirect_uri' comes from an index signature, so it must be accessed with ['redirect_uri'].
-src/modules/auth/controller/auth.controller.ts(99,11): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+src/modules/auth/controller/auth.controller.spec.ts(169,21): error TS4111: Property 'redirect_uri' comes from an index signature, so it must be accessed with ['redirect_uri'].
+src/modules/auth/controller/auth.controller.ts(100,11): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
   Type 'null' is not assignable to type 'string | undefined'.
 src/modules/auth/controller/delete-permissions.controller.ts(34,22): error TS6138: Property 'logger' is declared but its value is never read.
 src/modules/auth/controller/delete-role.controller.ts(62,25): error TS18046: 'error' is of type 'unknown'.
@@ -79,11 +79,11 @@ src/modules/auth/repository/refresh-token.repository.ts(17,7): error TS2375: Typ
       Types of property 'created_by_ip' are incompatible.
         Type 'string | undefined' is not assignable to type 'string | null'.
           Type 'undefined' is not assignable to type 'string | null'.
-src/modules/auth/services/auth.service.ts(308,43): error TS2379: Argument of type '{ token: `${string}-${string}-${string}-${string}-${string}`; userId: string; expiresAt: Date; familyId: string | undefined; createdByIp: string | null; createdByUserAgent: string | null; }' is not assignable to parameter of type 'RefreshTokenProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/services/auth.service.ts(314,43): error TS2379: Argument of type '{ token: `${string}-${string}-${string}-${string}-${string}`; userId: string; expiresAt: Date; familyId: string | undefined; createdByIp: string | null; createdByUserAgent: string | null; }' is not assignable to parameter of type 'RefreshTokenProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'familyId' are incompatible.
     Type 'string | undefined' is not assignable to type 'string'.
       Type 'undefined' is not assignable to type 'string'.
-src/modules/auth/services/auth.service.ts(416,62): error TS2379: Argument of type '{ context: SessionContext | undefined; familyId: string | undefined; }' is not assignable to parameter of type 'RefreshTokenOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/services/auth.service.ts(442,62): error TS2379: Argument of type '{ context: SessionContext | undefined; familyId: string | undefined; }' is not assignable to parameter of type 'RefreshTokenOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'familyId' are incompatible.
     Type 'string | undefined' is not assignable to type 'string'.
       Type 'undefined' is not assignable to type 'string'.

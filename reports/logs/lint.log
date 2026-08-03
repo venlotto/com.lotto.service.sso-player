@@ -1,11 +1,11 @@
 
 src/modules/auth/controller/auth.controller.spec.ts
-  75:22    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  77:22    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/controller/auth.controller.ts
   89:20    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  174:20   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  233:20   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  175:20   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  235:20   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/model/refresh-token.model.ts
   74:42    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
@@ -21,15 +21,20 @@ src/modules/auth/services/auth.service.rotation.spec.ts
   152:34   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/services/auth.service.spec.ts
-  93:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  94:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  183:9    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  184:9    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  96:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  97:7     [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  186:9    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  187:9    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  242:20   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  264:55   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/auth/services/auth.service.ts
-  344:45   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  440:16   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
-  449:12   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  361:45   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  370:45   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  466:16   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  475:12   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  497:14   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
+  499:12   [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
 
 src/modules/user/model/user.model.ts
   33:23    [33mwarn [0m  Avoid inline new Date(); precompute it or use a clock abstraction.  [2mno-restricted-syntax[0m
@@ -50,5 +55,5 @@ src/modules/user/repository/user.repository.prisma.spec.ts
 src/modules/user/services/user.service.ts
   109:16   [33mwarn [0m  Unnecessary conditional, comparison is always true, since `UserStatus.ACTIVE === UserStatus.ACTIVE` is true.  [2m@typescript-eslint/no-unnecessary-condition[0m
 
-0 error(s), 31 warning(s)
+0 error(s), 36 warning(s)
 
