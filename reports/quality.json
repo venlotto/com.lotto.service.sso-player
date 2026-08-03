@@ -1,10 +1,10 @@
 {
   "repo": "com.lotto.service.sso-player",
-  "sha": "f3d5df438a37a2adaa398bca2c01cb44d0cdc166",
+  "sha": "8ce36d900336ddf46e2a1319645e024fa4658e43",
   "branch": "main",
   "stage": "local",
   "pipelineRunId": null,
-  "timestamp": "2026-08-03T00:19:27.307Z",
+  "timestamp": "2026-08-03T00:20:32.742Z",
   "status": "passed",
   "adopted": {
     "sdlcVersion": 1,
@@ -15,7 +15,7 @@
       "gate": "arch",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 197,
+      "durationMs": 173,
       "log": "logs/arch.log",
       "command": "node /home/ubuntu/repos/koperca-sdlc/gates/arch/repo-invariants.mjs"
     },
@@ -23,7 +23,7 @@
       "gate": "lint",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 17464,
+      "durationMs": 20677,
       "log": "logs/lint.log",
       "command": "env ESLINT_JSON_OUT=reports/raw/eslint.json /home/ubuntu/repos/koperca-sdlc/node_modules/.bin/eslint . --format /home/ubuntu/repos/koperca-sdlc/configs/eslint/formatter-dual.cjs",
       "errors": 0,
@@ -33,7 +33,7 @@
       "gate": "typecheck",
       "status": "ratcheted",
       "exitCode": 1,
-      "durationMs": 2494,
+      "durationMs": 4036,
       "log": "logs/typecheck.log",
       "command": "/home/ubuntu/repos/koperca-sdlc/gates/tee-raw.sh reports/raw/tsc.txt /home/ubuntu/repos/koperca-sdlc/gates/tsc-noemit.sh",
       "errors": 117
@@ -42,7 +42,7 @@
       "gate": "unit",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 7010,
+      "durationMs": 7318,
       "log": "logs/unit.log",
       "command": "npx --no-install jest --selectProjects unit --coverage --coverageDirectory=reports/raw/coverage --coverageReporters=json --coverageReporters=json-summary --coverageReporters=text-summary --json --outputFile=reports/raw/jest-unit.json",
       "total": 174,
@@ -67,12 +67,12 @@
   },
   "ratchet": {
     "baseline": {
-      "lintErrors": 306,
-      "typeErrors": 165,
-      "coverage": 0.34,
+      "lintErrors": 0,
+      "typeErrors": 117,
+      "coverage": 67.01,
       "sdlcVersion": 1,
-      "sha": "0c1230d8850a340a25d1277df87083e660e5014f",
-      "updated": "2026-07-31",
+      "sha": "f3d5df438a37a2adaa398bca2c01cb44d0cdc166",
+      "updated": "2026-08-03",
       "archViolations": 0
     },
     "current": {

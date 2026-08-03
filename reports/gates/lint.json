@@ -2,7 +2,7 @@
   "gate": "lint",
   "status": "passed",
   "exitCode": 0,
-  "durationMs": 17464,
+  "durationMs": 20677,
   "log": "logs/lint.log",
   "command": "env ESLINT_JSON_OUT=reports/raw/eslint.json /home/ubuntu/repos/koperca-sdlc/node_modules/.bin/eslint . --format /home/ubuntu/repos/koperca-sdlc/configs/eslint/formatter-dual.cjs"
 }

@@ -4,45 +4,45 @@ Running one project: unit
 PASS unit src/config/env.config.spec.ts
 PASS unit src/modules/auth/strategy/jwt.strategy.spec.ts
 PASS unit src/middleware/cors.middleware.spec.ts
+PASS unit src/modules/user/controller/change-password.controller.spec.ts
+PASS unit src/modules/auth/controller/permission.controller.spec.ts
+PASS unit src/app/app.controller.spec.ts
+PASS unit src/modules/auth/controller/auth.controller.spec.ts
 PASS unit src/core/decorators/custom.decorator.spec.ts
-[31m[Nest] 3110077  - [39m03/08/2026, 12:19:23 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
-[31m[Nest] 3110077  - [39m03/08/2026, 12:19:23 a. m. [31m  ERROR[39m [31mnull[39m
-[31m[Nest] 3110077  - [39m03/08/2026, 12:19:23 a. m. [31m  ERROR[39m [31mObject:[39m
+[31m[Nest] 3111818  - [39m03/08/2026, 12:20:29 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
+[31m[Nest] 3111818  - [39m03/08/2026, 12:20:29 a. m. [31m  ERROR[39m [31mnull[39m
+[31m[Nest] 3111818  - [39m03/08/2026, 12:20:29 a. m. [31m  ERROR[39m [31mObject:[39m
 {
   "correlationId": "corr-2"
 }
 
-[31m[Nest] 3110077  - [39m03/08/2026, 12:19:23 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
-[31m[Nest] 3110077  - [39m03/08/2026, 12:19:23 a. m. [31m  ERROR[39m [31mnull[39m
-[31m[Nest] 3110077  - [39m03/08/2026, 12:19:23 a. m. [31m  ERROR[39m [31mObject:[39m
+[31m[Nest] 3111818  - [39m03/08/2026, 12:20:29 a. m. [31m  ERROR[39m [31mValidation error details : Error: value is not allowed[39m
+[31m[Nest] 3111818  - [39m03/08/2026, 12:20:29 a. m. [31m  ERROR[39m [31mnull[39m
+[31m[Nest] 3111818  - [39m03/08/2026, 12:20:29 a. m. [31m  ERROR[39m [31mObject:[39m
 {
   "correlationId": "corr-4"
 }
 
 PASS unit src/pipes/joi-validation.pipe.spec.ts
-PASS unit src/modules/auth/controller/permission.controller.spec.ts
-PASS unit src/middleware/correlation-id.middleware.spec.ts
-PASS unit src/modules/user/controller/change-password.controller.spec.ts
-PASS unit src/app/app.controller.spec.ts
-PASS unit src/decorators/correlation-id.decorator.spec.ts
-PASS unit src/core/guards/roles.guard.spec.ts
 PASS unit src/middleware/logging.middleware.spec.ts
 PASS unit src/utils/case-converter.spec.ts
 PASS unit src/modules/auth/strategy/local.strategy.spec.ts
-PASS unit src/modules/auth/guards/jwt-auth.guard.spec.ts
-PASS unit src/core/filters/http.exception.filters.spec.ts
-PASS unit src/modules/auth/guards/permission.guard.spec.ts
-PASS unit src/modules/user/repository/user.repository.prisma.spec.ts
-PASS unit src/modules/user/module-graph.spec.ts
-PASS unit src/modules/auth/services/auth.service.rotation.spec.ts
-PASS unit src/modules/auth/controller/auth.controller.spec.ts
+PASS unit src/core/guards/roles.guard.spec.ts
 PASS unit src/modules/auth/services/auth.service.spec.ts
-PASS unit src/modules/auth/guards/roles.guard.spec.ts
+PASS unit src/modules/user/module-graph.spec.ts
+PASS unit src/modules/auth/guards/permission.guard.spec.ts
+PASS unit src/modules/auth/guards/jwt-auth.guard.spec.ts
+PASS unit src/middleware/correlation-id.middleware.spec.ts
+PASS unit src/modules/auth/guards/session-cookie.guard.spec.ts
 PASS unit src/modules/auth/dto/register-user.dto.spec.ts
-PASS unit src/modules/auth/guards/status.guard.spec.ts
+PASS unit src/decorators/correlation-id.decorator.spec.ts
+PASS unit src/modules/user/repository/user.repository.prisma.spec.ts
+PASS unit src/modules/auth/services/auth.service.rotation.spec.ts
+PASS unit src/modules/auth/guards/roles.guard.spec.ts
 PASS unit src/core/interceptors/transform.interceptor.spec.ts
 PASS unit src/utils/phone.spec.ts
-PASS unit src/modules/auth/guards/session-cookie.guard.spec.ts
+PASS unit src/modules/auth/guards/status.guard.spec.ts
+PASS unit src/core/filters/http.exception.filters.spec.ts
 
 =============================== Coverage summary ===============================
 Statements   : 68.23% ( 1031/1511 )
@@ -54,6 +54,6 @@ Lines        : 67.01% ( 949/1416 )
 Test Suites: 28 passed, 28 total
 Tests:       174 passed, 174 total
 Snapshots:   0 total
-Time:        5.672 s
+Time:        5.93 s
 Ran all test suites.
 Test results written to: reports/raw/jest-unit.json
