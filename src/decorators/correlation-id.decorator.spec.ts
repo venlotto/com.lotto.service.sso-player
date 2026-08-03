@@ -21,7 +21,7 @@ const getDecoratorFactory = (): CorrelationIdFactory => {
     "handler",
   ) as Record<string, { factory: CorrelationIdFactory }>;
   const metadataKey = Object.keys(argsMetadata)[0];
-  return argsMetadata[metadataKey].factory;
+  return argsMetadata[metadataKey].factory as unknown as CorrelationIdFactory;
 };
 
 describe("CorrelationId decorator", () => {

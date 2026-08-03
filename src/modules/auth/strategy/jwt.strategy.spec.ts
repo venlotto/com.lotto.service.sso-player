@@ -1,10 +1,14 @@
 import { type ConfigService } from "@nestjs/config";
-import { ExtractJwt } from "passport-jwt";
+import { ExtractJwt as PassportExtractJwt } from "passport-jwt";
 import { JwtStrategy } from "./jwt.strategy";
 
 type CookieExtractor = (
   request: { cookies?: Record<string, string>; signedCookies?: Record<string, string> } | null | undefined,
 ) => string | null;
+
+const ExtractJwt = PassportExtractJwt as unknown as {
+  fromExtractors: (extractors: CookieExtractor[]) => CookieExtractor;
+};
 
 describe("JwtStrategy", () => {
   const JWT_SECRET_VALUE = "unit-test-jwt-signing-key";
@@ -18,7 +22,7 @@ describe("JwtStrategy", () => {
     fromExtractorsSpy = jest
       .spyOn(ExtractJwt, "fromExtractors")
       .mockImplementation((extractors) => {
-        capturedExtractors = extractors as unknown as CookieExtractor[];
+        capturedExtractors = extractors;
         return () => null;
       });
   });

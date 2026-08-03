@@ -8,7 +8,7 @@ describe("LoggingMiddleware", () => {
   let finishCallback: (() => void) | undefined;
 
   const buildResponse = (statusCode: number): Response => {
-    const response = {
+    const response: { on: jest.Mock; statusCode: number } = {
       statusCode,
       on: jest.fn((event: string, callback: () => void) => {
         if (event === "finish") {
