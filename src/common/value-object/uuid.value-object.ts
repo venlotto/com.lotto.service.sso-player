@@ -4,7 +4,7 @@ export class UUID {
   private readonly value: string;
 
   constructor(id?: string) {
-    if (id) {
+    if (id !== undefined && id !== "") {
       if (!UUID.isValid(id)) {
         throw new Error(`Invalid UUID: ${id}`);
       }

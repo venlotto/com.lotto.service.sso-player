@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Request } from "express";
-
 import { AuthService } from "../services/auth.service";
 
 @Injectable()
@@ -16,7 +15,7 @@ export class SessionCookieGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const refreshToken = this.authService.extractRefreshToken(request);
 
-    if (!refreshToken) {
+    if (refreshToken === null || refreshToken === "") {
       throw new UnauthorizedException("Authentication session cookie missing");
     }
 

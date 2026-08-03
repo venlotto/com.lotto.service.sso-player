@@ -1,9 +1,12 @@
-import { Logger, Module, DynamicModule, forwardRef } from "@nestjs/common";
+import { Logger, Module, DynamicModule } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
-
+import { PrismaModule } from "../prisma/prisma.module";
 import { PrismaService } from "../prisma/prisma.service";
+import { UserRepositoryPrisma } from "../user/repository/user.repository.prisma";
+import { UserService } from "../user/services/user.service";
+import { UserModule } from "../user/user.module";
 import { AssignPermissionsController } from "./controller/assign-permissions.controller";
 import { AuthController } from "./controller/auth.controller";
 import { DeletePermissionsController } from "./controller/delete-permissions.controller";
@@ -22,10 +25,6 @@ import { PermissionService } from "./services/permission.service";
 import { RoleService } from "./services/role.service";
 import { JwtStrategy } from "./strategy/jwt.strategy";
 import { LocalStrategy } from "./strategy/local.strategy";
-import { PrismaModule } from "../prisma/prisma.module";
-import { UserRepositoryPrisma } from "../user/repository/user.repository.prisma";
-import { UserService } from "../user/services/user.service";
-import { UserModule } from "../user/user.module";
 
 export interface AuthModuleConfig {
   isTestEnvironment?: boolean;
@@ -51,22 +50,22 @@ export class AuthModule {
         PassportModule.register({ defaultStrategy: "jwt" }),
         JwtModule.registerAsync({
           imports: [ConfigModule],
-          useFactory: async (configService: ConfigService) => {
+          useFactory: (configService: ConfigService) => {
             const secret = configService.get<string>("JWT_SECRET");
-            if (!secret) {
+            if (secret === undefined || secret === "") {
               throw new Error("JWT_SECRET is not defined in configuration");
             }
             return {
               secret,
               signOptions: {
-                expiresIn: configService.get<string>("JWT_EXPIRATION") || "5m",
+                expiresIn: configService.get<string>("JWT_EXPIRATION") ?? "5m",
               },
             };
           },
           inject: [ConfigService],
         }),
         PrismaModule,
-        forwardRef(() => UserModule),
+        UserModule,
       ],
       providers: [
         Logger,

@@ -8,7 +8,7 @@ export class RegisterUserDto {
   })
   @IsNotEmpty({ message: "phone is required" })
   @IsString()
-  @Matches(/^\+?[0-9\s\-]{6,19}$/, {
+  @Matches(/^\+?[0-9\s-]{6,19}$/, {
     message: "phone must be a valid phone number",
   })
   readonly phone: string;

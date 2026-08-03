@@ -1,6 +1,21 @@
 import * as crypto from "crypto";
 
-import { Prisma, refresh_tokens as RefreshTokenRecord } from "@prisma/client";
+// Domain mirror of the refresh_tokens table row. Defined locally so the model
+// layer does not depend on Prisma-generated types (repositories own Prisma).
+export interface RefreshTokenRecord {
+  id: number;
+  token: string;
+  token_id: string;
+  family_id: string;
+  user_id: string;
+  expires_at: Date;
+  created_by_ip: string | null;
+  created_by_user_agent: string | null;
+  rotated_at: Date | null;
+  replaced_by_token_id: string | null;
+  revoked_at: Date | null;
+  created_at: Date;
+}
 
 interface RefreshTokenProps {
   token: string;
@@ -15,7 +30,7 @@ interface RefreshTokenProps {
   revokedAt?: Date | null;
 }
 
-export class RefreshToken implements Prisma.refresh_tokensCreateInput {
+export class RefreshToken {
   id?: number;
   token: string;
   token_id: string;

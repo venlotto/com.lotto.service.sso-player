@@ -268,7 +268,7 @@ describe("AuthService - register & login", () => {
 
   describe("resolveRedirectUri", () => {
     it("returns null when no redirect is requested", (): void => {
-      expect(service.resolveRedirectUri(undefined)).toBeNull();
+      expect(service.resolveRedirectUri()).toBeNull();
     });
 
     it("rejects a value that is not an absolute URL", (): void => {

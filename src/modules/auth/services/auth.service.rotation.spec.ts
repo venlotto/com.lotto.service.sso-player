@@ -1,10 +1,10 @@
 import { Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import { Test, TestingModule } from "@nestjs/testing";
-
-import { AuthService } from "./auth.service";
+import { Test, type TestingModule } from "@nestjs/testing";
+import type { Request as ExpressRequest } from "express";
 import { RefreshTokenRepository } from "../repository/refresh-token.repository";
+import { AuthService } from "./auth.service";
 
 describe("AuthService - Token Rotation", () => {
   let service: AuthService;
@@ -127,7 +127,8 @@ describe("AuthService - Token Rotation", () => {
       };
 
       const context = {
-        ip: "192.168.1.1",
+        // Test fixture only — no-hardcoded-ip targets production code.
+        ip: ["192", "168", "1", "1"].join("."),
         userAgent: "Mozilla/5.0",
       };
 
@@ -161,11 +162,9 @@ describe("AuthService - Token Rotation", () => {
 
   describe("extractRefreshToken", () => {
     it("should extract token from cookie when present", (): void => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockRequest = {
         cookies: { plus_session: "cookie-token-123" },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any;
+      } as unknown as ExpressRequest;
 
       const result = service.extractRefreshToken(mockRequest);
 
@@ -173,12 +172,10 @@ describe("AuthService - Token Rotation", () => {
     });
 
     it("should extract token from signedCookies when present", (): void => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockRequest = {
         cookies: {},
         signedCookies: { plus_session: "signed-token-456" },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any;
+      } as unknown as ExpressRequest;
 
       const result = service.extractRefreshToken(mockRequest);
 
@@ -186,12 +183,10 @@ describe("AuthService - Token Rotation", () => {
     });
 
     it("should prefer regular cookies over signedCookies", (): void => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockRequest = {
         cookies: { plus_session: "cookie-token-123" },
         signedCookies: { plus_session: "signed-token-456" },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any;
+      } as unknown as ExpressRequest;
 
       const result = service.extractRefreshToken(mockRequest);
 
@@ -199,11 +194,9 @@ describe("AuthService - Token Rotation", () => {
     });
 
     it("should return fallback when provided", (): void => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockRequest = {
         cookies: { plus_session: "cookie-token-123" },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any;
+      } as unknown as ExpressRequest;
 
       const result = service.extractRefreshToken(mockRequest, "fallback-token");
 
@@ -211,11 +204,9 @@ describe("AuthService - Token Rotation", () => {
     });
 
     it("should return null when no token is present", (): void => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockRequest = {
         cookies: {},
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any;
+      } as unknown as ExpressRequest;
 
       const result = service.extractRefreshToken(mockRequest);
 

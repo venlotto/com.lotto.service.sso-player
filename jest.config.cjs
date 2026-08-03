@@ -6,4 +6,16 @@ const sdlc = process.env.KOPERCA_SDLC || path.join(require('node:os').homedir(),
 module.exports = require(path.join(sdlc, 'configs/jest/jest.base.cjs'))({
   // tiers: { unit: [...] },              // override only if the layout differs
   // moduleNameMapper: { '^@x/(.*)$': '<rootDir>/src/$1' },
+  // src/scripts are operational CLI entry points (like src/main.ts, which the
+  // preset already excludes): they drive readline/prisma interactively and are
+  // exercised by running them, not by unit specs.
+  collectCoverageFrom: [
+    'src/**/*.{ts,js}',
+    '!src/**/*.spec.ts',
+    '!src/**/*.module.ts',
+    '!src/main.ts',
+    '!src/**/*.d.ts',
+    '!src/**/generated/**',
+    '!src/scripts/**',
+  ],
 });

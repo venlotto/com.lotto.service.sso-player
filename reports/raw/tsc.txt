@@ -1,101 +1,53 @@
-src/app/app.controller.ts(74,27): error TS7053: Element implicitly has an 'any' type because expression of type '"correlationId"' can't be used to index type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-  Property 'correlationId' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-src/app/app.controller.ts(82,25): error TS18046: 'error' is of type 'unknown'.
-src/app/app.controller.ts(82,40): error TS18046: 'error' is of type 'unknown'.
-src/app/app.module.ts(27,35): error TS4111: Property 'THROTTLE_TTL_SECONDS' comes from an index signature, so it must be accessed with ['THROTTLE_TTL_SECONDS'].
-src/app/app.module.ts(28,37): error TS4111: Property 'THROTTLE_LIMIT' comes from an index signature, so it must be accessed with ['THROTTLE_LIMIT'].
-src/common/common.module.ts(17,7): error TS2322: Type '() => { secret: string | undefined; signOptions: { expiresIn: string; }; }' is not assignable to type '(...args: any[]) => JwtModuleOptions | Promise<JwtModuleOptions>'.
+src/common/common.module.ts(18,7): error TS2322: Type '() => { secret: string | undefined; signOptions: { expiresIn: string; }; }' is not assignable to type '(...args: any[]) => JwtModuleOptions | Promise<JwtModuleOptions>'.
   Type '{ secret: string | undefined; signOptions: { expiresIn: string; }; }' is not assignable to type 'JwtModuleOptions | Promise<JwtModuleOptions>'.
     Type '{ secret: string | undefined; signOptions: { expiresIn: string; }; }' is not assignable to type 'JwtModuleOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
       Types of property 'secret' are incompatible.
         Type 'string | undefined' is not assignable to type 'string | Buffer'.
           Type 'undefined' is not assignable to type 'string | Buffer'.
-src/common/common.module.ts(18,29): error TS4111: Property 'JWT_SECRET' comes from an index signature, so it must be accessed with ['JWT_SECRET'].
 src/common/enum/utils.enum.ts(2,36): error TS2769: No overload matches this call.
   Overload 1 of 2, '(o: { [s: string]: string; } | ArrayLike<string>): string[]', gave the following error.
     Argument of type 'T' is not assignable to parameter of type '{ [s: string]: string; } | ArrayLike<string>'.
       Type 'T' is not assignable to type 'ArrayLike<string>'.
   Overload 2 of 2, '(o: {}): any[]', gave the following error.
     Argument of type 'T' is not assignable to parameter of type '{}'.
-src/core/decorators/custom.decorator.ts(18,3): error TS2322: Type '(object: object, propertyName: string) => void' is not assignable to type 'PropertyDecorator'.
-  Types of parameters 'propertyName' and 'propertyKey' are incompatible.
-    Type 'string | symbol' is not assignable to type 'string'.
-      Type 'symbol' is not assignable to type 'string'.
-src/core/decorators/custom.decorator.ts(19,23): error TS2379: Argument of type '{ name: string; target: Function; propertyName: string; options: ValidationOptions | undefined; constraints: string[]; validator: ValidatorConstraintInterface; }' is not assignable to parameter of type 'ValidationDecoratorOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
-  Types of property 'options' are incompatible.
-    Type 'ValidationOptions | undefined' is not assignable to type 'ValidationOptions'.
-      Type 'undefined' is not assignable to type 'ValidationOptions'.
-src/core/decorators/custom.decorator.ts(28,44): error TS2538: Type 'undefined' cannot be used as an index type.
-src/core/filters/http.exception.filters.ts(25,27): error TS7053: Element implicitly has an 'any' type because expression of type '"correlationId"' can't be used to index type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-  Property 'correlationId' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-src/core/interceptors/transform.interceptor.ts(38,35): error TS4111: Property 'message' comes from an index signature, so it must be accessed with ['message'].
-src/core/interceptors/transform.interceptor.ts(39,31): error TS4111: Property 'message' comes from an index signature, so it must be accessed with ['message'].
-src/core/interceptors/transform.interceptor.ts(44,39): error TS4111: Property 'meta' comes from an index signature, so it must be accessed with ['meta'].
-src/core/interceptors/transform.interceptor.ts(45,27): error TS4111: Property 'meta' comes from an index signature, so it must be accessed with ['meta'].
-src/core/interceptors/transform.interceptor.ts(46,32): error TS4111: Property 'meta' comes from an index signature, so it must be accessed with ['meta'].
-src/core/interceptors/transform.interceptor.ts(53,30): error TS4111: Property 'data' comes from an index signature, so it must be accessed with ['data'].
-src/core/interceptors/transform.interceptor.ts(54,30): error TS4111: Property 'data' comes from an index signature, so it must be accessed with ['data'].
-src/core/interceptors/transform.interceptor.ts(54,51): error TS4111: Property 'data' comes from an index signature, so it must be accessed with ['data'].
-src/core/interceptors/transform.interceptor.ts(58,28): error TS4111: Property 'message' comes from an index signature, so it must be accessed with ['message'].
-src/core/interceptors/transform.interceptor.ts(60,30): error TS4111: Property 'data' comes from an index signature, so it must be accessed with ['data'].
-src/decorators/correlation-id.decorator.ts(4,4): error TS6133: 'data' is declared but its value is never read.
-src/main.ts(5,31): error TS7016: Could not find a declaration file for module 'cookie-parser'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/ratchet-green/node_modules/cookie-parser/index.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/cookie-parser` if it exists or add a new declaration (.d.ts) file containing `declare module 'cookie-parser';`
-src/main.ts(20,22): error TS2349: This expression is not callable.
-  Type 'typeof e' has no call signatures.
-src/main.ts(28,36): error TS4111: Property 'COOKIE_SECRET' comes from an index signature, so it must be accessed with ['COOKIE_SECRET'].
-src/main.ts(31,12): error TS7006: Parameter 'req' implicitly has an 'any' type.
-src/main.ts(31,17): error TS7006: Parameter 'res' implicitly has an 'any' type.
-src/main.ts(31,22): error TS7006: Parameter 'next' implicitly has an 'any' type.
-src/main.ts(63,28): error TS4111: Property 'APP_PORT' comes from an index signature, so it must be accessed with ['APP_PORT'].
-src/main.ts(67,23): error TS4111: Property 'APP_NAME' comes from an index signature, so it must be accessed with ['APP_NAME'].
-src/middleware/correlation-id.middleware.ts(13,5): error TS7053: Element implicitly has an 'any' type because expression of type '"correlationId"' can't be used to index type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-  Property 'correlationId' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-src/middleware/correlation-id.middleware.ts(14,39): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | readonly string[]'.
-  Type 'undefined' is not assignable to type 'string | number | readonly string[]'.
-src/middleware/cors.middleware.ts(16,34): error TS4111: Property 'ALLOWED_ORIGINS' comes from an index signature, so it must be accessed with ['ALLOWED_ORIGINS'].
-src/middleware/cors.middleware.ts(30,39): error TS4111: Property 'CORS_FALLBACK_ORIGIN' comes from an index signature, so it must be accessed with ['CORS_FALLBACK_ORIGIN'].
-src/modules/auth/auth.module.ts(94,13): error TS6133: 'authService' is declared but its value is never read.
-src/modules/auth/controller/assign-permissions.controller.ts(158,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+src/core/decorators/custom.decorator.spec.ts(26,12): error TS2564: Property 'pin' has no initializer and is not definitely assigned in the constructor.
+src/core/decorators/custom.decorator.spec.ts(27,12): error TS2564: Property 'confirmPin' has no initializer and is not definitely assigned in the constructor.
+src/decorators/correlation-id.decorator.spec.ts(24,23): error TS2538: Type 'undefined' cannot be used as an index type.
+src/modules/auth/auth.module.ts(93,13): error TS6133: 'authService' is declared but its value is never read.
+src/modules/auth/controller/assign-permissions.controller.ts(157,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/auth/controller/assign-permissions.controller.ts(161,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/assign-permissions.controller.ts(161,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/auth.controller.spec.ts(159,21): error TS4111: Property 'redirect_uri' comes from an index signature, so it must be accessed with ['redirect_uri'].
-src/modules/auth/controller/auth.controller.ts(99,11): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+src/modules/auth/controller/assign-permissions.controller.ts(160,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/assign-permissions.controller.ts(160,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/auth.controller.spec.ts(169,21): error TS4111: Property 'redirect_uri' comes from an index signature, so it must be accessed with ['redirect_uri'].
+src/modules/auth/controller/auth.controller.ts(100,11): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
   Type 'null' is not assignable to type 'string | undefined'.
-src/modules/auth/controller/delete-permissions.controller.ts(35,22): error TS6138: Property 'logger' is declared but its value is never read.
-src/modules/auth/controller/delete-role.controller.ts(63,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/delete-role.controller.ts(63,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/permission.controller.ts(70,65): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+src/modules/auth/controller/delete-permissions.controller.ts(34,22): error TS6138: Property 'logger' is declared but its value is never read.
+src/modules/auth/controller/delete-role.controller.ts(62,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/delete-role.controller.ts(62,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/permission.controller.ts(69,65): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/auth/controller/permission.controller.ts(72,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/permission.controller.ts(72,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/permission.controller.ts(74,18): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/controller/permission.controller.ts(121,61): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/auth/controller/permission.controller.ts(123,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/permission.controller.ts(123,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/permission.controller.ts(125,18): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/remove-permissions.controller.ts(111,16): error TS6133: 'req' is declared but its value is never read.
-src/modules/auth/controller/remove-permissions.controller.ts(124,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+src/modules/auth/controller/remove-permissions.controller.ts(110,16): error TS6133: 'req' is declared but its value is never read.
+src/modules/auth/controller/remove-permissions.controller.ts(123,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/auth/controller/remove-permissions.controller.ts(127,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/remove-permissions.controller.ts(127,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/role.controller.ts(145,16): error TS6133: 'req' is declared but its value is never read.
-src/modules/auth/controller/role.controller.ts(152,53): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+src/modules/auth/controller/remove-permissions.controller.ts(126,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/remove-permissions.controller.ts(126,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/role.controller.ts(144,16): error TS6133: 'req' is declared but its value is never read.
+src/modules/auth/controller/role.controller.ts(151,53): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/auth/controller/role.controller.ts(154,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/role.controller.ts(154,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/role.controller.ts(244,16): error TS6133: 'req' is declared but its value is never read.
-src/modules/auth/controller/role.controller.ts(250,56): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+src/modules/auth/controller/role.controller.ts(153,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/role.controller.ts(153,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/role.controller.ts(243,16): error TS6133: 'req' is declared but its value is never read.
+src/modules/auth/controller/role.controller.ts(249,56): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/auth/controller/role.controller.ts(260,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/role.controller.ts(260,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/role.controller.ts(351,16): error TS6133: 'req' is declared but its value is never read.
-src/modules/auth/controller/role.controller.ts(360,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+src/modules/auth/controller/role.controller.ts(259,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/role.controller.ts(259,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/role.controller.ts(350,16): error TS6133: 'req' is declared but its value is never read.
+src/modules/auth/controller/role.controller.ts(359,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/auth/controller/role.controller.ts(371,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/controller/role.controller.ts(371,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/role.controller.ts(370,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/controller/role.controller.ts(370,40): error TS18046: 'error' is of type 'unknown'.
 src/modules/auth/dto/assign-permissions.dto.ts(11,3): error TS2564: Property 'role_id' has no initializer and is not definitely assigned in the constructor.
 src/modules/auth/dto/assign-permissions.dto.ts(23,3): error TS2564: Property 'permission_ids' has no initializer and is not definitely assigned in the constructor.
 src/modules/auth/dto/create-permission.dto.ts(7,3): error TS2564: Property 'name' has no initializer and is not definitely assigned in the constructor.
@@ -106,10 +58,10 @@ src/modules/auth/dto/login-user.dto.ts(21,12): error TS2564: Property 'phone' ha
 src/modules/auth/dto/login-user.dto.ts(29,12): error TS2564: Property 'password' has no initializer and is not definitely assigned in the constructor.
 src/modules/auth/dto/login.dto.ts(5,3): error TS2564: Property 'username' has no initializer and is not definitely assigned in the constructor.
 src/modules/auth/dto/login.dto.ts(8,3): error TS2564: Property 'password' has no initializer and is not definitely assigned in the constructor.
-src/modules/auth/dto/register-user.dto.spec.ts(34,30): error TS2379: Argument of type '{ phone: undefined; password: string; }' is not assignable to parameter of type 'Partial<RegisterUserDto>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/dto/register-user.dto.spec.ts(36,30): error TS2379: Argument of type '{ phone: undefined; password: string; }' is not assignable to parameter of type 'Partial<RegisterUserDto>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'phone' are incompatible.
     Type 'undefined' is not assignable to type 'string'.
-src/modules/auth/dto/register-user.dto.spec.ts(38,30): error TS2379: Argument of type '{ phone: string; password: undefined; }' is not assignable to parameter of type 'Partial<RegisterUserDto>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/dto/register-user.dto.spec.ts(40,30): error TS2379: Argument of type '{ phone: string; password: undefined; }' is not assignable to parameter of type 'Partial<RegisterUserDto>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'password' are incompatible.
     Type 'undefined' is not assignable to type 'string'.
 src/modules/auth/dto/register-user.dto.ts(14,12): error TS2564: Property 'phone' has no initializer and is not definitely assigned in the constructor.
@@ -121,76 +73,69 @@ src/modules/auth/entity/role.entity.ts(14,3): error TS2564: Property 'name' has 
 src/modules/auth/entity/role.entity.ts(20,3): error TS2564: Property 'description' has no initializer and is not definitely assigned in the constructor.
 src/modules/auth/entity/role.entity.ts(26,3): error TS2564: Property 'createdAt' has no initializer and is not definitely assigned in the constructor.
 src/modules/auth/entity/role.entity.ts(32,3): error TS2564: Property 'updatedAt' has no initializer and is not definitely assigned in the constructor.
-src/modules/auth/guards/jwt-auth.guard.ts(14,11): error TS2564: Property 'context' has no initializer and is not definitely assigned in the constructor.
-src/modules/auth/guards/jwt-auth.guard.ts(20,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'IAuthGuard'.
-src/modules/auth/guards/jwt-auth.guard.ts(36,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'IAuthGuard'.
-src/modules/auth/guards/local-auth.guard.ts(5,16): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'IAuthGuard'.
-src/modules/auth/guards/status.guard.ts(7,1): error TS6133: 'Request' is declared but its value is never read.
-src/modules/auth/guards/status.guard.ts(21,18): error TS7053: Element implicitly has an 'any' type because expression of type '"user"' can't be used to index type 'Request'.
-  Property 'user' does not exist on type 'Request'.
-src/modules/auth/guards/status.guard.ts(22,27): error TS7053: Element implicitly has an 'any' type because expression of type '"correlationId"' can't be used to index type 'Request'.
-  Property 'correlationId' does not exist on type 'Request'.
-src/modules/auth/repository/refresh-token.repository.ts(18,7): error TS2375: Type '{ token: string; token_id: string; family_id: string; user_id: string; expires_at: Date; created_by_ip: string | undefined; created_by_user_agent: string | undefined; rotated_at: Date | undefined; replaced_by_token_id: string | undefined; revoked_at: Date | undefined; }' is not assignable to type '(Without<refresh_tokensCreateInput, refresh_tokensUncheckedCreateInput> & refresh_tokensUncheckedCreateInput) | (Without<...> & refresh_tokensCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/repository/refresh-token.repository.ts(17,7): error TS2375: Type '{ token: string; token_id: string; family_id: string; user_id: string; expires_at: Date; created_by_ip: string | undefined; created_by_user_agent: string | undefined; rotated_at: Date | undefined; replaced_by_token_id: string | undefined; revoked_at: Date | undefined; }' is not assignable to type '(Without<refresh_tokensCreateInput, refresh_tokensUncheckedCreateInput> & refresh_tokensUncheckedCreateInput) | (Without<...> & refresh_tokensCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Type '{ token: string; token_id: string; family_id: string; user_id: string; expires_at: Date; created_by_ip: string | undefined; created_by_user_agent: string | undefined; rotated_at: Date | undefined; replaced_by_token_id: string | undefined; revoked_at: Date | undefined; }' is not assignable to type 'Without<refresh_tokensUncheckedCreateInput, refresh_tokensCreateInput> & refresh_tokensCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
     Type '{ token: string; token_id: string; family_id: string; user_id: string; expires_at: Date; created_by_ip: string | undefined; created_by_user_agent: string | undefined; rotated_at: Date | undefined; replaced_by_token_id: string | undefined; revoked_at: Date | undefined; }' is not assignable to type 'refresh_tokensCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
       Types of property 'created_by_ip' are incompatible.
         Type 'string | undefined' is not assignable to type 'string | null'.
           Type 'undefined' is not assignable to type 'string | null'.
-src/modules/auth/services/auth.service.ts(308,43): error TS2379: Argument of type '{ token: `${string}-${string}-${string}-${string}-${string}`; userId: string; expiresAt: Date; familyId: string | undefined; createdByIp: string | null; createdByUserAgent: string | null; }' is not assignable to parameter of type 'RefreshTokenProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/services/auth.service.ts(314,43): error TS2379: Argument of type '{ token: `${string}-${string}-${string}-${string}-${string}`; userId: string; expiresAt: Date; familyId: string | undefined; createdByIp: string | null; createdByUserAgent: string | null; }' is not assignable to parameter of type 'RefreshTokenProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'familyId' are incompatible.
     Type 'string | undefined' is not assignable to type 'string'.
       Type 'undefined' is not assignable to type 'string'.
-src/modules/auth/services/auth.service.ts(416,62): error TS2379: Argument of type '{ context: SessionContext | undefined; familyId: string | undefined; }' is not assignable to parameter of type 'RefreshTokenOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+src/modules/auth/services/auth.service.ts(442,62): error TS2379: Argument of type '{ context: SessionContext | undefined; familyId: string | undefined; }' is not assignable to parameter of type 'RefreshTokenOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
   Types of property 'familyId' are incompatible.
     Type 'string | undefined' is not assignable to type 'string'.
       Type 'undefined' is not assignable to type 'string'.
-src/modules/auth/services/role.service.ts(145,64): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/services/role.service.ts(207,65): error TS18046: 'error' is of type 'unknown'.
-src/modules/auth/strategy/jwt.strategy.ts(5,38): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/.worktrees/com.lotto.service.sso-player/ratchet-green/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
+src/modules/auth/services/role.service.ts(153,64): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/services/role.service.ts(215,65): error TS18046: 'error' is of type 'unknown'.
+src/modules/auth/strategy/jwt.strategy.spec.ts(2,50): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
   Try `npm i --save-dev @types/passport-jwt` if it exists or add a new declaration (.d.ts) file containing `declare module 'passport-jwt';`
-src/modules/auth/strategy/jwt.strategy.ts(18,32): error TS6138: Property 'configService' is declared but its value is never read.
-src/modules/auth/strategy/jwt.strategy.ts(61,5): error TS2375: Type '{ sub: string; username: string | null; role: string | undefined; permissions: string[]; }' is not assignable to type '{ sub: string; username: string | null; role?: string; permissions: string[]; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
-  Types of property 'role' are incompatible.
-    Type 'string | undefined' is not assignable to type 'string'.
-      Type 'undefined' is not assignable to type 'string'.
-src/modules/user/controller/assign-role.controller.ts(163,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/assign-role.controller.ts(163,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/change-password.controller.ts(187,27): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/change-password.controller.ts(187,42): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/change-password.controller.ts(229,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/change-password.controller.ts(229,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/change-status.controller.ts(234,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/change-status.controller.ts(234,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/list-users.controller.ts(84,16): error TS6133: 'req' is declared but its value is never read.
-src/modules/user/controller/list-users.controller.ts(97,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/list-users.controller.ts(97,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/new-user.controller.ts(197,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+src/modules/auth/strategy/jwt.strategy.spec.ts(73,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/modules/auth/strategy/jwt.strategy.spec.ts(86,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/modules/auth/strategy/jwt.strategy.spec.ts(97,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/modules/auth/strategy/jwt.strategy.spec.ts(98,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/modules/auth/strategy/jwt.strategy.spec.ts(99,12): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/modules/auth/strategy/jwt.strategy.ts(5,38): error TS7016: Could not find a declaration file for module 'passport-jwt'. '/home/ubuntu/repos/com.lotto.service.sso-player/node_modules/passport-jwt/lib/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/passport-jwt` if it exists or add a new declaration (.d.ts) file containing `declare module 'passport-jwt';`
+src/modules/user/controller/assign-role.controller.ts(162,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/assign-role.controller.ts(162,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/change-password.controller.ts(186,27): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/change-password.controller.ts(186,42): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/change-password.controller.ts(228,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/change-password.controller.ts(228,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/change-status.controller.ts(233,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/change-status.controller.ts(233,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/list-users.controller.ts(83,16): error TS6133: 'req' is declared but its value is never read.
+src/modules/user/controller/list-users.controller.ts(96,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/list-users.controller.ts(96,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/new-user.controller.ts(196,9): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
   Type 'null' is not assignable to type 'string'.
-src/modules/user/controller/new-user.controller.ts(223,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/new-user.controller.ts(223,40): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/remove-roles.controller.ts(163,25): error TS18046: 'error' is of type 'unknown'.
-src/modules/user/controller/remove-roles.controller.ts(163,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/new-user.controller.ts(222,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/new-user.controller.ts(222,40): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/remove-roles.controller.ts(162,25): error TS18046: 'error' is of type 'unknown'.
+src/modules/user/controller/remove-roles.controller.ts(162,40): error TS18046: 'error' is of type 'unknown'.
 src/modules/user/dto/assign-role-response.dto.ts(2,3): error TS2564: Property 'user_id' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/assign-role-response.dto.ts(3,3): error TS2564: Property 'roles' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/assign-role.dto.ts(11,3): error TS2564: Property 'user_id' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/assign-role.dto.ts(24,3): error TS2564: Property 'role_ids' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/change-password.dto.ts(37,3): error TS2564: Property 'new_password' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/change-status.dto.ts(13,3): error TS2564: Property 'user_id' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/change-status.dto.ts(30,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(7,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(10,3): error TS2564: Property 'username' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(13,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(16,3): error TS2564: Property 'roles' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(19,3): error TS2564: Property 'permissions' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(22,3): error TS2564: Property 'last_login' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(25,3): error TS2564: Property 'created_at' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(28,3): error TS2564: Property 'updated_at' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(33,3): error TS2564: Property 'currentPage' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(36,3): error TS2564: Property 'totalPages' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(39,3): error TS2564: Property 'totalItems' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(42,3): error TS2564: Property 'itemsPerPage' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(47,3): error TS2564: Property 'data' has no initializer and is not definitely assigned in the constructor.
-src/modules/user/dto/list-users-response.dto.ts(50,3): error TS2564: Property 'meta' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/change-status.dto.ts(12,3): error TS2564: Property 'user_id' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/change-status.dto.ts(29,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(6,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(9,3): error TS2564: Property 'username' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(12,3): error TS2564: Property 'status' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(15,3): error TS2564: Property 'roles' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(18,3): error TS2564: Property 'permissions' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(21,3): error TS2564: Property 'last_login' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(24,3): error TS2564: Property 'created_at' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(27,3): error TS2564: Property 'updated_at' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(32,3): error TS2564: Property 'currentPage' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(35,3): error TS2564: Property 'totalPages' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(38,3): error TS2564: Property 'totalItems' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(41,3): error TS2564: Property 'itemsPerPage' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(46,3): error TS2564: Property 'data' has no initializer and is not definitely assigned in the constructor.
+src/modules/user/dto/list-users-response.dto.ts(49,3): error TS2564: Property 'meta' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/me-response.dto.ts(2,3): error TS2564: Property 'id' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/me-response.dto.ts(3,3): error TS2564: Property 'username' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/dto/me-response.dto.ts(4,3): error TS2564: Property 'created_at' has no initializer and is not definitely assigned in the constructor.
@@ -202,13 +147,16 @@ src/modules/user/dto/remove-roles.dto.ts(11,3): error TS2564: Property 'user_id'
 src/modules/user/dto/remove-roles.dto.ts(23,3): error TS2564: Property 'role_ids' has no initializer and is not definitely assigned in the constructor.
 src/modules/user/repository/user.repository.prisma.ts(168,5): error TS2322: Type 'User | null' is not assignable to type 'User'.
   Type 'null' is not assignable to type 'User'.
-src/modules/user/services/user.service.ts(31,22): error TS6138: Property 'roleService' is declared but its value is never read.
-src/modules/user/services/user.service.ts(268,14): error TS18047: 'updatedUser' is possibly 'null'.
-src/modules/user/services/user.service.ts(362,7): error TS2322: Type '{ id: string; username: string | null; status: UserStatus; roles: string[]; permissions: string[]; last_login: Date | null; created_at: Date; updated_at: Date; }[]' is not assignable to type 'UserDetailsDto[]'.
+src/modules/user/services/user.service.ts(30,22): error TS6138: Property 'roleService' is declared but its value is never read.
+src/modules/user/services/user.service.ts(267,14): error TS18047: 'updatedUser' is possibly 'null'.
+src/modules/user/services/user.service.ts(361,7): error TS2322: Type '{ id: string; username: string | null; status: UserStatus; roles: string[]; permissions: string[]; last_login: Date | null; created_at: Date; updated_at: Date; }[]' is not assignable to type 'UserDetailsDto[]'.
   Type '{ id: string; username: string | null; status: UserStatus; roles: string[]; permissions: string[]; last_login: Date | null; created_at: Date; updated_at: Date; }' is not assignable to type 'UserDetailsDto'.
     Types of property 'username' are incompatible.
       Type 'string | null' is not assignable to type 'string'.
         Type 'null' is not assignable to type 'string'.
-src/modules/user/services/user.service.ts(423,14): error TS18047: 'updatedUser' is possibly 'null'.
-src/pipes/joi-validation.pipe.ts(29,27): error TS7053: Element implicitly has an 'any' type because expression of type '"correlationId"' can't be used to index type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
-  Property 'correlationId' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/modules/user/services/user.service.ts(422,14): error TS18047: 'updatedUser' is possibly 'null'.
+src/pipes/joi-validation.pipe.spec.ts(12,3): error TS2322: Type '(value: unknown) => { error: Error; value: unknown; } | { error: undefined; value: unknown; }' is not assignable to type '(value: unknown) => { error?: Error; value: unknown; }'.
+  Type '{ error: Error; value: unknown; } | { error: undefined; value: unknown; }' is not assignable to type '{ error?: Error; value: unknown; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ error: undefined; value: unknown; }' is not assignable to type '{ error?: Error; value: unknown; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'error' are incompatible.
+        Type 'undefined' is not assignable to type 'Error'.

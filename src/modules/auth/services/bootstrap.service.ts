@@ -1,5 +1,4 @@
 import * as crypto from "crypto";
-
 import {
   Injectable,
   Logger,
@@ -7,12 +6,11 @@ import {
   Inject,
   forwardRef,
 } from "@nestjs/common";
-
-import { PermissionService } from "./permission.service";
-import { RoleService } from "./role.service";
 import { UUID } from "../../../common/value-object/uuid.value-object";
 import { PrismaService } from "../../prisma/prisma.service";
 import { UserService } from "../../user/services/user.service";
+import { PermissionService } from "./permission.service";
+import { RoleService } from "./role.service";
 
 @Injectable()
 export class BootstrapService implements OnModuleInit {

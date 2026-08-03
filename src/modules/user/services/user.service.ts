@@ -7,7 +7,6 @@ import {
   ConflictException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-
 import { RoleService } from "../../auth/services/role.service";
 import { PrismaService } from "../../prisma/prisma.service";
 import { ListUsersResponseDto } from "../dto/list-users-response.dto";

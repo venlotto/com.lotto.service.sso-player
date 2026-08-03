@@ -1,4 +1,4 @@
-import { RefreshToken } from "../model/refresh-token.model";
+import { type RefreshToken } from "../model/refresh-token.model";
 
 export interface IRefreshTokenRepository {
   save(refreshToken: RefreshToken): Promise<void>;

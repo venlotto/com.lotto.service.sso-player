@@ -4,24 +4,17 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from "@nestjs/common";
-import { Request } from "@nestjs/common";
-
 import { UserStatus } from "../../user/model/enum/user-status.enum";
-
-interface RequestUser {
-  userId: string;
-  status: UserStatus;
-  username: string;
-}
+import { type AuthenticatedRequest } from "../model/auth-user.model";
 
 @Injectable()
 export class StatusGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request>();
-    const user = request["user"] as RequestUser;
-    const correlationId = request["correlationId"];
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+    const correlationId = request.correlationId;
 
-    if (!user) {
+    if (user === undefined || user === null) {
       throw new UnauthorizedException({
         message: "User not found in request",
         error: "Unauthorized",
