@@ -89,6 +89,50 @@ describe("AuthController", () => {
       });
     });
 
+    it("returns the validated redirect_uri when one is provided", async (): Promise<void> => {
+      mockAuthService.register.mockResolvedValue(loginResult());
+      mockAuthService.resolveRedirectUri.mockReturnValue(
+        "https://plus.bingo/web.bingo-crush/?state=abc",
+      );
+
+      const result = (await controller().register(
+        {
+          ...dto,
+          redirect_uri: "https://plus.bingo/web.bingo-crush",
+          state: "abc",
+        },
+        "corr-1b",
+        req(),
+        res(),
+      )) as Record<string, unknown>;
+
+      expect(mockAuthService.resolveRedirectUri).toHaveBeenCalledWith(
+        "https://plus.bingo/web.bingo-crush",
+        "abc",
+      );
+      expect(result["redirect_uri"]).toBe(
+        "https://plus.bingo/web.bingo-crush/?state=abc",
+      );
+    });
+
+    it("validates redirect_uri but does not fail the registration when it is rejected", async (): Promise<void> => {
+      mockAuthService.register.mockResolvedValue(loginResult());
+      mockAuthService.resolveRedirectUri.mockImplementation(() => {
+        throw new BadRequestException("redirect_uri must be a valid absolute URL");
+      });
+
+      const result = (await controller().register(
+        { ...dto, redirect_uri: "https://evil.example" },
+        "corr-1c",
+        req(),
+        res(),
+      )) as Record<string, unknown>;
+
+      expect(mockLogger.warn).toHaveBeenCalled();
+      expect(result).toMatchObject({ user_id: "user-1" });
+      expect(result["redirect_uri"]).toBeUndefined();
+    });
+
     it("re-throws the domain ConflictException instead of masking it as 401", async (): Promise<void> => {
       mockAuthService.register.mockRejectedValue(
         new ConflictException("Phone already exists"),

@@ -176,12 +176,35 @@ export class AuthController {
       });
       this.authService.attachAccessTokenCookie(res, result.access_token);
 
+      // Validate redirect_uri if provided (for security), but don't perform
+      // redirect — same contract as login: the frontend handles navigation.
+      let validatedRedirectUri: string | undefined;
+      if (
+        registerUserDto.redirect_uri !== undefined &&
+        registerUserDto.redirect_uri !== ""
+      ) {
+        try {
+          validatedRedirectUri =
+            this.authService.resolveRedirectUri(
+              registerUserDto.redirect_uri,
+              registerUserDto.state,
+            ) ?? undefined;
+        } catch (error) {
+          // If redirect validation fails, log but don't fail the registration
+          this.logger.warn(
+            `Invalid redirect_uri: ${registerUserDto.redirect_uri} (${errorMessage(error)})`,
+            { correlationId },
+          );
+        }
+      }
+
       return {
         user_id: result.user_id,
         username: result.username,
         user: result.user,
         session_family_id: result.session_family_id,
         correlation_id: correlationId,
+        redirect_uri: validatedRedirectUri, // Frontend will handle redirect
       };
     } catch (error) {
       this.logger.error(errorMessage(error), errorStack(error), {
